@@ -17,3 +17,4 @@ jobs:
       run: |
         cd test
         make --version
+        g++ --version
