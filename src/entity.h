@@ -1,15 +1,19 @@
 #include <set>
+#include <string>
+#include <functional>
 #ifndef ENGINE_ENTIY_H_
 #define ENGINE_ENTIY_H_
 
 class Entity{
     private:
+        int id;
+
         //Movement
         int x;
         int y;
         int z;
         int coordVector [3];
-        std::set<Entity> children;
+        std::set<Entity *> children;
 
         //Collision
         int width;
@@ -31,10 +35,12 @@ class Entity{
 
 
     public:
-        
+        //How many entites have been initialised
+        static int entityCount;
+
         //currently unimplemented
         bool operator==(const Entity &other) const{
-            return false;
+            return this->id == other.getId();
         }
 
         Entity(int x, int y, int z, int width, int height, int depth){
@@ -44,6 +50,8 @@ class Entity{
             this->width = width;
             this->height = height;
             this->depth = depth;
+            this->id = entityCount;
+            entityCount++; //Basic unique id
         }
 
         //sets the x y and z move vectors
@@ -103,7 +111,6 @@ class Entity{
         //Whether or not another entity is in the ghosts of this entity
         bool inGhosts(Entity other){
             return this->ghosts.find(other) != ghosts.end();
-
         }
 
 
@@ -165,31 +172,34 @@ class Entity{
         }
 
         //Getters
-        int getX(){
+        int getId() const{
+            return this->id;
+        }
+        int getX() const{
             return this->x;
         }
-        int getY(){
+        int getY() const{
             return this->y;
         }
-        int getZ(){
+        int getZ() const{
             return this->z;
         }
-        int getWidth(){
+        int getWidth() const{
             return this->width;
         }
-        int getHeight(){
+        int getHeight() const{
             return this->height;
         }
-        int getDepth(){
+        int getDepth() const{
             return this->depth;
         }
-        int getLookAngX(){
+        int getLookAngX() const{
             return this->lookAngX;
         }
-        int getLookAngY(){
+        int getLookAngY() const{
             return this->lookAngY;
         }
-        bool isSolid(){
+        bool isSolid() const{
             return this->solid;
         }
 
@@ -197,6 +207,16 @@ class Entity{
         void setSolid(bool solid){
             this->solid = solid;
         }
+};
+
+//Hash function, very simple atm but will work for now
+template<>
+struct std::hash<Entity>
+{
+    std::size_t operator()(Entity const& entity) const noexcept
+    {
+        return std::hash<int>{}(entity.getId());
+    }
 };
 
 #endif // ENGINE_ENTIY_H_
