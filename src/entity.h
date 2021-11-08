@@ -1,6 +1,6 @@
+#include <set>
 #ifndef ENGINE_ENTIY_H_
 #define ENGINE_ENTIY_H_
-#include <set>
 
 class Entity{
     private:
