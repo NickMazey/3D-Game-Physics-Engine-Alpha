@@ -31,6 +31,11 @@ class Entity{
 
 
     public:
+        
+        //currently unimplemented
+        bool operator==(const Entity &other) const{
+            return false;
+        }
 
         Entity(int x, int y, int z, int width, int height, int depth){
             this->x = x;
@@ -97,7 +102,7 @@ class Entity{
 
         //Whether or not another entity is in the ghosts of this entity
         bool inGhosts(Entity other){
-            return false; //Currently unimplemented
+            return this->ghosts.find(other) != ghosts.end();
 
         }
 
