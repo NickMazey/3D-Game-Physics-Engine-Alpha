@@ -1,5 +1,6 @@
-#include <vector>
-#include <algorithm>
+#ifndef ENGINE_ENTIY_H_
+#define ENGINE_ENTIY_H_
+#include <set>
 
 class Entity{
     private:
@@ -8,13 +9,13 @@ class Entity{
         int y;
         int z;
         int coordVector [3];
-        std::vector<Entity> children;
+        std::set<Entity> children;
 
         //Collision
         int width;
         int height;
         int depth;
-        std::vector<Entity> ghosts;
+        std::set<Entity> ghosts;
 
         //Physics
         bool physics;
@@ -96,13 +97,14 @@ class Entity{
 
         //Whether or not another entity is in the ghosts of this entity
         bool inGhosts(Entity other){
-            return std::find(this->ghosts.begin(), this->ghosts.end(), other) != this->ghosts.end();
+            return false; //Currently unimplemented
+
         }
 
 
         //whether or not this entity is colliding with the other (atm uses bounding box)
         bool isColliding(Entity other){
-            if(this->inGhosts(other)){
+            if(!this->inGhosts(other)){
 
             //Variables for this
             int xMin,xMax,yMin,yMax,zMin,zMax;
@@ -148,7 +150,7 @@ class Entity{
 
         //whether or not this entity would collide with the other if it moved by x,y, and z
         bool wouldCollide(Entity other, int x,int y,int z){
-            if(!inGhosts(other)){
+            if(!this->inGhosts(other)){
                 Entity created(this->x,this->y,this->z,this->width,this->height,this->depth);
                 created.doMove(x,y,z);
                 return created.isColliding(other);
@@ -191,3 +193,5 @@ class Entity{
             this->solid = solid;
         }
 };
+
+#endif // ENGINE_ENTIY_H_
