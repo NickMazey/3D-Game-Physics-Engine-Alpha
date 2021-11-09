@@ -1,4 +1,3 @@
-#include <set>
 #include "entity.h"
 int Entity::entityCount = 0;
 
