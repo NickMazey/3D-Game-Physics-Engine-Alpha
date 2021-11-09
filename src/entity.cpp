@@ -1,8 +1,5 @@
 #include <set>
 #include <functional>
-#ifndef ENGINE_ENTIY_H_
-#define ENGINE_ENTIY_H_
-
 class Entity{
     private:
         int id;
@@ -217,5 +214,3 @@ struct std::hash<Entity>
         return std::hash<int>{}(entity.getId());
     }
 };
-
-#endif // ENGINE_ENTIY_H_

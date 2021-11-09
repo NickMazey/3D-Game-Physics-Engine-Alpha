@@ -34,3 +34,7 @@
 #IDE Stuff
 */.vscode/
 *.code-workspace
+
+#CMake Stuff
+
+/project_build/
