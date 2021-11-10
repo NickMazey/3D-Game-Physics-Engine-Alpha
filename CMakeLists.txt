@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 
 project(game_engine)
 
-list(APPEND LIB "${PROJECT_BINARY_DIR}")
-
 add_subdirectory(src/logic)
+
+list(APPEND LIB "${PROJECT_BINARY_DIR}")
 list(APPEND LIB "${PROJECT_SOURCE_DIR}/src/logic")
 
 
