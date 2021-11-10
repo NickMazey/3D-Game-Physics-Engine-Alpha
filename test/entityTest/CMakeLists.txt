@@ -15,7 +15,7 @@ add_executable(
 target_link_libraries(
     entity_test
     PUBLIC
-    logic
+    entity
     gtest_main
 )
 

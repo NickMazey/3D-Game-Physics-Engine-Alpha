@@ -10,7 +10,7 @@ list(APPEND LIB "${PROJECT_SOURCE_DIR}/src/logic")
 
 add_executable(game_engine src/runner.cc)
 
-target_link_libraries(game_engine PUBLIC logic)
+target_link_libraries(game_engine PUBLIC ${LOGIC_LIBRARIES})
 
 target_include_directories(game_engine PUBLIC
     ${LIB}   
