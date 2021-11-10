@@ -85,6 +85,7 @@ bool Entity::inGhosts(Entity other){
 //whether or not this entity is colliding with the other (atm uses bounding box)
 bool Entity::isColliding(Entity other){
             if(!this->inGhosts(other)){
+            //Assumes that x,y, and z are located at the center of the entity
 
             //Variables for this
             int xMin,xMax,yMin,yMax,zMin,zMax;
@@ -107,21 +108,11 @@ bool Entity::isColliding(Entity other){
             otherZMin = other.getZ() - (otherDepth / 2);
             otherZMax = other.getZ() + (otherDepth / 2);
 
-
-            //Check x collision
-            if (xMin >= otherXMin && xMin <= otherXMax || xMax >= otherXMin && xMax <= otherXMax //If this "line" is smaller
-                || otherXMin >= xMin && otherXMin <= xMax || otherXMax >= xMin && otherXMax <= xMax //If the other "line" is smaller
-                ){
-                    //Check y collision
-                    if (yMin >= otherYMin && yMin <= otherYMax || yMax >= otherYMin && yMax <= otherYMax //If this "line" is smaller
-                || otherYMin >= yMin && otherYMin <= yMax || otherYMax >= yMin && otherYMax <= yMax //If the other "line" is smaller
-                ){
-                    //Z collision
-                    return (zMin >= otherZMin && zMin <= otherZMax || zMax >= otherZMin && zMax <= otherZMax //If this "line" is smaller
-                || otherZMin >= zMin && otherZMin <= zMax || otherZMax >= zMin && otherZMax <= zMax //If the other "line" is smaller
-                );       
-            }           
-            }
+            //This line starts somewhere before the max of the other object and ends somewhere after the min of the other object
+            return (xMin <= otherXMax && xMax >= otherXMin) && //X axis
+                   (yMin <= otherYMax && yMax >= otherYMin) && //Y axis
+                   (zMin <= otherZMax && zMax >= otherZMin);   //Z axis
+                
             }
 
             //Would've already returned otherwise, must not be colliding
