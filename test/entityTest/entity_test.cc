@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 #include "entity.h"
-TEST(EntityTest,Test){
-    EXPECT_EQ(1,1);
+TEST(EntityTest,Collides){
+    logic::Entity a (0,0,0,100,100,100);
+    logic::Entity b (0,0,0,100,100,100);
+    EXPECT_TRUE(a.isColliding(b));
 }
