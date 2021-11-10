@@ -1,0 +1,3 @@
+#ifndef GAME_ENGINE_WORLD_H
+#define GAME_ENGINE_WORLD_H
+#endif //GAME_ENGINE_WORLD_H
