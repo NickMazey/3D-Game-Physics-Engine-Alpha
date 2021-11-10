@@ -21,7 +21,7 @@ bool Entity::operator<(const Entity &other) const{
 }
 
         
-        //sets the x y and z move vectors
+//sets the x y and z move vectors
 void Entity::setMove(int x, int y, int z){
             this->coordVector[0] = x;
             this->coordVector[1] = y;
@@ -29,33 +29,33 @@ void Entity::setMove(int x, int y, int z){
 }
 
 
-        //Applies movement
+//Applies movement
 void Entity::doMove(){
             this->x += coordVector[0];
             this->y += coordVector[1];
             this->z += coordVector[2];
 }
 
-        //updates the entity's x,y, and z co-ordinates by x,y, and z
+//updates the entity's x,y, and z co-ordinates by x,y, and z
 void Entity::doMove(int x,int y,int z){
             this->setMove(x,y,z);
             this->doMove();
 }
 
-        //sets the look vector angles
+//sets the look vector angles
 void Entity::setLook(int x,int y){
             this->lookVector[0] = x;
             this->lookVector[1] = y;
 }
 
 
-        //Applies look
+//Applies look
 void Entity::doLook(){
             this->lookAngX += lookVector[0];
             this->lookAngY += lookVector[1];
 }
 
-        //updates the entity's look angles by x and y
+//updates the entity's look angles by x and y
 void Entity::doLook(int x,int y){
             this->setLook(x,y);
             doLook();
@@ -68,20 +68,20 @@ void Entity::setPos(int x, int y, int z){
             this->z = z;
 }
 
-        //sets position of entity relative to other entity + x,y, and z
+//sets position of entity relative to other entity + x,y, and z
 void Entity::setPosRelativeTo(Entity other,int x,int y,int z){
                 this->x = x + other.getX();
                 this->y = y + other.getY();
                 this->z = z + other.getZ();
 }
 
-        //Whether or not another entity is in the ghosts of this entity
+//Whether or not another entity is in the ghosts of this entity
 bool Entity::inGhosts(Entity other){
             return this->ghosts.find(other) != ghosts.end();
 }
 
 
-        //whether or not this entity is colliding with the other (atm uses bounding box)
+//whether or not this entity is colliding with the other (atm uses bounding box)
 bool Entity::isColliding(Entity other){
             if(!this->inGhosts(other)){
 
@@ -127,7 +127,7 @@ bool Entity::isColliding(Entity other){
             return false;
 }
 
-        //whether or not this entity would collide with the other if it moved by x,y, and z
+//whether or not this entity would collide with the other if it moved by x,y, and z
 bool Entity::wouldCollide(Entity other, int x,int y,int z){
             if(!this->inGhosts(other)){
                 Entity created(this->x,this->y,this->z,this->width,this->height,this->depth);
