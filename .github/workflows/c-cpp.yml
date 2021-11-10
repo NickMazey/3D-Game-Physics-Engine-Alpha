@@ -7,25 +7,21 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-windows:
 
     runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: test
+    - name: Build
       run: |
         mkdir project_build
         cd project_build
         cmake .. -B build
         cmake --build build
-        
-  test:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: test
+    - name: Test
       run: |
         cd project_build
         cd build
         ctest
+        
