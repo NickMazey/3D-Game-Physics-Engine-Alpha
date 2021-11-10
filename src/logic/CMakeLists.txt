@@ -1,1 +1,1 @@
-add_library(entity entity.cc)
+add_library(logic server.cc)

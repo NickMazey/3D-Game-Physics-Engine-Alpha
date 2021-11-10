@@ -4,9 +4,9 @@ project(Game_Engine)
 
 add_subdirectory(src/logic)
 
-add_executable(Game_Engine src/logic/server.cc)
+add_executable(Game_Engine src/runner.cc)
 
-target_link_libraries(Game_Engine PUBLIC entity)
+target_link_libraries(Game_Engine PUBLIC logic)
 
 target_include_directories(Game_Engine PUBLIC
     "${PROJECT_BINARY_DIR}"
