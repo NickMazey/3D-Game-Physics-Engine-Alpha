@@ -1,6 +1,7 @@
 #include <set>
 #ifndef GAME_ENGINE_ENTIY_H
 #define GAME_ENGINE_ENTIY_H
+namespace logic{
 class Entity{
     private:
         int id;
@@ -113,5 +114,5 @@ class Entity{
         //Setters
         void setSolid(bool solid);
 };
-
+}
 #endif //GAME_ENGINE_ENTIY_H

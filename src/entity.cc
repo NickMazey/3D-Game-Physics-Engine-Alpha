@@ -1,4 +1,5 @@
 #include "entity.h"
+namespace logic{
 int Entity::entityCount = 0;
 
 Entity::Entity(int x, int y, int z, int width, int height, int depth){
@@ -136,4 +137,5 @@ bool Entity::wouldCollide(Entity other, int x,int y,int z){
             }
             //Can't collide
             return false;
+}
 }
