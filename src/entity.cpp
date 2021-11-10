@@ -13,11 +13,11 @@ Entity::Entity(int x, int y, int z, int width, int height, int depth){
 }
 
 bool Entity::operator==(const Entity &other) const{
-            return this->id == other.getId();
+            return id == other.getId();
 }
 
 bool Entity::operator<(const Entity &other) const{
-            return this->id < other.id;
+            return id < other.getId();
 }
 
         
