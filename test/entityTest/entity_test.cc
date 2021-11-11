@@ -32,37 +32,37 @@ TEST(EntityTest, Unique_Ids_2){
 }
 
 //Movement Tests
-TEST(EntityTest, Movement_Test_X_1){
+TEST(EntityTest, Movement_Test_X_Positive){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove(1,0,0);
     EXPECT_TRUE(a.getX() == 1) << "Entity didn't move + in X axis. \n Entity:" << printInfo(a);
 }
-//Movement Tests
-TEST(EntityTest, Movement_Test_X_2){
+
+TEST(EntityTest, Movement_Test_X_Negative){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove(-1,0,0);
     EXPECT_TRUE(a.getX() == -1) << "Entity didn't move - in X axis. \n Entity:" << printInfo(a);
 }
 
-TEST(EntityTest, Movement_Test_Y_1){
+TEST(EntityTest, Movement_Test_Y_Positive){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove(0,1,0);
     EXPECT_TRUE(a.getY() == 1) << "Entity didn't move + in Y axis. \n Entity:" << printInfo(a);
 }
 
-TEST(EntityTest, Movement_Test_Y_2){
+TEST(EntityTest, Movement_Test_Y_Negative){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove(0,-1,0);
     EXPECT_TRUE(a.getY() == -1) << "Entity didn't move - in Y axis. \n Entity:" << printInfo(a);
 }
 
-TEST(EntityTest, Movement_Test_Z_1){
+TEST(EntityTest, Movement_Test_Z_Positive){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove(0,0,1);
     EXPECT_TRUE(a.getZ() == 1) << "Entity didn't move + in Z axis. \n Entity:" << printInfo(a);
 }
 
-TEST(EntityTest, Movement_Test_Z_2){
+TEST(EntityTest, Movement_Test_Z_Negative){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove(0,0,-1);
     EXPECT_TRUE(a.getZ() == -1) << "Entity didn't move - in Z axis. \n Entity:" << printInfo(a);
@@ -80,5 +80,5 @@ TEST(EntityTest,Collides_Other_1){
     logic::Entity a (0,0,0,100,100,100);
     logic::Entity b (0,0,0,100,100,100);
     EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
-    EXPECT_EQ(a.isColliding(b),b.isColliding(a)) << "Collisions aren't transitive";
+    EXPECT_EQ(a.isColliding(b),b.isColliding(a)) << "Collisions aren't symmetric";
 }
