@@ -68,6 +68,12 @@ TEST(EntityTest, Movement_Test_Z_Negative){
     EXPECT_TRUE(a.getZ() == -1) << "Entity didn't move - in Z axis. \n Entity:" << printInfo(a);
 }
 
+TEST(EntityTest, Movement_Test_Ticking_None){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doMove();
+    EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == 0) << "Entity moved unexpectedly. \n Entity:" << printInfo(a);
+}
+
 
 //Self Collision Tests
 TEST(EntityTest,Collides_Self_1){
