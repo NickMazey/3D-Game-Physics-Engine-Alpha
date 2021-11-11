@@ -78,7 +78,7 @@ TEST(EntityTest, Movement_Test_Ticking_None){
 //Self Collision Tests
 TEST(EntityTest,Collides_Self_1){
     logic::Entity a (0,0,0,100,100,100);
-    EXPECT_TRUE(a.isColliding(a)) << "The Entity doesn't collide with itself. \n Entity: " << printInfo(a);
+    EXPECT_FALSE(a.isColliding(a)) << "The Entity collides with itself. \n Entity: " << printInfo(a);
 }
 
 //Other Entity Collision Tests
