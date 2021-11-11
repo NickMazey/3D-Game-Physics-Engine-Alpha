@@ -3,19 +3,19 @@
 
 std::string printInfo(const logic::Entity toPrint){
     std::string toReturn = "ID: ";
-    toReturn.append("" + toPrint.getId());
+    toReturn.append(std::to_string(toPrint.getId()));
     toReturn.append(" X: ");
-    toReturn.append("" + toPrint.getX());
+    toReturn.append(std::to_string(toPrint.getX()));
     toReturn.append(" Y: ");
-    toReturn.append("" + toPrint.getY());
+    toReturn.append(std::to_string(toPrint.getY()));
     toReturn.append(" Z: ");
-    toReturn.append("" + toPrint.getZ());
+    toReturn.append(std::to_string(toPrint.getZ()));
     toReturn.append(" Width: ");
-    toReturn.append("" + toPrint.getWidth());
+    toReturn.append(std::to_string(toPrint.getWidth()));
     toReturn.append(" Height: ");
-    toReturn.append("" + toPrint.getHeight());
+    toReturn.append(std::to_string(toPrint.getHeight()));
     toReturn.append(" Depth: ");
-    toReturn.append("" + toPrint.getDepth());
+    toReturn.append(std::to_string(toPrint.getDepth()));
     return toReturn;
 }
 
