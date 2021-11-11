@@ -10,7 +10,7 @@ class Entity{
         int x;
         int y;
         int z;
-        int coordVector [3];
+        int coordVector [3] = {0};
         std::set<Entity *> children;
 
         //Collision
@@ -29,7 +29,7 @@ class Entity{
         int lookAngX;
         int lookAngY;
         int fov;
-        int lookVector [2];
+        int lookVector [2] = {0};
 
 
     public:
