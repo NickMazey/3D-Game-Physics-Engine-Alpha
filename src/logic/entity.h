@@ -37,6 +37,7 @@ class Entity{
         static int entityCount;
 
         bool operator==(const Entity &other) const;
+        bool operator!=(const Entity&other) const;
 
         //currently unfinished
         bool operator<(const Entity &other) const;
