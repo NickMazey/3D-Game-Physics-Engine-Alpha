@@ -169,6 +169,11 @@ TEST(EntityTest,Collides_Self_1){
     EXPECT_FALSE(a.isColliding(a)) << "The Entity collides with itself. \n Entity:" << printInfo(a);
 }
 
+TEST(EntityTest,Collides_Self_2){
+    logic::Entity a (0,0,0,100,100,100);
+    EXPECT_FALSE(a.wouldCollide(a,0,0,0)) << "The Entity would collide with itself after moving. \n Entity:" << printInfo(a);
+}
+
 //Other Entity Collision Tests
 TEST(EntityTest,Collides_Other_1){
     logic::Entity a (0,0,0,100,100,100);
