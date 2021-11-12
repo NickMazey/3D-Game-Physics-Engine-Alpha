@@ -28,6 +28,18 @@ TEST(EntityTest,Equals_Self){
 TEST(EntityTest,Equals_Other){
     logic::Entity a (0,0,0,0,0,0);
     logic::Entity b (0,0,0,0,0,0);
+    EXPECT_FALSE(a == b) << "Different entites are equal. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+//Inequality Tests
+TEST(EntityTest,Not_Equals_Self){
+    logic::Entity a (0,0,0,0,0,0);
+    EXPECT_FALSE(a != a) << "Entity doesn't equal itself. \n Entity:" << printInfo(a);
+}
+
+TEST(EntityTest,Not_Equals_Other){
+    logic::Entity a (0,0,0,0,0,0);
+    logic::Entity b (0,0,0,0,0,0);
     EXPECT_TRUE(a != b) << "Different entites are equal. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
