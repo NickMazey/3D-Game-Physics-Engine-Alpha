@@ -161,8 +161,6 @@ TEST(EntityTest, Multi_Entity_Movement){
 }
 
 
-
-
 //Self Collision Tests
 TEST(EntityTest,Collides_Self){
     logic::Entity a (0,0,0,100,100,100);
@@ -181,6 +179,42 @@ TEST(EntityTest,Collides_Other){
     logic::Entity b (0,0,0,100,100,100);
     EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
     EXPECT_EQ(a.isColliding(b),b.isColliding(a)) << "Collisions aren't symmetric. \n Entity a isColliding:" << a.isColliding(b) << "\n Entity b isColliding:" << b.isColliding(a);
+}
+
+TEST(EntityTest,Collides_Other_Positive_X){
+    logic::Entity a (0,0,0,50,50,50);
+    logic::Entity b (50,50,50,50,50,50);
+    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the positive X axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+}
+
+TEST(EntityTest,Collides_Other_Negative_X){
+    logic::Entity a (0,0,0,50,50,50);
+    logic::Entity b (-50,50,50,50,50,50);
+    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the negative X axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+}
+
+TEST(EntityTest,Collides_Other_Positive_Y){
+    logic::Entity a (0,0,0,50,50,50);
+    logic::Entity b (50,50,50,50,50,50);
+    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the positive Y axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+}
+
+TEST(EntityTest,Collides_Other_Negative_Y){
+    logic::Entity a (0,0,0,50,50,50);
+    logic::Entity b (50,-50,50,50,50,50);
+    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the negative Y axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+}
+
+TEST(EntityTest,Collides_Other_Positive_Z){
+    logic::Entity a (0,0,0,50,50,50);
+    logic::Entity b (50,50,50,50,50,50);
+    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the positive Z axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+}
+
+TEST(EntityTest,Collides_Other_Negative_Z){
+    logic::Entity a (0,0,0,50,50,50);
+    logic::Entity b (50,50,-50,50,50,50);
+    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the negative Z axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
 }
 
 TEST(EntityTest,Not_Colliding_Other_Positive_X){
@@ -219,46 +253,13 @@ TEST(EntityTest,Not_Colliding_Other_Negative_Z){
     EXPECT_FALSE(a.isColliding(b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
-TEST(EntityTest,Collides_Other_X_Positive){
-    logic::Entity a (0,0,0,50,50,50);
-    logic::Entity b (50,50,50,50,50,50);
-    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the positive X axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
-}
-
-TEST(EntityTest,Collides_Other_X_Negative){
-    logic::Entity a (0,0,0,50,50,50);
-    logic::Entity b (-50,50,50,50,50,50);
-    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the negative X axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
-}
-
-TEST(EntityTest,Collides_Other_Y_Positive){
-    logic::Entity a (0,0,0,50,50,50);
-    logic::Entity b (50,50,50,50,50,50);
-    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the positive Y axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
-}
-
-TEST(EntityTest,Collides_Other_Y_Negative){
-    logic::Entity a (0,0,0,50,50,50);
-    logic::Entity b (50,-50,50,50,50,50);
-    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the negative Y axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
-}
-
-TEST(EntityTest,Collides_Other_Z_Positive){
-    logic::Entity a (0,0,0,50,50,50);
-    logic::Entity b (50,50,50,50,50,50);
-    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the positive Z axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
-}
-
-TEST(EntityTest,Collides_Other_Z_Negative){
-    logic::Entity a (0,0,0,50,50,50);
-    logic::Entity b (50,50,-50,50,50,50);
-    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the negative Z axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
-}
-
-
+//Collision Prediction Tests
 TEST(EntityTest, Would_Collide_Other_Moves_Entity){
     logic::Entity a (0,0,0,100,100,100);
     logic::Entity b (0,0,0,100,100,100);
     a.wouldCollide(b,1,1,1);
     EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == 0) << "wouldCollide also moves Entity. \n Entity:" << printInfo(a);
 }
+
+
+//Movement-Collision Tests
