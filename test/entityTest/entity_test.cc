@@ -111,7 +111,7 @@ TEST(EntityTest, Movement_Test_Ticking_None){
 //Self Collision Tests
 TEST(EntityTest,Collides_Self_1){
     logic::Entity a (0,0,0,100,100,100);
-    EXPECT_FALSE(a.isColliding(a)) << "The Entity collides with itself. \n Entity: " << printInfo(a);
+    EXPECT_FALSE(a.isColliding(a)) << "The Entity collides with itself. \n Entity:" << printInfo(a);
 }
 
 //Other Entity Collision Tests
@@ -119,5 +119,5 @@ TEST(EntityTest,Collides_Other_1){
     logic::Entity a (0,0,0,100,100,100);
     logic::Entity b (0,0,0,100,100,100);
     EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
-    EXPECT_EQ(a.isColliding(b),b.isColliding(a)) << "Collisions aren't symmetric";
+    EXPECT_EQ(a.isColliding(b),b.isColliding(a)) << "Collisions aren't symmetric. \n Entity a isColliding:" << a.isColliding(b) << "\n Entity b isColliding:" << b.isColliding(a);
 }
