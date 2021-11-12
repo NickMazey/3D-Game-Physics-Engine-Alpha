@@ -64,7 +64,7 @@ TEST(EntityTest, Unique_Ids_3){
     EXPECT_TRUE(b.getId() == 1) << "ID only changes within scope \n Entity:" << printInfo(b);
 }
 
-//Lone Entity Movement Tests
+//Entity Movement Tests
 TEST(EntityTest, Movement_X_Positive){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove(1,0,0);
@@ -150,6 +150,14 @@ TEST(EntityTest,Movement_Multi_Tick_Variable){
         a.doMove();
     }
     EXPECT_TRUE(a.getX() == 5 && a.getY() == 5 && a.getZ() == 5) << "Entity failed to change coordVector. \n Entity:" << printInfo(a);
+}
+
+TEST(EntityTest, Multi_Entity_Movement){
+    logic::Entity a (0,0,0,100,100,100);
+    logic::Entity b (0,0,0,100,100,100);
+    a.doMove(1,0,0);
+    b.doMove(-1,0,0);
+    EXPECT_TRUE(a.getX() == 1 && b.getX() == -1 && a.getY() == 0 && b.getY() == 0 && a.getZ() == 0 && b.getZ() == 0) << "Entity movement impacted by other. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 
