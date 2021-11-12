@@ -219,8 +219,7 @@ TEST(EntityTest,Collides_Other_Z_Negative){
     EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the negative Z axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
 }
 
-
-TEST(EntityTest, Would_Collide_Other_Movement){
+TEST(EntityTest, Would_Collide_Other_Moves_Entity){
     logic::Entity a (0,0,0,100,100,100);
     logic::Entity b (0,0,0,100,100,100);
     a.wouldCollide(b,1,1,1);
