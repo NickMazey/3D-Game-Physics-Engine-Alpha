@@ -114,6 +114,14 @@ TEST(EntityTest, Movement_Single_Tick_Set){
     EXPECT_TRUE(a.getX() == 1 && a.getY() == 0 && a.getZ() == 0) << "Entity moved unexpectedly. \n Entity:" << printInfo(a);
 }
 
+TEST(EntityTest, Movement_Single_Tick_Variable){
+    logic::Entity a (0,0,0,100,100,100);
+    a.setMove(1,0,0);
+    a.doMove();
+    a.setMove(-1,1,1);
+    EXPECT_TRUE(a.getX() == 1 && a.getY() == 0 && a.getZ() == 0) << "Entity moved unexpectedly. \n Entity:" << printInfo(a);
+}
+
 TEST(EntityTest, Movement_Multi_Tick_None){
     logic::Entity a (0,0,0,100,100,100);
     for(int i = 0; i < 5; i++){
@@ -130,6 +138,21 @@ TEST(EntityTest,Movement_Multi_Tick_Set){
     }
     EXPECT_TRUE(a.getX() == 5 && a.getY() == 0 && a.getZ() == 0) << "Entity moved unexpectedly. \n Entity:" << printInfo(a);
 }
+
+TEST(EntityTest,Movement_Multi_Tick_Variable){
+    logic::Entity a (0,0,0,100,100,100);
+    a.setMove(1,0,0);
+    for(int i = 0; i < 5; i++){
+        a.doMove();
+    }
+    a.setMove(0,1,1);
+    for(int i = 0; i < 5; i++){
+        a.doMove();
+    }
+    EXPECT_TRUE(a.getX() == 5 && a.getY() == 5 && a.getZ() == 5) << "Entity failed to change coordVector. \n Entity:" << printInfo(a);
+}
+
+
 
 
 //Self Collision Tests
