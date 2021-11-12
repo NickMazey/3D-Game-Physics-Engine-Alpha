@@ -92,12 +92,12 @@ bool Entity::isColliding(Entity other){
 
             //Variables for this
             int xMin,xMax,yMin,yMax,zMin,zMax;
-            xMin = this->x - (this->width / 2);
-            xMax = this->x + (this->width / 2);
-            yMin = this->y - (this->height / 2);
-            yMax = this->y + (this->height / 2);
-            zMin = this->z - (this->depth / 2);
-            zMax = this->z + (this->depth / 2);
+            xMin = x - (width / 2);
+            xMax = x + (width / 2);
+            yMin = y - (height / 2);
+            yMax = y + (height / 2);
+            zMin = z - (depth / 2);
+            zMax = z + (depth / 2);
 
             //Variables for the other
             int otherXMin, otherXMax,otherYMin, otherYMax,otherZMin, otherZMax,otherWidth,otherHeight,otherDepth;
