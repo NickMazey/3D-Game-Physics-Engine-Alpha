@@ -64,47 +64,71 @@ TEST(EntityTest, Unique_Ids_3){
     EXPECT_TRUE(b.getId() == 1) << "ID only changes within scope \n Entity:" << printInfo(b);
 }
 
-//Movement Tests
-TEST(EntityTest, Movement_Test_X_Positive){
+//Lone Entity Movement Tests
+TEST(EntityTest, Movement_X_Positive){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove(1,0,0);
     EXPECT_TRUE(a.getX() == 1) << "Entity didn't move + in X axis. \n Entity:" << printInfo(a);
 }
 
-TEST(EntityTest, Movement_Test_X_Negative){
+TEST(EntityTest, Movement_X_Negative){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove(-1,0,0);
     EXPECT_TRUE(a.getX() == -1) << "Entity didn't move - in X axis. \n Entity:" << printInfo(a);
 }
 
-TEST(EntityTest, Movement_Test_Y_Positive){
+TEST(EntityTest, Movement_Y_Positive){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove(0,1,0);
     EXPECT_TRUE(a.getY() == 1) << "Entity didn't move + in Y axis. \n Entity:" << printInfo(a);
 }
 
-TEST(EntityTest, Movement_Test_Y_Negative){
+TEST(EntityTest, Movement_Y_Negative){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove(0,-1,0);
     EXPECT_TRUE(a.getY() == -1) << "Entity didn't move - in Y axis. \n Entity:" << printInfo(a);
 }
 
-TEST(EntityTest, Movement_Test_Z_Positive){
+TEST(EntityTest, Movement_Z_Positive){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove(0,0,1);
     EXPECT_TRUE(a.getZ() == 1) << "Entity didn't move + in Z axis. \n Entity:" << printInfo(a);
 }
 
-TEST(EntityTest, Movement_Test_Z_Negative){
+TEST(EntityTest, Movement_Z_Negative){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove(0,0,-1);
     EXPECT_TRUE(a.getZ() == -1) << "Entity didn't move - in Z axis. \n Entity:" << printInfo(a);
 }
 
-TEST(EntityTest, Movement_Test_Ticking_None){
+TEST(EntityTest, Movement_Single_Tick_None){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove();
     EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == 0) << "Entity moved unexpectedly. \n Entity:" << printInfo(a);
+}
+
+TEST(EntityTest, Movement_Single_Tick_Set){
+    logic::Entity a (0,0,0,100,100,100);
+    a.setMove(1,0,0);
+    a.doMove();
+    EXPECT_TRUE(a.getX() == 1 && a.getY() == 0 && a.getZ() == 0) << "Entity moved unexpectedly. \n Entity:" << printInfo(a);
+}
+
+TEST(EntityTest, Movement_Multi_Tick_None){
+    logic::Entity a (0,0,0,100,100,100);
+    for(int i = 0; i < 5; i++){
+        a.doMove();
+    }
+    EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == 0) << "Entity moved unexpectedly. \n Entity:" << printInfo(a);
+}
+
+TEST(EntityTest,Movement_Multi_Tick_Set){
+    logic::Entity a (0,0,0,100,100,100);
+    a.setMove(1,0,0);
+    for(int i = 0; i < 5; i++){
+        a.doMove();
+    }
+    EXPECT_TRUE(a.getX() == 5 && a.getY() == 0 && a.getZ() == 0) << "Entity moved unexpectedly. \n Entity:" << printInfo(a);
 }
 
 
