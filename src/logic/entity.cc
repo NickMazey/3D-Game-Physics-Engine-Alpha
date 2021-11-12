@@ -16,6 +16,9 @@ Entity::Entity(int x, int y, int z, int width, int height, int depth){
 bool Entity::operator==(const Entity &other) const{
             return id == other.getId();
 }
+bool Entity::operator!=(const Entity &other) const{
+    return !operator==(other);
+}
 
 bool Entity::operator<(const Entity &other) const{
             return id < other.getId();
@@ -84,7 +87,7 @@ bool Entity::inGhosts(Entity other){
 
 //whether or not this entity is colliding with the other (atm uses bounding box)
 bool Entity::isColliding(Entity other){
-            if(!this->inGhosts(other) && !(this == &other)){
+            if(!this->inGhosts(other) && *this != other){
             //Assumes that x,y, and z are located at the center of the entity
 
             //Variables for this
