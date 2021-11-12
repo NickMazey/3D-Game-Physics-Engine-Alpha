@@ -19,6 +19,19 @@ std::string printInfo(const logic::Entity toPrint){
     return toReturn;
 }
 
+//Equality Tests
+TEST(EntityTest,Equals_Self){
+    logic::Entity a (0,0,0,0,0,0);
+    EXPECT_TRUE(a == a) << "Entity doesn't equal itself. \n Entity:" << printInfo(a);
+}
+
+TEST(EntityTest,Equals_Other){
+    logic::Entity a (0,0,0,0,0,0);
+    logic::Entity b (0,0,0,0,0,0);
+    EXPECT_FALSE(a == b) << "Different entites are equal. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+
 //ID Tests
 TEST(EntityTest,Unique_Ids_1){
     logic::Entity a (0,0,0,0,0,0);
@@ -29,6 +42,14 @@ TEST(EntityTest,Unique_Ids_1){
 TEST(EntityTest, Unique_Ids_2){
     logic::Entity a (0,0,0,0,0,0);
     EXPECT_TRUE(a.getId() == a.getId()) << "ID changes between calls. \n Entity:" << printInfo(a);
+}
+
+TEST(EntityTest, Unique_Ids_3){
+    if(true){
+        logic::Entity a (0,0,0,0,0,0);
+    }
+    logic::Entity b (0,0,0,0,0,0);
+    EXPECT_TRUE(b.getId() == 1) << "ID only changes within scope \n Entity:" << printInfo(b);
 }
 
 //Movement Tests
