@@ -29,7 +29,7 @@ class Entity{
         int lookAngX;
         int lookAngY;
         int fov;
-        int lookVector [2] = {0};
+        int lookVector [2] = {0}; // Radians
 
 
     public:

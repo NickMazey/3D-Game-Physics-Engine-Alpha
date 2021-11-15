@@ -1,3 +1,4 @@
+#include "tgmath.h"
 #include "entity.h"
 namespace logic{
 int Entity::entityCount = 0;
@@ -10,6 +11,8 @@ Entity::Entity(int x, int y, int z, int width, int height, int depth){
             this->height = height;
             this->depth = depth;
             this->id = entityCount;
+            this->lookAngX = 0;
+            this->lookAngY = 0;
             entityCount++;
 }
 
@@ -35,9 +38,9 @@ void Entity::setMove(int x, int y, int z){
 
 //Applies movement
 void Entity::doMove(){
-            this->x += coordVector[0];
+            this->x += cos(lookAngX) * coordVector[0] + sin(lookAngX) * coordVector[2];
             this->y += coordVector[1];
-            this->z += coordVector[2];
+            this->z += cos(lookAngX) * coordVector[2] + sin(lookAngX) * coordVector[0];
 }
 
 //updates the entity's x,y, and z co-ordinates by x,y, and z
