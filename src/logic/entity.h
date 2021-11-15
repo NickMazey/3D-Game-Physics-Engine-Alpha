@@ -29,7 +29,7 @@ class Entity{
         int lookAngX;
         int lookAngY;
         int fov;
-        int lookVector [2] = {0}; // Radians
+        float lookVector [2] = {0}; // Radians
 
 
     public:
@@ -55,14 +55,14 @@ class Entity{
         void doMove(int x,int y,int z);
 
         //sets the look vector angles
-        void setLook(int x,int y);
+        void setLook(float x,float y);
 
 
         //Applies look
         void doLook();
 
         //updates the entity's look angles by x and y
-        void doLook(int x,int y);
+        void doLook(float x,float y);
 
 
         void setPos(int x, int y, int z);

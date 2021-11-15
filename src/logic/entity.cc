@@ -50,7 +50,7 @@ void Entity::doMove(int x,int y,int z){
 }
 
 //sets the look vector angles
-void Entity::setLook(int x,int y){
+void Entity::setLook(float x,float y){
             this->lookVector[0] = x;
             this->lookVector[1] = y;
 }
@@ -63,7 +63,7 @@ void Entity::doLook(){
 }
 
 //updates the entity's look angles by x and y
-void Entity::doLook(int x,int y){
+void Entity::doLook(float x,float y){
             this->setLook(x,y);
             doLook();
 }
