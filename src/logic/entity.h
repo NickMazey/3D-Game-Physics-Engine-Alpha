@@ -45,7 +45,10 @@ class Entity{
         void setPosRelativeTo(Entity other,int x,int y,int z);
 
         //Whether or not another entity is in the ghosts of this entity
-        bool inGhosts(Entity other);
+        bool inGhosts(Entity * other);
+
+        //Adds to ghosts
+        void addGhost(Entity * other);
 
 
         //whether or not this entity is colliding with the other (atm uses bounding box)
@@ -102,7 +105,7 @@ class Entity{
         int width;
         int height;
         int depth;
-        std::set<Entity> ghosts;
+        std::set<Entity *> ghosts;
 
         //Physics
         bool physics;
