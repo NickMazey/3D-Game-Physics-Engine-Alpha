@@ -90,6 +90,9 @@ class Entity{
         //Removes from children
         void removeChild(Entity * other);
 
+        //Updates children
+        void updateChildren();
+
         //whether or not this entity is colliding with the other (atm uses bounding box)
         bool isColliding(const Entity * other);
 

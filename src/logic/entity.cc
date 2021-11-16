@@ -75,6 +75,7 @@ void Entity::doMove(){
             this->x += xHelper(coordVector[0],coordVector[2]);
             this->y += coordVector[1];
             this->z += zHelper(coordVector[0],coordVector[2]);
+            this->updateChildren();
 }
 
 //updates the entity's x,y, and z co-ordinates by x,y, and z
@@ -88,6 +89,7 @@ void Entity::doMoveAbsolute(int x,int y,int z){
             this->x += x;
             this->y += y;
             this->z += z;
+            this->updateChildren();
 }
 
 //sets the look vector angles
@@ -166,6 +168,17 @@ void Entity::removeChild(Entity * other){
         this->children.erase(other);
     }
     other->removeDependent(this);
+}
+
+//Updates children
+void Entity::updateChildren(){
+    for(ChildMap::iterator iter = children.begin(); iter != children.end(); iter++){
+                std::tuple<int,int,int> offset = iter->second;
+                Entity * child = iter->first;
+                int xOff,yOff,zOff;
+                std::tie(xOff,yOff,zOff) = offset;
+                child->setPosRelativeTo(this,xOff,yOff,zOff);
+    }
 }
 
 
