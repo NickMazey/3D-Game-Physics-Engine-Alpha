@@ -123,6 +123,7 @@ void Entity::setPosRelativeTo(const Entity* other,int x,int y,int z){
                 this->x = x + other->getX();
                 this->y = y + other->getY();
                 this->z = z + other->getZ();
+                updateChildren();
 }
 
 //sets position of other entity relative to this + x, y, and z
