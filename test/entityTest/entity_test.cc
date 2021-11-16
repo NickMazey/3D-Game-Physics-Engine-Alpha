@@ -1,11 +1,11 @@
-#define _USE_MATH_DEFINES
 #include "gtest/gtest.h"
 #include "math.h"
 #include "entity.h"
 
 
 float degreesToRadians(float degrees){
-    return (degrees * M_PI) / 180.0;
+    float PI = 3.14159265;
+    return (degrees *PI) / 180.0;
 }
 
 std::string printInfo(const logic::Entity toPrint){
