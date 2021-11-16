@@ -1,6 +1,11 @@
 #include "gtest/gtest.h"
 #include "entity.h"
 
+float degreesToRadians(float degrees){
+    float PI = 3.14159265;
+    return (degrees * PI) / 180;
+}
+
 std::string printInfo(const logic::Entity toPrint){
     std::string toReturn = "ID: ";
     toReturn.append(std::to_string(toPrint.getId()));
@@ -16,6 +21,10 @@ std::string printInfo(const logic::Entity toPrint){
     toReturn.append(std::to_string(toPrint.getHeight()));
     toReturn.append(" Depth: ");
     toReturn.append(std::to_string(toPrint.getDepth()));
+    toReturn.append(" LookAngX: ");
+    toReturn.append(std::to_string(toPrint.getLookAngX()));
+    toReturn.append(" LookAngY: ");
+    toReturn.append(std::to_string(toPrint.getLookAngY()));
     return toReturn;
 }
 
@@ -353,3 +362,37 @@ TEST(EntityTest,Collides_After_Move_Z_Neg){
     a.doMove(0,0,-1);
     EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
+
+//Look Tests
+TEST(EntityTest, No_Look){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(0,0);
+    EXPECT_TRUE(a.getLookAngX() == 0.0 && a.getLookAngY() == 0.0) << "Entity shouldn't have changed where it's looking. \n Entity: " << printInfo(a);
+}
+
+TEST(EntityTest, Look_X_Positive){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(45),0);
+    EXPECT_TRUE(a.getLookAngX() == degreesToRadians(45) && a.getLookAngY() == 0.0) << "Entity should be looking at " << degreesToRadians(45) <<" radians on X. \n Entity: " << printInfo(a);
+}
+
+TEST(EntityTest, Look_X_Negative){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(-45),0);
+    EXPECT_TRUE(a.getLookAngX() == degreesToRadians(-45) && a.getLookAngY() == 0.0) << "Entity should be looking at " << degreesToRadians(-45) <<" radians on X. \n Entity: " << printInfo(a);
+}
+
+TEST(EntityTest, Look_Y_Positive){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(0,degreesToRadians(45));
+    EXPECT_TRUE(a.getLookAngX() == 0.0 && a.getLookAngY() == degreesToRadians(45)) << "Entity should be looking at " << degreesToRadians(45) <<" radians on Y. \n Entity: " << printInfo(a);
+}
+TEST(EntityTest, Look_Y_Negative){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(0,degreesToRadians(-45));
+    EXPECT_TRUE(a.getLookAngX() == 0.0 && a.getLookAngY() == degreesToRadians(-45)) << "Entity should be looking at " << degreesToRadians(-45) <<" radians on Y. \n Entity: " << printInfo(a);
+}
+
+
+
+
