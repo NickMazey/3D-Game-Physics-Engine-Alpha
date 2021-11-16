@@ -73,10 +73,10 @@ class Entity{
         int getDepth() const{
             return depth;
         }
-        int getLookAngX() const{
+        float getLookAngX() const{
             return lookAngX;
         }
-        int getLookAngY() const{
+        float getLookAngY() const{
             return lookAngY;
         }
         bool isSolid() const{
