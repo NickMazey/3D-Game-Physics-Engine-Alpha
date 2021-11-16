@@ -29,14 +29,14 @@ class Entity{
         void doMoveAbsolute(int x, int y, int z);
 
         //sets the look vector angles
-        void setLook(float x,float y);
+        void setLook(double x,double y);
 
 
         //Applies look
         void doLook();
 
         //updates the entity's look angles by x and y
-        void doLook(float x,float y);
+        void doLook(double x,double y);
 
 
         void setPos(int x, int y, int z);
@@ -76,10 +76,10 @@ class Entity{
         int getDepth() const{
             return depth;
         }
-        float getLookAngX() const{
+        double getLookAngX() const{
             return lookAngX;
         }
-        float getLookAngY() const{
+        double getLookAngY() const{
             return lookAngY;
         }
         bool isSolid() const{
@@ -111,10 +111,10 @@ class Entity{
         float friction;
 
         //Rendering
-        float lookAngX;
-        float lookAngY;
+        double lookAngX;
+        double lookAngY;
         int fov;
-        float lookVector [2] = {0.0}; // Radians
+        double lookVector [2] = {0.0}; // Radians
 
 
 };

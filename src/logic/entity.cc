@@ -38,9 +38,9 @@ void Entity::setMove(int x, int y, int z){
 
 //Applies movement
 void Entity::doMove(){
-            this->x += (cos(lookAngX) * (float)coordVector[0] + sin(lookAngX) * (float)coordVector[2]);
+            this->x += (cos(lookAngX) * (double)coordVector[0] + sin(lookAngX) * (double)coordVector[2]);
             this->y += coordVector[1];
-            this->z += (cos(lookAngX) * (float)coordVector[2] + sin(lookAngX) * (float)coordVector[0]);
+            this->z += (cos(lookAngX) * (double)coordVector[2] + sin(lookAngX) * (double)coordVector[0]);
 }
 
 //updates the entity's x,y, and z co-ordinates by x,y, and z
@@ -57,7 +57,7 @@ void Entity::doMoveAbsolute(int x,int y,int z){
 }
 
 //sets the look vector angles
-void Entity::setLook(float x,float y){
+void Entity::setLook(double x,double y){
             this->lookVector[0] = x;
             this->lookVector[1] = y;
 }
@@ -70,7 +70,7 @@ void Entity::doLook(){
 }
 
 //updates the entity's look angles by x and y
-void Entity::doLook(float x,float y){
+void Entity::doLook(double x,double y){
             this->setLook(x,y);
             doLook();
 }
