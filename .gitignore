@@ -34,6 +34,7 @@
 #IDE Stuff
 */.vscode/
 *.code-workspace
+.vscode/*
 
 #CMake Stuff
 
