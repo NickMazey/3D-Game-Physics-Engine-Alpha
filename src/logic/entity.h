@@ -50,6 +50,9 @@ class Entity{
         //Adds to ghosts
         void addGhost(const Entity * other);
 
+        //Removes from ghosts
+        void removeGhost(const Entity * other);
+
 
         //whether or not this entity is colliding with the other (atm uses bounding box)
         bool isColliding(Entity other);

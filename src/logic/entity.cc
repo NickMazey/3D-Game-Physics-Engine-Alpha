@@ -99,6 +99,13 @@ void Entity::addGhost(const Entity * other){
     this->ghosts.insert(other);
 }
 
+//Removes a ghost from ghosts
+void Entity::removeGhost(const Entity * other){
+    if(inGhosts(other)){
+        this->ghosts.erase(other);
+    }
+}
+
 
 //whether or not this entity is colliding with the other (atm uses bounding box)
 bool Entity::isColliding(Entity other){
