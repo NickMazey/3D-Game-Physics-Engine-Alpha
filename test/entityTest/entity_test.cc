@@ -30,7 +30,7 @@ std::string printInfo(const logic::Entity toPrint){
     return toReturn;
 }
 
-
+ 
 
 //Consistency Tests
 TEST(EntityTest,Platform_Consistency){
@@ -193,12 +193,12 @@ TEST(EntityTest, Multi_Entity_Movement){
 //Self Collision Tests
 TEST(EntityTest,Collides_Self){
     logic::Entity a (0,0,0,100,100,100);
-    EXPECT_FALSE(a.isColliding(a)) << "The Entity collides with itself. \n Entity:" << printInfo(a);
+    EXPECT_FALSE(a.isColliding(&a)) << "The Entity collides with itself. \n Entity:" << printInfo(a);
 }
 
 TEST(EntityTest,Would_Collide_Self){
     logic::Entity a (0,0,0,100,100,100);
-    EXPECT_FALSE(a.wouldCollide(a,0,0,0)) << "The Entity would collide with itself after moving. \n Entity:" << printInfo(a);
+    EXPECT_FALSE(a.wouldCollide(&a,0,0,0)) << "The Entity would collide with itself after moving. \n Entity:" << printInfo(a);
 }
 
 
@@ -207,80 +207,112 @@ TEST(EntityTest,Would_Collide_Self){
 TEST(EntityTest,Collides_Other){
     logic::Entity a (0,0,0,100,100,100);
     logic::Entity b (0,0,0,100,100,100);
-    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
-    EXPECT_EQ(a.isColliding(b),b.isColliding(a)) << "Collisions aren't symmetric. \n Entity a isColliding:" << a.isColliding(b) << "\n Entity b isColliding:" << b.isColliding(a);
+    EXPECT_TRUE(a.isColliding(&b)) << "Entities aren't colliding. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+    EXPECT_EQ(a.isColliding(&b),b.isColliding(&a)) << "Collisions aren't symmetric. \n Entity a isColliding:" << a.isColliding(&b) << "\n Entity b isColliding:" << b.isColliding(&a);
 }
 
 TEST(EntityTest,Collides_Other_Positive_X){
     logic::Entity a (0,0,0,50,50,50);
     logic::Entity b (50,50,50,50,50,50);
-    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the positive X axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+    EXPECT_TRUE(a.isColliding(&b)) << "Entities aren't colliding on the positive X axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
 }
 
 TEST(EntityTest,Collides_Other_Negative_X){
     logic::Entity a (0,0,0,50,50,50);
     logic::Entity b (-50,50,50,50,50,50);
-    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the negative X axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+    EXPECT_TRUE(a.isColliding(&b)) << "Entities aren't colliding on the negative X axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
 }
 
 TEST(EntityTest,Collides_Other_Positive_Y){
     logic::Entity a (0,0,0,50,50,50);
     logic::Entity b (50,50,50,50,50,50);
-    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the positive Y axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+    EXPECT_TRUE(a.isColliding(&b)) << "Entities aren't colliding on the positive Y axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
 }
 
 TEST(EntityTest,Collides_Other_Negative_Y){
     logic::Entity a (0,0,0,50,50,50);
     logic::Entity b (50,-50,50,50,50,50);
-    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the negative Y axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+    EXPECT_TRUE(a.isColliding(&b)) << "Entities aren't colliding on the negative Y axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
 }
 
 TEST(EntityTest,Collides_Other_Positive_Z){
     logic::Entity a (0,0,0,50,50,50);
     logic::Entity b (50,50,50,50,50,50);
-    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the positive Z axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+    EXPECT_TRUE(a.isColliding(&b)) << "Entities aren't colliding on the positive Z axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
 }
 
 TEST(EntityTest,Collides_Other_Negative_Z){
     logic::Entity a (0,0,0,50,50,50);
     logic::Entity b (50,50,-50,50,50,50);
-    EXPECT_TRUE(a.isColliding(b)) << "Entities aren't colliding on the negative Z axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+    EXPECT_TRUE(a.isColliding(&b)) << "Entities aren't colliding on the negative Z axis. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
 }
 
 TEST(EntityTest,Not_Colliding_Other_Positive_X){
     logic::Entity a (0,0,0,50,50,50);
     logic::Entity b (51,50,50,50,50,50);
-    EXPECT_FALSE(a.isColliding(b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_FALSE(a.isColliding(&b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest,Not_Colliding_Other_Negative_X){
     logic::Entity a (0,0,0,50,50,50);
     logic::Entity b (-51,50,50,50,50,50);
-    EXPECT_FALSE(a.isColliding(b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_FALSE(a.isColliding(&b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest,Not_Colliding_Other_Positive_Y){
     logic::Entity a (0,0,0,50,50,50);
     logic::Entity b (50,51,50,50,50,50);
-    EXPECT_FALSE(a.isColliding(b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_FALSE(a.isColliding(&b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest,Not_Colliding_Other_Negative_Y){
     logic::Entity a (0,0,0,50,50,50);
     logic::Entity b (50,-51,50,50,50,50);
-    EXPECT_FALSE(a.isColliding(b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_FALSE(a.isColliding(&b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest,Not_Colliding_Other_Positive_Z){
     logic::Entity a (0,0,0,50,50,50);
     logic::Entity b (50,50,51,50,50,50);
-    EXPECT_FALSE(a.isColliding(b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_FALSE(a.isColliding(&b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest,Not_Colliding_Other_Negative_Z){
     logic::Entity a (0,0,0,50,50,50);
     logic::Entity b (50,50,-51,50,50,50);
-    EXPECT_FALSE(a.isColliding(b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_FALSE(a.isColliding(&b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+
+
+//Ghost Tests
+TEST(EntityTest,Not_In_Ghosts_Test){
+    logic::Entity a (0,0,0,100,100,100);
+    logic::Entity b (0,0,0,100,100,100);
+    EXPECT_TRUE(!a.inGhosts(&b)) << "Entity b is counted as in the ghosts of a.";
+}
+
+TEST(EntityTest,In_Ghosts_Test){
+    logic::Entity a (0,0,0,100,100,100);
+    logic::Entity b (0,0,0,100,100,100);
+    a.addGhost(&b);
+    EXPECT_TRUE(a.inGhosts(&b)) << "Entity b is not counted as in the ghosts of a.";
+}
+
+TEST(EntityTest,Remove_Ghosts_Test){
+    logic::Entity a (0,0,0,100,100,100);
+    logic::Entity b (0,0,0,100,100,100);
+    a.addGhost(&b);
+    a.removeGhost(&b);
+    EXPECT_TRUE(!a.inGhosts(&b)) << "Entity b is not removed from the ghosts of a.";
+}
+
+TEST(EntityTest,Ghost_Collision_Test){
+    logic::Entity a (0,0,0,100,100,100);
+    logic::Entity b (0,0,0,100,100,100);
+    a.addGhost(&b);
+    EXPECT_TRUE(a.inGhosts(&b) && !a.isColliding(&b)) << "B in ghosts of A : " << a.inGhosts(&b) << " \nA isn't colliding with B: " << !a.isColliding(&b);
+
 }
 
 
@@ -289,56 +321,56 @@ TEST(EntityTest,Not_Colliding_Other_Negative_Z){
 TEST(EntityTest, Would_Collide_Other_Moves_Entity){
     logic::Entity a (0,0,0,100,100,100);
     logic::Entity b (0,0,0,100,100,100);
-    a.wouldCollide(b,1,1,1);
+    a.wouldCollide(&b,1,1,1);
     EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == 0) << "wouldCollide also moves Entity. \n Entity:" << printInfo(a);
 }
 
 TEST(EntityTest, Would_Collide_No_Move_Pos){
     logic::Entity a (0,0,0,100,100,100);
     logic::Entity b (100,100,100,100,100,100);
-    EXPECT_TRUE(a.wouldCollide(b,0,0,0)) << "These entities should be colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.wouldCollide(&b,0,0,0)) << "These entities should be colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest, Would_Collide_No_Move_Neg){
     logic::Entity a (0,0,0,100,100,100);
     logic::Entity b (-100,-100,-100,100,100,100);
-    EXPECT_TRUE(a.wouldCollide(b,0,0,0)) << "These entities should be colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.wouldCollide(&b,0,0,0)) << "These entities should be colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest, Would_Collide_After_Move_X_Pos){
     logic::Entity a (-1,0,0,100,100,100);
     logic::Entity b (100,100,100,100,100,100);
-    EXPECT_TRUE(a.wouldCollide(b,1,0,0)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.wouldCollide(&b,1,0,0)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest, Would_Collide_After_Move_X_Neg){
     logic::Entity a (1,0,0,100,100,100);
     logic::Entity b (-100,-100,-100,100,100,100);
-    EXPECT_TRUE(a.wouldCollide(b,-1,0,0)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.wouldCollide(&b,-1,0,0)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest, Would_Collide_After_Move_Y_Pos){
     logic::Entity a (0,-1,0,100,100,100);
     logic::Entity b (100,100,100,100,100,100);
-    EXPECT_TRUE(a.wouldCollide(b,0,1,0)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.wouldCollide(&b,0,1,0)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest, Would_Collide_After_Move_Y_Neg){
     logic::Entity a (0,1,0,100,100,100);
     logic::Entity b (-100,-100,-100,100,100,100);
-    EXPECT_TRUE(a.wouldCollide(b,0,-1,0)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.wouldCollide(&b,0,-1,0)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest, Would_Collide_After_Move_Z_Pos){
     logic::Entity a (0,0,-1,100,100,100);
     logic::Entity b (100,100,100,100,100,100);
-    EXPECT_TRUE(a.wouldCollide(b,0,0,1)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.wouldCollide(&b,0,0,1)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest, Would_Collide_After_Move_Z_Neg){
     logic::Entity a (0,0,1,100,100,100);
     logic::Entity b (-100,-100,-100,100,100,100);
-    EXPECT_TRUE(a.wouldCollide(b,0,0,-1)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.wouldCollide(&b,0,0,-1)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 
@@ -348,42 +380,42 @@ TEST(EntityTest,Collides_After_Move_X_Pos){
     logic::Entity a (-1,0,0,100,100,100);
     logic::Entity b (100,100,100,100,100,100);
     a.doMove(1,0,0);
-    EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.isColliding(&b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest,Collides_After_Move_X_Neg){
     logic::Entity a (1,0,0,100,100,100);
     logic::Entity b (-100,-100,-100,100,100,100);
     a.doMove(-1,0,0);
-    EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.isColliding(&b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest,Collides_After_Move_Y_Pos){
     logic::Entity a (0,-1,0,100,100,100);
     logic::Entity b (100,100,100,100,100,100);
     a.doMove(0,1,0);
-    EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.isColliding(&b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest,Collides_After_Move_Y_Neg){
     logic::Entity a (0,1,0,100,100,100);
     logic::Entity b (-100,-100,-100,100,100,100);
     a.doMove(0,-1,0);
-    EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.isColliding(&b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest,Collides_After_Move_Z_Pos){
     logic::Entity a (0,0,-1,100,100,100);
     logic::Entity b (100,100,100,100,100,100);
     a.doMove(0,0,1);
-    EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.isColliding(&b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 TEST(EntityTest,Collides_After_Move_Z_Neg){
     logic::Entity a (0,0,1,100,100,100);
     logic::Entity b (-100,-100,-100,100,100,100);
     a.doMove(0,0,-1);
-    EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+    EXPECT_TRUE(a.isColliding(&b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 
