@@ -138,10 +138,11 @@ bool Entity::inChildren(Entity * other){
             return children.count(other);
 }
 
+
 //Adds a child to children
 void Entity::addChild(Entity * other, int offX, int offY, int offZ){
-    int offsets[3] = {offX, offY, offZ};
-    //this->children.emplace((other,offsets)); Broken
+    std::tuple offsets = std::make_tuple(offX,offY,offZ);
+    this->children.insert(ChildPair(other,offsets)); 
     other->addDependent(this);
 }
 

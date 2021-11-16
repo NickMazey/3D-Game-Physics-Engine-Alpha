@@ -1,5 +1,6 @@
 #include <set>
 #include <map>
+#include <tuple>
 #ifndef GAME_ENGINE_LOGIC_ENTIY_H
 #define GAME_ENGINE_LOGIC_ENTIY_H
 namespace logic{
@@ -7,6 +8,11 @@ class Entity{
     public:
         //How many entites have been initialised
         static int entityCount;
+
+        //Defining the map
+        typedef std::map<Entity *, std::tuple<int,int,int>> ChildMap;
+
+        typedef std::pair<Entity *, std::tuple<int,int,int>> ChildPair;
 
         bool operator==(const Entity &other) const;
         bool operator!=(const Entity&other) const;
@@ -124,7 +130,8 @@ class Entity{
         int y;
         int z;
         int coordVector [3] = {0};
-        std::map<Entity *, int[3]> children;
+        ChildMap children;
+
 
         //Collision
         int width;
