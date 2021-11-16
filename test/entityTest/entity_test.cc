@@ -403,56 +403,122 @@ TEST(EntityTest,Movement_Rotated_45_Pos_X){
     logic::Entity a (0,0,0,100,100,100);
     a.doLook(degreesToRadians(45),0);
     a.doMove(10,0,0);
-    EXPECT_TRUE(a.getX() == 7 && a.getY() == 0 && a.getZ() == 7) << "Entity didn't move properly with angle. \n Entity a:" << printInfo(a);
+    EXPECT_TRUE(a.getX() == 7 && a.getY() == 0 && a.getZ() == 7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
 }
 
 TEST(EntityTest,Movement_Rotated_45_Pos_Z){
     logic::Entity a (0,0,0,100,100,100);
     a.doLook(degreesToRadians(45),0);
     a.doMove(0,0,10);
-    EXPECT_TRUE(a.getX() == 7 && a.getY() == 0 && a.getZ() == 7) << "Entity didn't move properly with angle. \n Entity a:" << printInfo(a);
+    EXPECT_TRUE(a.getX() == 7 && a.getY() == 0 && a.getZ() == 7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
 }
 
 TEST(EntityTest,Movement_Rotated_90_Pos_X){
     logic::Entity a (0,0,0,100,100,100);
     a.doLook(degreesToRadians(90),0);
     a.doMove(10,0,0);
-    EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == 10) << "Entity didn't move properly with angle. \n Entity a:" << printInfo(a);
+    EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == 10) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
 }
 
 TEST(EntityTest,Movement_Rotated_90_Pos_Z){
     logic::Entity a (0,0,0,100,100,100);
     a.doLook(degreesToRadians(90),0);
     a.doMove(10,0,0);
-    EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == 10) << "Entity didn't move properly with angle. \n Entity a:" << printInfo(a);
+    EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == 10) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
 }
 
 TEST(EntityTest,Movement_Rotated_135_Pos_X){
     logic::Entity a (0,0,0,100,100,100);
     a.doLook(degreesToRadians(135),0);
     a.doMove(10,0,0);
-    EXPECT_TRUE(a.getX() == -7 && a.getY() == 0 && a.getZ() == 7) << "Entity didn't move properly with angle. \n Entity a:" << printInfo(a);
+    EXPECT_TRUE(a.getX() == -7 && a.getY() == 0 && a.getZ() == 7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
 }
 
 TEST(EntityTest,Movement_Rotated_135_Pos_Z){
     logic::Entity a (0,0,0,100,100,100);
     a.doLook(degreesToRadians(135),0);
     a.doMove(0,0,10);
-    EXPECT_TRUE(a.getX() == 7 && a.getY() == 0 && a.getZ() == -7) << "Entity didn't move properly with angle. \n Entity a:" << printInfo(a);
+    EXPECT_TRUE(a.getX() == 7 && a.getY() == 0 && a.getZ() == -7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
 }
 
 TEST(EntityTest,Movement_Rotated_180_Pos_X){
     logic::Entity a (0,0,0,100,100,100);
     a.doLook(degreesToRadians(180),0);
     a.doMove(10,0,0);
-    EXPECT_TRUE(a.getX() == -10 && a.getY() == 0 && a.getZ() == 0) << "Entity didn't move properly with angle. \n Entity a:" << printInfo(a);
+    EXPECT_TRUE(a.getX() == -10 && a.getY() == 0 && a.getZ() == 0) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
 }
 
 TEST(EntityTest,Movement_Rotated_180_Pos_Z){
     logic::Entity a (0,0,0,100,100,100);
     a.doLook(degreesToRadians(180),0);
     a.doMove(0,0,10);
-    EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == -10) << "Entity didn't move properly with angle. \n Entity a:" << printInfo(a);
+    EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == -10) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
+}
+
+TEST(EntityTest,Movement_Rotated_45_Neg_X){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(-45),0);
+    a.doMove(10,0,0);
+    EXPECT_TRUE(a.getX() == 7 && a.getY() == 0 && a.getZ() == -7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
+}
+
+TEST(EntityTest,Movement_Rotated_45_Neg_Z){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(-45),0);
+    a.doMove(0,0,10);
+    EXPECT_TRUE(a.getX() == -7 && a.getY() == 0 && a.getZ() == 7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
+}
+
+TEST(EntityTest,Movement_Rotated_90_Neg_X){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(-90),0);
+    a.doMove(10,0,0);
+    EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == -10) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
+}
+
+TEST(EntityTest,Movement_Rotated_90_Neg_Z){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(-90),0);
+    a.doMove(10,0,0);
+    EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == -10) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
+}
+
+TEST(EntityTest,Movement_Rotated_135_Neg_X){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(-135),0);
+    a.doMove(10,0,0);
+    EXPECT_TRUE(a.getX() == -7 && a.getY() == 0 && a.getZ() == -7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
+}
+
+TEST(EntityTest,Movement_Rotated_135_Neg_Z){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(-135),0);
+    a.doMove(0,0,10);
+    EXPECT_TRUE(a.getX() == -7 && a.getY() == 0 && a.getZ() == -7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
+}
+
+TEST(EntityTest,Movement_Rotated_180_Neg_X){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(-180),0);
+    a.doMove(10,0,0);
+    EXPECT_TRUE(a.getX() == -10 && a.getY() == 0 && a.getZ() == 0) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
+}
+
+TEST(EntityTest,Movement_Rotated_180_Neg_Z){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(-180),0);
+    a.doMove(0,0,10);
+    EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == -10) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
+}
+
+TEST(EntityTest,Movement_Rotated_Over_360_Equal){
+    logic::Entity a (0,0,0,100,100,100);
+    logic::Entity b (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(0),0);
+    b.doLook(degreesToRadians(360),0);
+    a.doMove(10,0,0);
+    b.doMove(10,0,0);
+    EXPECT_TRUE(a.getX() == 10 && a.getY() == 0 && a.getZ() == 0 && b.getX() == a.getX() && b.getY() == a.getY() && b.getZ() == a.getZ()) << "Rotation over 360 degrees doesn't work properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
 
