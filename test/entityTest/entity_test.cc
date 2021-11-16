@@ -3,8 +3,8 @@
 #include "entity.h"
 
 
-float degreesToRadians(float degrees){
-    float PI = 3.14159265;
+double degreesToRadians(double degrees){
+    double PI = 3.14159265;
     return (degrees *PI) / 180.0;
 }
 
@@ -33,9 +33,9 @@ std::string printInfo(const logic::Entity toPrint){
 
 //Consistency Tests
 TEST(EntityTest,Platform_Consistency){
-    float radians = degreesToRadians(90);
-    float sin90 = sin(radians);
-    float cos90 = cos(radians);
+    double radians = degreesToRadians(90);
+    double sin90 = sin(radians);
+    double cos90 = cos(radians);
     EXPECT_TRUE((int) sin90 == 1 && (int)cos90 == 0) << " Sin 90 actually gives: " << sin90 << " \n Cos 90 actually gives: " << cos90;
 }
 
