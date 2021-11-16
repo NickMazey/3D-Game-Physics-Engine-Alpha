@@ -108,8 +108,8 @@ class Entity{
         float friction;
 
         //Rendering
-        int lookAngX;
-        int lookAngY;
+        float lookAngX;
+        float lookAngY;
         int fov;
         float lookVector [2] = {0.0}; // Radians
 

@@ -38,9 +38,9 @@ void Entity::setMove(int x, int y, int z){
 
 //Applies movement
 void Entity::doMove(){
-            this->x += cos(lookAngX) * coordVector[0] + sin(lookAngX) * coordVector[2];
+            this->x += (cos(lookAngX) * (float)coordVector[0] + sin(lookAngX) * (float)coordVector[2]);
             this->y += coordVector[1];
-            this->z += cos(lookAngX) * coordVector[2] + sin(lookAngX) * coordVector[0];
+            this->z += (cos(lookAngX) * (float)coordVector[2] + sin(lookAngX) * (float)coordVector[0]);
 }
 
 //updates the entity's x,y, and z co-ordinates by x,y, and z
