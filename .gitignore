@@ -36,6 +36,9 @@
 *.code-workspace
 .vscode/*
 
+#My Test Script
+build-and-test.bat
+
 #CMake Stuff
 
 /project_build/
