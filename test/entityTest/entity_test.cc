@@ -293,10 +293,10 @@ TEST(EntityTest,Not_In_Ghosts){
 }
 
 TEST(EntityTest,In_Ghosts){
-    logic::Entity a (0,0,0,100,100,100);
-    logic::Entity b (0,0,0,100,100,100);
-    a.addGhost(&b);
-    EXPECT_TRUE(a.inGhosts(&b)) << "Entity b is not counted as in the ghosts of a.";
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addGhost(b);
+    EXPECT_TRUE(a->inGhosts(b)) << "Entity b is not counted as in the ghosts of a.";
 }
 
 TEST(EntityTest,Remove_Ghosts){
