@@ -108,10 +108,10 @@ void Entity::setPos(int x, int y, int z){
 }
 
 //sets position of entity relative to other entity + x,y, and z
-void Entity::setPosRelativeTo(Entity other,int x,int y,int z){
-                this->x = x + other.getX();
-                this->y = y + other.getY();
-                this->z = z + other.getZ();
+void Entity::setPosRelativeTo(const Entity* other,int x,int y,int z){
+                this->x = x + other->getX();
+                this->y = y + other->getY();
+                this->z = z + other->getZ();
 }
 
 //Whether or not another entity is in the ghosts of this entity
