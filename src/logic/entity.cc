@@ -27,6 +27,23 @@ bool Entity::operator<(const Entity &other) const{
             return id < other.getId();
 }
 
+//Whether or not another entity is in the dependents of this entity
+bool Entity::inDependents(Entity * other){
+            return this->dependents.find(other) != dependents.end();
+}
+
+//Adds to dependents
+void Entity::addDependent(Entity * other){
+    this->dependents.insert(other);
+}
+
+//Removes from dependents
+void Entity::removeDependent(Entity * other){
+    if(inDependents(other)){
+        this->dependents.erase(other);
+    }
+}
+
         
 //sets the x y and z move vectors
 void Entity::setMove(int x, int y, int z){
@@ -95,15 +112,17 @@ bool Entity::inGhosts(const Entity * other){
 }
 
 //Adds a ghost to ghosts
-void Entity::addGhost(const Entity * other){
+void Entity::addGhost(Entity * other){
     this->ghosts.insert(other);
+    other->addDependent(this);
 }
 
 //Removes a ghost from ghosts
-void Entity::removeGhost(const Entity * other){
+void Entity::removeGhost(Entity * other){
     if(inGhosts(other)){
         this->ghosts.erase(other);
     }
+    other->removeDependent(this);
 }
 
 

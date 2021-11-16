@@ -9,9 +9,17 @@ class Entity{
 
         bool operator==(const Entity &other) const;
         bool operator!=(const Entity&other) const;
-
         //currently unfinished
         bool operator<(const Entity &other) const;
+
+        //Whether or not another entity is in the dependents of this entity
+        bool inDependents(Entity * other);
+
+        //Adds to dependents
+        void addDependent(Entity * other);
+
+        //Removes from dependents
+        void removeDependent(Entity * other);
 
         Entity(int x, int y, int z, int width, int height, int depth);
 
@@ -48,10 +56,10 @@ class Entity{
         bool inGhosts(const Entity * other);
 
         //Adds to ghosts
-        void addGhost(const Entity * other);
+        void addGhost(Entity * other);
 
         //Removes from ghosts
-        void removeGhost(const Entity * other);
+        void removeGhost(Entity * other);
 
 
         //whether or not this entity is colliding with the other (atm uses bounding box)
@@ -96,6 +104,7 @@ class Entity{
         void setSolid(bool solid);
     private:
         int id;
+        std::set<Entity *> dependents;
 
         //Movement
         int x;
