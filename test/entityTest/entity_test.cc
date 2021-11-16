@@ -261,5 +261,95 @@ TEST(EntityTest, Would_Collide_Other_Moves_Entity){
     EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == 0) << "wouldCollide also moves Entity. \n Entity:" << printInfo(a);
 }
 
+TEST(EntityTest, Would_Collide_No_Move_Pos){
+    logic::Entity a (0,0,0,100,100,100);
+    logic::Entity b (100,100,100,100,100,100);
+    EXPECT_TRUE(a.wouldCollide(b,0,0,0)) << "These entities should be colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+TEST(EntityTest, Would_Collide_No_Move_Neg){
+    logic::Entity a (0,0,0,100,100,100);
+    logic::Entity b (-100,-100,-100,100,100,100);
+    EXPECT_TRUE(a.wouldCollide(b,0,0,0)) << "These entities should be colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+TEST(EntityTest, Would_Collide_After_Move_X_Pos){
+    logic::Entity a (-1,0,0,100,100,100);
+    logic::Entity b (100,100,100,100,100,100);
+    EXPECT_TRUE(a.wouldCollide(b,1,0,0)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+TEST(EntityTest, Would_Collide_After_Move_X_Neg){
+    logic::Entity a (1,0,0,100,100,100);
+    logic::Entity b (-100,-100,-100,100,100,100);
+    EXPECT_TRUE(a.wouldCollide(b,-1,0,0)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+
+TEST(EntityTest, Would_Collide_After_Move_Y_Pos){
+    logic::Entity a (0,-1,0,100,100,100);
+    logic::Entity b (100,100,100,100,100,100);
+    EXPECT_TRUE(a.wouldCollide(b,0,1,0)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+TEST(EntityTest, Would_Collide_After_Move_Y_Neg){
+    logic::Entity a (0,1,0,100,100,100);
+    logic::Entity b (-100,-100,-100,100,100,100);
+    EXPECT_TRUE(a.wouldCollide(b,0,-1,0)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+TEST(EntityTest, Would_Collide_After_Move_Z_Pos){
+    logic::Entity a (0,0,-1,100,100,100);
+    logic::Entity b (100,100,100,100,100,100);
+    EXPECT_TRUE(a.wouldCollide(b,0,0,1)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+TEST(EntityTest, Would_Collide_After_Move_Z_Neg){
+    logic::Entity a (0,0,1,100,100,100);
+    logic::Entity b (-100,-100,-100,100,100,100);
+    EXPECT_TRUE(a.wouldCollide(b,0,0,-1)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
 
 //Movement-Collision Tests
+TEST(EntityTest,Collides_After_Move_X_Pos){
+    logic::Entity a (-1,0,0,100,100,100);
+    logic::Entity b (100,100,100,100,100,100);
+    a.doMove(1,0,0);
+    EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+TEST(EntityTest,Collides_After_Move_X_Neg){
+    logic::Entity a (1,0,0,100,100,100);
+    logic::Entity b (-100,-100,-100,100,100,100);
+    a.doMove(-1,0,0);
+    EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+TEST(EntityTest,Collides_After_Move_Y_Pos){
+    logic::Entity a (0,-1,0,100,100,100);
+    logic::Entity b (100,100,100,100,100,100);
+    a.doMove(0,1,0);
+    EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+TEST(EntityTest,Collides_After_Move_Y_Neg){
+    logic::Entity a (0,1,0,100,100,100);
+    logic::Entity b (-100,-100,-100,100,100,100);
+    a.doMove(0,-1,0);
+    EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+TEST(EntityTest,Collides_After_Move_Z_Pos){
+    logic::Entity a (0,0,-1,100,100,100);
+    logic::Entity b (100,100,100,100,100,100);
+    a.doMove(0,0,1);
+    EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+TEST(EntityTest,Collides_After_Move_Z_Neg){
+    logic::Entity a (0,0,1,100,100,100);
+    logic::Entity b (-100,-100,-100,100,100,100);
+    a.doMove(0,0,-1);
+    EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
