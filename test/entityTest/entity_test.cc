@@ -1,9 +1,11 @@
+#define _USE_MATH_DEFINES
 #include "gtest/gtest.h"
+#include "math.h"
 #include "entity.h"
 
+
 float degreesToRadians(float degrees){
-    float PI = 3.14159265;
-    return (degrees * PI) / 180;
+    return (degrees * M_PI) / 180.0;
 }
 
 std::string printInfo(const logic::Entity toPrint){
@@ -27,6 +29,7 @@ std::string printInfo(const logic::Entity toPrint){
     toReturn.append(std::to_string(toPrint.getLookAngY()));
     return toReturn;
 }
+
 
 //Equality Tests
 TEST(EntityTest,Equals_Self){
@@ -395,4 +398,33 @@ TEST(EntityTest, Look_Y_Negative){
 
 
 
+//Rotation Tests
+TEST(EntityTest,Movement_Rotated_45_Pos_X){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(45),0);
+    a.doMove(10,0,0);
+    EXPECT_TRUE(a.getX() == 7 && a.getY() == 0 && a.getZ() == 7) << "Entity didn't move properly with angle. \n Entity a:" << printInfo(a);
+}
+
+//Rotation Tests
+TEST(EntityTest,Movement_Rotated_45_Pos_Z){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(45),0);
+    a.doMove(0,0,10);
+    EXPECT_TRUE(a.getX() == 7 && a.getY() == 0 && a.getZ() == 7) << "Entity didn't move properly with angle. \n Entity a:" << printInfo(a);
+}
+
+TEST(EntityTest,Movement_Rotated_90_Pos_X){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(90),0);
+    a.doMove(10,0,0);
+    EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == 10) << "Entity didn't move properly with angle. \n Entity a:" << printInfo(a);
+}
+
+TEST(EntityTest,Movement_Rotated_90_Pos_Z){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doLook(degreesToRadians(90),0);
+    a.doMove(10,0,0);
+    EXPECT_TRUE(a.getX() == 0 && a.getY() == 0 && a.getZ() == 10) << "Entity didn't move properly with angle. \n Entity a:" << printInfo(a);
+}
 
