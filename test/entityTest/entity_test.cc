@@ -30,7 +30,7 @@ std::string printInfo(const logic::Entity toPrint){
     return toReturn;
 }
 
- 
+
 
 //Consistency Tests
 TEST(EntityTest,Platform_Consistency){
@@ -286,20 +286,20 @@ TEST(EntityTest,Not_Colliding_Other_Negative_Z){
 
 
 //Ghost Tests
-TEST(EntityTest,Not_In_Ghosts_Test){
+TEST(EntityTest,Not_In_Ghosts){
     logic::Entity a (0,0,0,100,100,100);
     logic::Entity b (0,0,0,100,100,100);
     EXPECT_TRUE(!a.inGhosts(&b)) << "Entity b is counted as in the ghosts of a.";
 }
 
-TEST(EntityTest,In_Ghosts_Test){
+TEST(EntityTest,In_Ghosts){
     logic::Entity a (0,0,0,100,100,100);
     logic::Entity b (0,0,0,100,100,100);
     a.addGhost(&b);
     EXPECT_TRUE(a.inGhosts(&b)) << "Entity b is not counted as in the ghosts of a.";
 }
 
-TEST(EntityTest,Remove_Ghosts_Test){
+TEST(EntityTest,Remove_Ghosts){
     logic::Entity a (0,0,0,100,100,100);
     logic::Entity b (0,0,0,100,100,100);
     a.addGhost(&b);
@@ -307,7 +307,7 @@ TEST(EntityTest,Remove_Ghosts_Test){
     EXPECT_TRUE(!a.inGhosts(&b)) << "Entity b is not removed from the ghosts of a.";
 }
 
-TEST(EntityTest,Ghost_Collision_Test){
+TEST(EntityTest,Ghost_Collision){
     logic::Entity a (0,0,0,100,100,100);
     logic::Entity b (0,0,0,100,100,100);
     a.addGhost(&b);
