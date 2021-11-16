@@ -20,7 +20,7 @@ Entity::~Entity(){
     for(Entity * dependent : this->dependents){
         dependent->removeDependent(this);
         dependent->removeGhost(this);
-        //dependent->removeChild(this); Unimplemented
+        dependent->removeChild(this);
     }
 }
 
@@ -129,6 +129,26 @@ void Entity::addGhost(Entity * other){
 void Entity::removeGhost(Entity * other){
     if(inGhosts(other)){
         this->ghosts.erase(other);
+    }
+    other->removeDependent(this);
+}
+
+//Whether or not another entity is in the children of this entity
+bool Entity::inChildren(Entity * other){
+            return children.count(other);
+}
+
+//Adds a child to children
+void Entity::addChild(Entity * other, int offX, int offY, int offZ){
+    int offsets[3] = {offX, offY, offZ};
+    //this->children.emplace((other,offsets)); Broken
+    other->addDependent(this);
+}
+
+//Removes a child from children
+void Entity::removeChild(Entity * other){
+    if(inChildren(other)){
+        this->children.erase(other);
     }
     other->removeDependent(this);
 }

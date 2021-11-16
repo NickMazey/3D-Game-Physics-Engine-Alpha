@@ -1,4 +1,5 @@
 #include <set>
+#include <map>
 #ifndef GAME_ENGINE_LOGIC_ENTIY_H
 #define GAME_ENGINE_LOGIC_ENTIY_H
 namespace logic{
@@ -65,6 +66,14 @@ class Entity{
         //Removes from ghosts
         void removeGhost(Entity * other);
 
+        //Whether or not another entity is in the children of this entity
+        bool inChildren(Entity * other);
+
+        //Adds to children
+        void addChild(Entity * other, int offX, int offY, int offZ);
+
+        //Removes from children
+        void removeChild(Entity * other);
 
         //whether or not this entity is colliding with the other (atm uses bounding box)
         bool isColliding(const Entity * other);
@@ -115,7 +124,7 @@ class Entity{
         int y;
         int z;
         int coordVector [3] = {0};
-        std::set<Entity *> children;
+        std::map<Entity *, int[3]> children;
 
         //Collision
         int width;
