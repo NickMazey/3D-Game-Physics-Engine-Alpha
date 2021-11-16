@@ -300,18 +300,18 @@ TEST(EntityTest,In_Ghosts){
 }
 
 TEST(EntityTest,Remove_Ghosts){
-    logic::Entity a (0,0,0,100,100,100);
-    logic::Entity b (0,0,0,100,100,100);
-    a.addGhost(&b);
-    a.removeGhost(&b);
-    EXPECT_TRUE(!a.inGhosts(&b)) << "Entity b is not removed from the ghosts of a.";
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addGhost(b);
+    a->removeGhost(b);
+    EXPECT_TRUE(!a->inGhosts(b)) << "Entity b is not removed from the ghosts of a.";
 }
 
 TEST(EntityTest,Ghost_Collision){
-    logic::Entity a (0,0,0,100,100,100);
-    logic::Entity b (0,0,0,100,100,100);
-    a.addGhost(&b);
-    EXPECT_TRUE(a.inGhosts(&b) && !a.isColliding(&b)) << "B in ghosts of A : " << a.inGhosts(&b) << " \nA isn't colliding with B: " << !a.isColliding(&b);
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addGhost(b);
+    EXPECT_TRUE(a->inGhosts(b) && !a->isColliding(b)) << "B in ghosts of A : " << a->inGhosts(b) << " \nA isn't colliding with B: " << !a->isColliding(b);
 
 }
 
