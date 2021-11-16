@@ -108,8 +108,8 @@ void Entity::removeGhost(const Entity * other){
 
 
 //whether or not this entity is colliding with the other (atm uses bounding box)
-bool Entity::isColliding(const Entity other){
-            if(!this->inGhosts(&other) && *this != other){
+bool Entity::isColliding(const Entity * other){
+            if(!this->inGhosts(other) && *this != *other){
             //Assumes that x,y, and z are located at the center of the entity
 
             //Variables for this
@@ -121,17 +121,18 @@ bool Entity::isColliding(const Entity other){
             zMin = z - (depth / 2);
             zMax = z + (depth / 2);
 
+            Entity otherConst = *other;
             //Variables for the other
             int otherXMin, otherXMax,otherYMin, otherYMax,otherZMin, otherZMax,otherWidth,otherHeight,otherDepth;
-            otherWidth = other.getWidth();
-            otherHeight = other.getHeight();
-            otherDepth = other.getDepth();
-            otherXMin = other.getX() - (otherWidth / 2);
-            otherXMax = other.getX() + (otherWidth / 2);
-            otherYMin = other.getY() - (otherHeight / 2);
-            otherYMax = other.getY() + (otherHeight / 2);
-            otherZMin = other.getZ() - (otherDepth / 2);
-            otherZMax = other.getZ() + (otherDepth / 2);
+            otherWidth = otherConst.getWidth();
+            otherHeight = otherConst.getHeight();
+            otherDepth = otherConst.getDepth();
+            otherXMin = otherConst.getX() - (otherWidth / 2);
+            otherXMax = otherConst.getX() + (otherWidth / 2);
+            otherYMin = otherConst.getY() - (otherHeight / 2);
+            otherYMax = otherConst.getY() + (otherHeight / 2);
+            otherZMin = otherConst.getZ() - (otherDepth / 2);
+            otherZMax = otherConst.getZ() + (otherDepth / 2);
 
             //This line starts somewhere before the max of the other object and ends somewhere after the min of the other object
             return (xMin <= otherXMax && xMax >= otherXMin) && //X axis
@@ -145,8 +146,8 @@ bool Entity::isColliding(const Entity other){
 }
 
 //whether or not this entity would collide with the other if it moved by x,y, and z
-bool Entity::wouldCollide(const Entity other, int x,int y,int z){
-            if(!this->inGhosts(&other) && *this != other){
+bool Entity::wouldCollide(const Entity * other, int x,int y,int z){
+            if(!this->inGhosts(other) && *this != *other){
                 Entity created(this->x,this->y,this->z,this->width,this->height,this->depth);
                 created.doMove(x,y,z);
                 return created.isColliding(other);
