@@ -108,7 +108,7 @@ void Entity::removeGhost(const Entity * other){
 
 
 //whether or not this entity is colliding with the other (atm uses bounding box)
-bool Entity::isColliding(Entity other){
+bool Entity::isColliding(const Entity other){
             if(!this->inGhosts(&other) && *this != other){
             //Assumes that x,y, and z are located at the center of the entity
 
@@ -145,7 +145,7 @@ bool Entity::isColliding(Entity other){
 }
 
 //whether or not this entity would collide with the other if it moved by x,y, and z
-bool Entity::wouldCollide(Entity other, int x,int y,int z){
+bool Entity::wouldCollide(const Entity other, int x,int y,int z){
             if(!this->inGhosts(&other) && *this != other){
                 Entity created(this->x,this->y,this->z,this->width,this->height,this->depth);
                 created.doMove(x,y,z);

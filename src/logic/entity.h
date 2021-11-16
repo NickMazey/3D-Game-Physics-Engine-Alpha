@@ -55,10 +55,10 @@ class Entity{
 
 
         //whether or not this entity is colliding with the other (atm uses bounding box)
-        bool isColliding(Entity other);
+        bool isColliding(const Entity other);
 
         //whether or not this entity would collide with the other if it moved by x,y, and z
-        bool wouldCollide(Entity other, int x,int y,int z);
+        bool wouldCollide(const Entity other, int x,int y,int z);
 
         //Getters
         int getId() const{
