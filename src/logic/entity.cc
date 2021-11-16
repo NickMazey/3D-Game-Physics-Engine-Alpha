@@ -90,8 +90,13 @@ void Entity::setPosRelativeTo(Entity other,int x,int y,int z){
 }
 
 //Whether or not another entity is in the ghosts of this entity
-bool Entity::inGhosts(Entity * other){
+bool Entity::inGhosts(const Entity * other){
             return this->ghosts.find(other) != ghosts.end();
+}
+
+//Adds a ghost to ghosts
+void Entity::addGhost(const Entity * other){
+    this->ghosts.insert(other);
 }
 
 
