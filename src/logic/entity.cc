@@ -123,6 +123,11 @@ void Entity::setPosRelativeTo(const Entity* other,int x,int y,int z){
                 this->z = z + other->getZ();
 }
 
+//sets position of other entity relative to this + x, y, and z
+void Entity::setOtherPosRelativeTo(Entity* other, int x, int y, int z){
+    other->setPosRelativeTo(this, xHelper(x,z), y, zHelper(x,z));
+}
+
 //Whether or not another entity is in the ghosts of this entity
 bool Entity::inGhosts(const Entity * other){
             return this->ghosts.find(other) != ghosts.end();

@@ -69,6 +69,9 @@ class Entity{
         //sets position of entity relative to other entity + x,y, and z
         void setPosRelativeTo(const Entity* other,int x,int y,int z);
 
+        //sets position of other entity relative to this + x, y, and z
+        void setOtherPosRelativeTo(Entity* other, int x, int y, int z);
+
         //Whether or not another entity is in the ghosts of this entity
         bool inGhosts(const Entity * other);
 
