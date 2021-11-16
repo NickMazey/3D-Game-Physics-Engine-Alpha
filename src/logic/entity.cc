@@ -60,12 +60,21 @@ void Entity::setMove(int x, int y, int z){
             this->coordVector[2] = z;
 }
 
+//Applies x rotation
+int Entity::xHelper(const double x,const double z) const{
+    return (cos(lookAngX) * x + sin(lookAngX) * z);
+}
+
+//Applies z rotation
+int Entity::zHelper(const double x,const double z) const{
+    return xHelper(z,x);
+}
 
 //Applies movement
 void Entity::doMove(){
-            this->x += (cos(lookAngX) * (double)coordVector[0] + sin(lookAngX) * (double)coordVector[2]);
+            this->x += xHelper(coordVector[0],coordVector[2]);
             this->y += coordVector[1];
-            this->z += (cos(lookAngX) * (double)coordVector[2] + sin(lookAngX) * (double)coordVector[0]);
+            this->z += zHelper(coordVector[0],coordVector[2]);
 }
 
 //updates the entity's x,y, and z co-ordinates by x,y, and z
