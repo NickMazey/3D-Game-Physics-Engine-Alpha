@@ -31,6 +31,7 @@ std::string printInfo(const logic::Entity toPrint){
 }
 
 
+
 //Consistency Tests
 TEST(EntityTest,Platform_Consistency){
     double radians = degreesToRadians(90);
@@ -38,6 +39,8 @@ TEST(EntityTest,Platform_Consistency){
     double cos90 = cos(radians);
     EXPECT_TRUE((int) sin90 == 1 && (int)cos90 == 0) << " Sin 90 actually gives: " << sin90 << " \n Cos 90 actually gives: " << cos90;
 }
+
+
 
 //Equality Tests
 TEST(EntityTest,Equals_Self){
@@ -51,6 +54,8 @@ TEST(EntityTest,Equals_Other){
     EXPECT_FALSE(a == b) << "Different entites are equal. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
+
+
 //Inequality Tests
 TEST(EntityTest,Not_Equals_Self){
     logic::Entity a (0,0,0,0,0,0);
@@ -62,6 +67,7 @@ TEST(EntityTest,Not_Equals_Other){
     logic::Entity b (0,0,0,0,0,0);
     EXPECT_TRUE(a != b) << "Different entites are equal. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
+
 
 
 //ID Tests
@@ -83,6 +89,8 @@ TEST(EntityTest, Unique_Ids_3){
     logic::Entity b (0,0,0,0,0,0);
     EXPECT_TRUE(b.getId() == 1) << "ID only changes within scope \n Entity:" << printInfo(b);
 }
+
+
 
 //Entity Movement Tests
 TEST(EntityTest, Movement_X_Positive){
@@ -181,6 +189,7 @@ TEST(EntityTest, Multi_Entity_Movement){
 }
 
 
+
 //Self Collision Tests
 TEST(EntityTest,Collides_Self){
     logic::Entity a (0,0,0,100,100,100);
@@ -191,6 +200,7 @@ TEST(EntityTest,Would_Collide_Self){
     logic::Entity a (0,0,0,100,100,100);
     EXPECT_FALSE(a.wouldCollide(a,0,0,0)) << "The Entity would collide with itself after moving. \n Entity:" << printInfo(a);
 }
+
 
 
 //Other Entity Collision Tests
@@ -273,6 +283,8 @@ TEST(EntityTest,Not_Colliding_Other_Negative_Z){
     EXPECT_FALSE(a.isColliding(b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
+
+
 //Collision Prediction Tests
 TEST(EntityTest, Would_Collide_Other_Moves_Entity){
     logic::Entity a (0,0,0,100,100,100);
@@ -305,7 +317,6 @@ TEST(EntityTest, Would_Collide_After_Move_X_Neg){
     EXPECT_TRUE(a.wouldCollide(b,-1,0,0)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
-
 TEST(EntityTest, Would_Collide_After_Move_Y_Pos){
     logic::Entity a (0,-1,0,100,100,100);
     logic::Entity b (100,100,100,100,100,100);
@@ -329,6 +340,7 @@ TEST(EntityTest, Would_Collide_After_Move_Z_Neg){
     logic::Entity b (-100,-100,-100,100,100,100);
     EXPECT_TRUE(a.wouldCollide(b,0,0,-1)) << "Movement doesn't apply properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
+
 
 
 //Movement-Collision Tests
@@ -373,6 +385,8 @@ TEST(EntityTest,Collides_After_Move_Z_Neg){
     a.doMove(0,0,-1);
     EXPECT_TRUE(a.isColliding(b)) << "Entity didn't collide after movement. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
+
+
 
 //Look Tests
 TEST(EntityTest, No_Look){
