@@ -49,6 +49,13 @@ void Entity::doMove(int x,int y,int z){
             this->doMove();
 }
 
+//updates the entity's x,y, and z co-ordinates by x,y, and z without angle.
+void Entity::doMoveAbsolute(int x,int y,int z){
+            this->x += x;
+            this->y += y;
+            this->z += z;
+}
+
 //sets the look vector angles
 void Entity::setLook(float x,float y){
             this->lookVector[0] = x;

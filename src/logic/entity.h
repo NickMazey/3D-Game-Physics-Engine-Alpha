@@ -25,6 +25,9 @@ class Entity{
         //updates the entity's x,y, and z co-ordinates by x,y, and z
         void doMove(int x,int y,int z);
 
+        //updates the entity's x,y, and z co-ordinates by x,y, and z without angle.
+        void doMoveAbsolute(int x, int y, int z);
+
         //sets the look vector angles
         void setLook(float x,float y);
 
