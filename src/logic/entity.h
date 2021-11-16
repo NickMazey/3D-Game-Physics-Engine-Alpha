@@ -111,7 +111,7 @@ class Entity{
         int lookAngX;
         int lookAngY;
         int fov;
-        float lookVector [2] = {0}; // Radians
+        float lookVector [2] = {0.0}; // Radians
 
 
 };

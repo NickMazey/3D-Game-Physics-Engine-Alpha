@@ -11,8 +11,8 @@ Entity::Entity(int x, int y, int z, int width, int height, int depth){
             this->height = height;
             this->depth = depth;
             this->id = entityCount;
-            this->lookAngX = 0;
-            this->lookAngY = 0;
+            this->lookAngX = 0.0;
+            this->lookAngY = 0.0;
             entityCount++;
 }
 
