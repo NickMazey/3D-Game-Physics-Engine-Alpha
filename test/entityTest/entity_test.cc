@@ -190,6 +190,58 @@ TEST(EntityTest, Multi_Entity_Movement){
 
 
 
+//Entity Relative Placement Tests
+TEST(EntityTest, Position_Relative_No_Off){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(100,100,100,100,100,100);
+    a->setPosRelativeTo(b,0,0,0);
+    EXPECT_TRUE(b->getX() == 100 && b->getY() == 100 && b->getZ() == 100 && a->getX() == b->getX() && a->getY() == b->getY() && a->getZ() == b-> getZ()) << "Entity a wasn't moved to b's position. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Position_Relative_Pos_X_Off){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->setPosRelativeTo(b,10,0,0);
+    EXPECT_TRUE(a->getX() == b->getX() + 10 && a->getY() == 0 && a->getZ() == 0) << "Entity a wasn't moved to b's position + 10 (x). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Position_Relative_Neg_X_Off){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->setPosRelativeTo(b,-10,0,0);
+    EXPECT_TRUE(a->getX() == b->getX() - 10 && a->getY() == 0 && a->getZ() == 0) << "Entity a wasn't moved to b's position - 10 (x). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Position_Relative_Pos_Y_Off){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->setPosRelativeTo(b,0,10,0);
+    EXPECT_TRUE(a->getX() == 0 && a->getY() == b->getY() + 10 && a->getZ() == 0) << "Entity a wasn't moved to b's position + 10 (y). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Position_Relative_Neg_Y_Off){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->setPosRelativeTo(b,0,-10,0);
+    EXPECT_TRUE(a->getX() == 0 && a->getY() == b->getY() - 10 && a->getZ() == 0) << "Entity a wasn't moved to b's position - 10 (y). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Position_Relative_Pos_Z_Off){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->setPosRelativeTo(b,0,0,10);
+    EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == b->getZ() + 10) << "Entity a wasn't moved to b's position + 10 (z). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Position_Relative_Neg_Z_Off){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->setPosRelativeTo(b,0,0,-10);
+    EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == b->getZ() - 10) << "Entity a wasn't moved to b's position - 10 (z). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+
+
 //Self Collision Tests
 TEST(EntityTest,Collides_Self){
     logic::Entity a (0,0,0,100,100,100);
@@ -575,6 +627,47 @@ TEST(EntityTest,Movement_Rotated_Over_360_Equal){
     EXPECT_TRUE(a.getX() == 10 && a.getY() == 0 && a.getZ() == 0 && b.getX() == a.getX() && b.getY() == a.getY() && b.getZ() == a.getZ()) << "Rotation over 360 degrees doesn't work properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
+
+
+//Entity Relative Placement Rotation Tests
+TEST(EntityTest, Position_Relative_No_Rotate){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(100,100,100,100,100,100);
+    b->setOtherPosRelativeTo(a,10,10,10);
+    EXPECT_TRUE(a->getX() == b->getX() + 10 && a->getY() == b->getY() + 10 && a->getZ() == b->getZ() + 10) << "Entity a wasn't moved properly to b (+10x,+10y,+10z). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Position_Relative_45_Pos_X){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(100,100,100,100,100,100);
+    b->doLook(degreesToRadians(45),0);
+    b->setOtherPosRelativeTo(a,10,0,0);
+    EXPECT_TRUE(a->getX() == b->getX() + 7 && a->getY() == b->getY() && a->getZ() == b->getZ() + 7) << "Entity a wasn't moved properly to b with rotation (45 degrees). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Position_Relative_45_Neg_X){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(100,100,100,100,100,100);
+    b->doLook(degreesToRadians(-45),0);
+    b->setOtherPosRelativeTo(a,10,0,0);
+    EXPECT_TRUE(a->getX() == b->getX() + 7 && a->getY() == b->getY() && a->getZ() == b->getZ() - 7) << "Entity a wasn't moved properly to b with rotation (45 degrees). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Position_Relative_45_Pos_Z){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(100,100,100,100,100,100);
+    b->doLook(degreesToRadians(45),0);
+    b->setOtherPosRelativeTo(a,0,0,10);
+    EXPECT_TRUE(a->getX() == b->getX() + 7 && a->getY() == b->getY() && a->getZ() == b->getZ() + 7) << "Entity a wasn't moved properly to b with rotation (45 degrees). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Position_Relative_45_Neg_Z){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(100,100,100,100,100,100);
+    b->doLook(degreesToRadians(-45),0);
+    b->setOtherPosRelativeTo(a,0,0,10);
+    EXPECT_TRUE(a->getX() == b->getX() - 7 && a->getY() == b->getY() && a->getZ() == b->getZ() + 7) << "Entity a wasn't moved properly to b with rotation (45 degrees). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
 
 
 
