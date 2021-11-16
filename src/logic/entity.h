@@ -3,35 +3,6 @@
 #define GAME_ENGINE_LOGIC_ENTIY_H
 namespace logic{
 class Entity{
-    private:
-        int id;
-
-        //Movement
-        int x;
-        int y;
-        int z;
-        int coordVector [3] = {0};
-        std::set<Entity *> children;
-
-        //Collision
-        int width;
-        int height;
-        int depth;
-        std::set<Entity> ghosts;
-
-        //Physics
-        bool physics;
-        bool solid;
-        int gravity;
-        float friction;
-
-        //Rendering
-        int lookAngX;
-        int lookAngY;
-        int fov;
-        float lookVector [2] = {0}; // Radians
-
-
     public:
         //How many entites have been initialised
         static int entityCount;
@@ -114,6 +85,35 @@ class Entity{
 
         //Setters
         void setSolid(bool solid);
+    private:
+        int id;
+
+        //Movement
+        int x;
+        int y;
+        int z;
+        int coordVector [3] = {0};
+        std::set<Entity *> children;
+
+        //Collision
+        int width;
+        int height;
+        int depth;
+        std::set<Entity> ghosts;
+
+        //Physics
+        bool physics;
+        bool solid;
+        int gravity;
+        float friction;
+
+        //Rendering
+        int lookAngX;
+        int lookAngY;
+        int fov;
+        float lookVector [2] = {0}; // Radians
+
+
 };
 }
 #endif //GAME_ENGINE_LOGIC_ENTIY_H
