@@ -16,6 +16,14 @@ Entity::Entity(int x, int y, int z, int width, int height, int depth){
             entityCount++;
 }
 
+Entity::~Entity(){
+    for(Entity * dependent : this->dependents){
+        dependent->removeDependent(this);
+        dependent->removeGhost(this);
+        //dependent->removeChild(this); Unimplemented
+    }
+}
+
 bool Entity::operator==(const Entity &other) const{
             return id == other.getId();
 }

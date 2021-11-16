@@ -21,7 +21,11 @@ class Entity{
         //Removes from dependents
         void removeDependent(Entity * other);
 
+        //Constructor
         Entity(int x, int y, int z, int width, int height, int depth);
+
+        //Destructor
+        ~Entity();
 
         //sets the x y and z move vectors
         void setMove(int x, int y, int z);
