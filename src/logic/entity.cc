@@ -1,4 +1,4 @@
-#include "tgmath.h"
+#include "math.h"
 #include "entity.h"
 namespace logic{
 int Entity::entityCount = 0;
