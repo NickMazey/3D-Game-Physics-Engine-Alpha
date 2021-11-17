@@ -187,6 +187,7 @@ void Entity::updateChildren(){
                 int xOff,yOff,zOff;
                 std::tie(xOff,yOff,zOff) = offset;
                 setOtherPosRelativeTo(child,xOff,yOff,zOff);
+                child->setLook(lookAngX,lookAngY);
     }
 }
 
