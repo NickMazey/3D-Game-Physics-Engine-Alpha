@@ -741,5 +741,92 @@ TEST(EntityTest, Children_Rotation_Z_Neg){
     EXPECT_TRUE(b->getX() == a->getX() - 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't rotate properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
 
+TEST(EntityTest, Children_Move_X_Pos){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,10,0,0);
+    a->doMove(10,10,10);
+    EXPECT_TRUE(b->getX() == a->getX() + 10 && b->getZ() == a->getZ() && b->getY() == a->getY()) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Children_Move_X_Neg){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,-10,0,0);
+    a->doMove(10,10,10);
+    EXPECT_TRUE(b->getX() == a->getX() - 10 && b->getZ() == a->getZ() && b->getY() == a->getY()) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Children_Move_Y_Pos){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,10,0);
+    a->doMove(10,10,10);
+    EXPECT_TRUE(b->getX() == a->getX() && b->getZ() == a->getZ() && b->getY() == a->getY() + 10) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Children_Move_Y_Neg){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,-10,0);
+    a->doMove(10,10,10);
+    EXPECT_TRUE(b->getX() == a->getX() && b->getZ() == a->getZ() && b->getY() == a->getY() - 10) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Children_Move_Z_Pos){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,0,10);
+    a->doMove(10,10,10);
+    EXPECT_TRUE(b->getX() == a->getX() && b->getZ() == a->getZ() + 10 && b->getY() == a->getY()) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Children_Move_Z_Neg){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,0,-10);
+    a->doMove(10,10,10);
+    EXPECT_TRUE(b->getX() == a->getX() && b->getZ() == a->getZ() - 10 && b->getY() == a->getY()) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest,Children_Move_And_Rotate_X_Pos){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,10,0,0);
+    a->setLook(degreesToRadians(45),0);
+    a->doMove(10,10,10);
+    EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest,Children_Move_And_Rotate_X_Neg){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,10,0,0);
+    a->setLook(degreesToRadians(-45),0);
+    a->doMove(10,10,10);
+    EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() - 7) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest,Children_Move_And_Rotate_Z_Pos){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,0,10);
+    a->setLook(degreesToRadians(45),0);
+    a->doMove(10,10,10);
+    EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest,Children_Move_And_Rotate_Z_Neg){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,0,10);
+    a->setLook(degreesToRadians(-45),0);
+    a->doMove(10,10,10);
+    EXPECT_TRUE(b->getX() == a->getX() - 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+
+
+
 
 
