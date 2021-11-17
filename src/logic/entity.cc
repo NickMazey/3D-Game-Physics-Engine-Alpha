@@ -167,7 +167,7 @@ bool Entity::inChildren(Entity * other){
 //Adds a child to children
 void Entity::addChild(Entity * other, int offX, int offY, int offZ){
     if(!inChildren(other) && !other->inChildren(this)){
-        std::tuple offsets = std::make_tuple(offX,offY,offZ);
+        std::tuple<int,int,int> offsets = std::make_tuple(offX,offY,offZ);
         this->children.insert(ChildPair(other,offsets)); 
         other->addDependent(this);
         updateChildren();
