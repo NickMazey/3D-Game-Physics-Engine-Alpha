@@ -697,8 +697,15 @@ TEST(EntityTest, Children_Offset){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->addChild(b,10,10,10);
-    a->updateChildren();
     EXPECT_TRUE(b->getX() == a->getX() + 10 && b->getY() == a->getY() + 10 && b->getZ() == a->getZ() + 10) << "B wasn't moved to the correct offset (a + 10,10,10). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Children_Look_Ang){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,0,0);
+    a->doLook(degreesToRadians(45),degreesToRadians(45));
+    EXPECT_TRUE(a->getLookAngX() == b->getLookAngX() && a->getLookAngY() == b->getLookAngY()) << "B and A aren't looking the same direction. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
 
 TEST(EntityTest, Children_Rotation_X_Pos){
@@ -706,7 +713,6 @@ TEST(EntityTest, Children_Rotation_X_Pos){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->addChild(b,10,0,0);
     a->doLook(degreesToRadians(45),0);
-    a->updateChildren();
     EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't rotate properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
 
@@ -715,8 +721,25 @@ TEST(EntityTest, Children_Rotation_X_Neg){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->addChild(b,10,0,0);
     a->doLook(degreesToRadians(-45),0);
-    a->updateChildren();
     EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() - 7) << "B didn't rotate properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
+
+TEST(EntityTest, Children_Rotation_Z_Pos){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,0,10);
+    a->doLook(degreesToRadians(45),0);
+    EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't rotate properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Children_Rotation_Z_Neg){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,0,10);
+    a->doLook(degreesToRadians(-45),0);
+    a->updateChildren();
+    EXPECT_TRUE(b->getX() == a->getX() - 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't rotate properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
 
 
