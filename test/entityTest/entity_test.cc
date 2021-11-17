@@ -829,4 +829,31 @@ TEST(EntityTest,Children_Move_And_Rotate_Z_Neg){
 
 
 
+//Exception Tests
+TEST(EntityTest,Safe_Ghost_Deletion){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addGhost(b);
+    delete b;
+    EXPECT_FALSE(a->inGhosts(b)) << "Destructor doesn't safely remove from ghosts";
+}
+
+TEST(EntityTest,Safe_Child_Deletion){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,0,0);
+    delete b;
+    EXPECT_FALSE(a->inChildren(b)) << "Destructor doesn't safely remove from children";
+}
+
+TEST(EntityTest,Safe_Parent_Deletion){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,0,0);
+    delete a;
+    EXPECT_FALSE(b->inDependents(a)) << "Destructor doesn't safely remove parents from dependents";
+}
+
+
+
 
