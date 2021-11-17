@@ -671,4 +671,52 @@ TEST(EntityTest, Position_Relative_45_Neg_Z){
 
 
 
+//Child Entity Tests
+TEST(EntityTest, Not_In_Children){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    EXPECT_FALSE(a->inChildren(b)) << "B shouldn't be considered a child of A.";
+}
+
+TEST(EntityTest, In_Children){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,0,0);
+    EXPECT_TRUE(a->inChildren(b)) << "B should be considered a child of A.";
+}
+
+TEST(EntityTest, One_Way_Children){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,0,0);
+    b->addChild(a,0,0,0);
+    EXPECT_FALSE(b->inChildren(a)) << "A shouldn't be considered a child of B.";
+}
+
+TEST(EntityTest, Children_Offset){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,10,10,10);
+    a->updateChildren();
+    EXPECT_TRUE(b->getX() == a->getX() + 10 && b->getY() == a->getY() + 10 && b->getZ() == a->getZ() + 10) << "B wasn't moved to the correct offset (a + 10,10,10). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Children_Rotation_X_Pos){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,10,0,0);
+    a->doLook(degreesToRadians(45),0);
+    a->updateChildren();
+    EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't rotate properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Children_Rotation_X_Neg){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,10,0,0);
+    a->doLook(degreesToRadians(-45),0);
+    a->updateChildren();
+    EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() - 7) << "B didn't rotate properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
 
