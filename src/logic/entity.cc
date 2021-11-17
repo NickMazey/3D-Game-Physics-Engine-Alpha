@@ -102,6 +102,7 @@ void Entity::setLookVector(double x,double y){
 void Entity::setLook(double x, double y){
     this->lookAngX = x;
     this->lookAngY = y;
+    this->updateChildren();
 }
 
 
@@ -109,6 +110,7 @@ void Entity::setLook(double x, double y){
 void Entity::doLook(){
             this->lookAngX += lookVector[0];
             this->lookAngY += lookVector[1];
+            this->updateChildren();
 }
 
 //updates the entity's look angles by x and y
