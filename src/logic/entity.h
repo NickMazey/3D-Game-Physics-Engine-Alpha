@@ -54,7 +54,10 @@ class Entity{
         void doMoveAbsolute(int x, int y, int z);
 
         //sets the look vector angles
-        void setLook(double x,double y);
+        void setLookVector(double x,double y);
+
+        //sets where the entity is looking
+        void setLook(double x, double y);
 
 
         //Applies look

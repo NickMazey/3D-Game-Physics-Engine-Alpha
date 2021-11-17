@@ -93,9 +93,15 @@ void Entity::doMoveAbsolute(int x,int y,int z){
 }
 
 //sets the look vector angles
-void Entity::setLook(double x,double y){
+void Entity::setLookVector(double x,double y){
             this->lookVector[0] = x;
             this->lookVector[1] = y;
+}
+
+//sets where the entity is looking
+void Entity::setLook(double x, double y){
+    this->lookAngX = x;
+    this->lookAngY = y;
 }
 
 
@@ -107,7 +113,7 @@ void Entity::doLook(){
 
 //updates the entity's look angles by x and y
 void Entity::doLook(double x,double y){
-            this->setLook(x,y);
+            this->setLookVector(x,y);
             doLook();
 }
 
