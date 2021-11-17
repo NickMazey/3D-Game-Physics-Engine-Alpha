@@ -825,18 +825,34 @@ TEST(EntityTest,Children_Move_And_Rotate_Z_Neg){
     EXPECT_TRUE(b->getX() == a->getX() - 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
 
-
+TEST(EntityTest,Children_Chain_In){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* c = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,0,0,0);
+    b->addChild(c,0,0,0);
+    EXPECT_TRUE(a->inChildren(c)) << "In child doesn't chain.";
+}
 
 
 
 //Exception Tests
-TEST(EntityTest,Safe_Ghost_Deletion){
+TEST(EntityTest,Safe_Ghost_Forward_Deletion){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->addGhost(b);
     delete b;
     EXPECT_FALSE(a->inGhosts(b)) << "Destructor doesn't safely remove from ghosts";
 }
+
+TEST(EntityTest,Safe_Ghost_Backward_Deletion){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addGhost(b);
+    delete a;
+    EXPECT_FALSE(b->inDependents(a)) << "Destructor doesn't safely remove from ghosts";
+}
+
 
 TEST(EntityTest,Safe_Child_Deletion){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
