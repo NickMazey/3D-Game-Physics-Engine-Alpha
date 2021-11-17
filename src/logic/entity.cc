@@ -180,7 +180,7 @@ void Entity::updateChildren(){
                 Entity * child = iter->first;
                 int xOff,yOff,zOff;
                 std::tie(xOff,yOff,zOff) = offset;
-                child->setPosRelativeTo(this,xOff,yOff,zOff);
+                setOtherPosRelativeTo(child,xOff,yOff,zOff);
     }
 }
 
