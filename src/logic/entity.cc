@@ -148,6 +148,7 @@ bool Entity::inGhosts(const Entity * other){
 void Entity::addGhost(Entity * other){
     this->ghosts.insert(other);
     other->addDependent(this);
+    this->addDependent(other);
 }
 
 //Removes a ghost from ghosts
@@ -156,6 +157,7 @@ void Entity::removeGhost(Entity * other){
         this->ghosts.erase(other);
     }
     other->removeDependent(this);
+    this->removeDependent(other);
 }
 
 //Whether or not another entity is in the children of this entity
@@ -180,6 +182,7 @@ void Entity::addChild(Entity * other, int offX, int offY, int offZ){
         std::tuple<int,int,int> offsets = std::make_tuple(offX,offY,offZ);
         this->children.insert(ChildPair(other,offsets)); 
         other->addDependent(this);
+        this->addDependent(other);
         updateChildren();
     }
 }
@@ -190,6 +193,7 @@ void Entity::removeChild(Entity * other){
         this->children.erase(other);
     }
     other->removeDependent(this);
+    this->removeDependent(other);
 }
 
 //Updates children
