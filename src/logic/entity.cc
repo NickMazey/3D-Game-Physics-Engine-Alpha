@@ -170,6 +170,7 @@ void Entity::addChild(Entity * other, int offX, int offY, int offZ){
         std::tuple offsets = std::make_tuple(offX,offY,offZ);
         this->children.insert(ChildPair(other,offsets)); 
         other->addDependent(this);
+        updateChildren();
     }
 }
 
