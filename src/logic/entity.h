@@ -87,6 +87,9 @@ class Entity{
         //Whether or not another entity is in the children of this entity
         bool inChildren(Entity * other);
 
+        //Whether or not the entity is in this entity's children's children
+        bool inChildrenDeep(Entity * other);
+
         //Adds to children
         void addChild(Entity * other, int offX, int offY, int offZ);
 

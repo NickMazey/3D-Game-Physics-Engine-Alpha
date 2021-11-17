@@ -160,7 +160,17 @@ void Entity::removeGhost(Entity * other){
 
 //Whether or not another entity is in the children of this entity
 bool Entity::inChildren(Entity * other){
-            return children.count(other);
+            return children.count(other) || inChildrenDeep(other);
+}
+
+//Whether or not the entity is in this entity's children's children
+bool Entity::inChildrenDeep(Entity * other){
+    for(ChildMap::iterator iter = children.begin(); iter != children.end(); iter++){
+        if(iter->first->inChildren(other)){
+            return true;
+        }
+    }
+    return false;
 }
 
 
