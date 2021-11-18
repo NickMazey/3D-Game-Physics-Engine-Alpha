@@ -540,7 +540,7 @@ TEST(EntityTest,Movement_Rotated_135_Pos_X){
     logic::Entity a (0,0,0,100,100,100);
     a.doLook(logic::degreesToRadians(135),0);
     a.doMove(10,0,0);
-    EXPECT_TRUE(a.getX() == -7 && a.getY() == 0 && a.getZ() == 7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
+    EXPECT_TRUE(a.getX() == -7 && a.getY() == 0 && a.getZ() == -7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
 }
 
 TEST(EntityTest,Movement_Rotated_135_Pos_Z){
@@ -628,6 +628,14 @@ TEST(EntityTest,Movement_Rotated_Over_360_Equal){
     a.doMove(10,0,0);
     b.doMove(10,0,0);
     EXPECT_TRUE(a.getX() == 10 && a.getY() == 0 && a.getZ() == 0 && b.getX() == a.getX() && b.getY() == a.getY() && b.getZ() == a.getZ()) << "Rotation over 360 degrees doesn't work properly. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
+}
+
+TEST(EntityTest,Movement_Rotated_45_Pos_X_And_Z){ 
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->doLook(logic::degreesToRadians(45),0);
+    a->doMove(10,0,10);
+    EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == 14) << "Entity didn't move correctly with multiple directions.\n Entity: " << printInfo(*a);
+
 }
 
 
