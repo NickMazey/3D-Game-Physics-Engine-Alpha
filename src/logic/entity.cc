@@ -1,5 +1,6 @@
 #include "math.h"
 #include "entity.h"
+#include "util.h"
 namespace logic{
 int Entity::entityCount = 0;
 
@@ -61,14 +62,56 @@ void Entity::setMove(int x, int y, int z){
 }
 
 //Applies x rotation
+#define PI 3.14159265
 int Entity::xHelper(const double x,const double z) const{
-    return (cos(lookAngX) * x + sin(lookAngX) * z);
+    double xComponent = cos(lookAngX) * (x);
+    double zComponent = 0;
+    if(sin(lookAngX) != 0){
+        int angX = radiansToDegrees(lookAngX);
+        //Positive
+        if(angX > 0 && angX < 90){
+            zComponent = z * sin(lookAngX - PI / 2);
+        } else if(angX == 90 || angX == -90){
+            zComponent = - z * sin(lookAngX);
+        } else if(angX > 90 && angX < 180){
+            zComponent = - z * sin(lookAngX - PI / 2);
+        }
+        //Negative
+        else if(angX < 0 && angX > -90){
+            zComponent = - z * sin(lookAngX - PI / 2);
+        }
+        else if(angX < -90 && angX > -180){
+            zComponent = z * sin(lookAngX - PI / 2);
+        }
+    }
+    return xComponent + zComponent;
 }
 
 //Applies z rotation
 int Entity::zHelper(const double x,const double z) const{
-    return xHelper(z,x);
+    double zComponent = cos(lookAngX) * (z);
+    double xComponent = 0;
+    if(sin(lookAngX) != 0){
+         int angX = radiansToDegrees(lookAngX);
+         //Positive
+         if(angX > 0 && angX < 90){
+            zComponent = z * cos(lookAngX - degreesToRadians(90));
+            xComponent = x * sin(lookAngX);
+        } else if(angX == 90 || angX == -90){
+            xComponent = x * sin(lookAngX);
+        } else if(angX > 90 && angX < 180){
+            xComponent = - x * sin(lookAngX);
+        } 
+        //Negative
+        else if(angX < 0 && angX > -90){
+            xComponent = x * sin(lookAngX);
+        } else if(angX < -90 && angX > -180){
+            xComponent = x * sin(lookAngX);
+        }
+    }
+    return zComponent + xComponent;
 }
+#undef PI
 
 //Applies movement
 void Entity::doMove(){
