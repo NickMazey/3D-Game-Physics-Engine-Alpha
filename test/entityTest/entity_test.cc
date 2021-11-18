@@ -26,7 +26,7 @@ std::string printInfo(const logic::Entity toPrint){
     toReturn.append(" degrees) ");
     toReturn.append(" LookAngY: ");
     toReturn.append(" (");
-    toReturn.append(std::to_string(logic::radiansToDegrees(toPrint.getLookAngX())));
+    toReturn.append(std::to_string(logic::radiansToDegrees(toPrint.getLookAngY())));
     toReturn.append(" degrees) ");
     
     toReturn.append(std::to_string(toPrint.getLookAngY()));
@@ -547,7 +547,7 @@ TEST(EntityTest,Movement_Rotated_135_Pos_Z){
     logic::Entity a (0,0,0,100,100,100);
     a.doLook(logic::degreesToRadians(135),0);
     a.doMove(0,0,10);
-    EXPECT_TRUE(a.getX() == 7 && a.getY() == 0 && a.getZ() == 7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
+    EXPECT_TRUE(a.getX() == -7 && a.getY() == 0 && a.getZ() == -7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
 }
 
 TEST(EntityTest,Movement_Rotated_180_Pos_X){
