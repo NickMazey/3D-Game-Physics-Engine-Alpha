@@ -62,7 +62,6 @@ void Entity::setMove(int x, int y, int z){
 }
 
 //Applies x rotation
-#define PI 3.14159265
 int Entity::xHelper(const double x,const double z) const{
     double xComponent = cos(lookAngX) * (x);
     double zComponent = 0;
@@ -78,9 +77,10 @@ int Entity::xHelper(const double x,const double z) const{
         }
         //Negative
         else if(angX < 0 && angX > -90){ //First Quad
-            zComponent = - z * sin(lookAngX - degreesToRadians(90));
+            zComponent = - z * sin(lookAngX);
         }
         else if(angX < -90 && angX > -180){ //Second Quad
+            xComponent = x * sin(lookAngX);
             zComponent = z * sin(lookAngX - degreesToRadians(90));
         }
     }
@@ -102,15 +102,15 @@ int Entity::zHelper(const double x,const double z) const{
             xComponent = x * sin(lookAngX);
         } 
         //Negative
-        else if(angX < 0 && angX > -90){
+        else if(angX < 0 && angX > -90){ //First Quad
             xComponent = x * sin(lookAngX);
-        } else if(angX < -90 && angX > -180){
-            xComponent = x * sin(lookAngX);
+        } else if(angX < -90 && angX > -180){ //Second Quad
+            zComponent = z * sin(lookAngX);
+            xComponent = x * cos(lookAngX);
         }
     }
     return zComponent + xComponent;
 }
-#undef PI
 
 //Applies movement
 void Entity::doMove(){
