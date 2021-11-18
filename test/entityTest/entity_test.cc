@@ -540,7 +540,7 @@ TEST(EntityTest,Movement_Rotated_135_Pos_X){
     logic::Entity a (0,0,0,100,100,100);
     a.doLook(logic::degreesToRadians(135),0);
     a.doMove(10,0,0);
-    EXPECT_TRUE(a.getX() == -7 && a.getY() == 0 && a.getZ() == -7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
+    EXPECT_TRUE(a.getX() == -7 && a.getY() == 0 && a.getZ() == 7) << "Entity didn't move properly with angle. \n Entity: " << printInfo(a);
 }
 
 TEST(EntityTest,Movement_Rotated_135_Pos_Z){
