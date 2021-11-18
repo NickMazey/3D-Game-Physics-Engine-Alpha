@@ -67,21 +67,21 @@ int Entity::xHelper(const double x,const double z) const{
     double xComponent = cos(lookAngX) * (x);
     double zComponent = 0;
     if(sin(lookAngX) != 0){
-        int angX = radiansToDegrees(lookAngX);
+        int angX = radiansToDegrees(lookAngX) % 360;
         //Positive
-        if(angX > 0 && angX < 90){
-            zComponent = z * sin(lookAngX - PI / 2);
-        } else if(angX == 90 || angX == -90){
+        if(angX > 0 && angX < 90){//First Quad
+            zComponent = z * sin(lookAngX + degreesToRadians(180));
+        } else if(angX == 90 || angX == -90){ //90 Degrees
             zComponent = - z * sin(lookAngX);
-        } else if(angX > 90 && angX < 180){
-            zComponent = - z * sin(lookAngX - PI / 2);
+        } else if(angX > 90 && angX < 180){ //Second Quad
+            zComponent = - z * sin(lookAngX);
         }
         //Negative
-        else if(angX < 0 && angX > -90){
-            zComponent = - z * sin(lookAngX - PI / 2);
+        else if(angX < 0 && angX > -90){ //First Quad
+            zComponent = - z * sin(lookAngX - degreesToRadians(90));
         }
-        else if(angX < -90 && angX > -180){
-            zComponent = z * sin(lookAngX - PI / 2);
+        else if(angX < -90 && angX > -180){ //Second Quad
+            zComponent = z * sin(lookAngX - degreesToRadians(90));
         }
     }
     return xComponent + zComponent;
@@ -94,13 +94,12 @@ int Entity::zHelper(const double x,const double z) const{
     if(sin(lookAngX) != 0){
          int angX = radiansToDegrees(lookAngX);
          //Positive
-         if(angX > 0 && angX < 90){
-            zComponent = z * cos(lookAngX - degreesToRadians(90));
+         if(angX > 0 && angX < 90){ //First Quad
             xComponent = x * sin(lookAngX);
-        } else if(angX == 90 || angX == -90){
+        } else if(angX == 90 || angX == -90){ //90 Degrees
             xComponent = x * sin(lookAngX);
-        } else if(angX > 90 && angX < 180){
-            xComponent = - x * sin(lookAngX);
+        } else if(angX > 90 && angX < 180){ //Second Quad
+            xComponent = x * sin(lookAngX);
         } 
         //Negative
         else if(angX < 0 && angX > -90){
