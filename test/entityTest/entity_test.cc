@@ -834,6 +834,25 @@ TEST(EntityTest,Children_Chain_In){
     EXPECT_TRUE(a->inChildren(c)) << "In child doesn't chain.";
 }
 
+TEST(EntityTest,Children_Chain_Move){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* c = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,10,10,10);
+    b->addChild(c,10,10,10);
+    a->doMove(10,0,0);
+    EXPECT_EQ(a->getX() + 20, c->getX()) << "Movement doesn't chain with children.";
+}
+
+TEST(EntityTest,Children_Chain_Rotate){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* c = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,10,10,10);
+    b->addChild(c,10,10,10);
+    a->doLook(degreesToRadians(45),0);
+    EXPECT_TRUE(a->getLookAngX() == c->getLookAngX() && c->getX() == a->getX() + 14) << "Look direction doesn't chain with children.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b) << "\n Entity c: " << printInfo(*c);
+}
 
 
 //Exception Tests
