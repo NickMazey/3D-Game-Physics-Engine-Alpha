@@ -16,6 +16,7 @@ target_link_libraries(
     entity_test
     PUBLIC
     entity
+    util
     gtest_main
 )
 
