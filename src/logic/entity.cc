@@ -39,10 +39,10 @@ bool Entity::operator<(const Entity &other) const{
 
 //Whether or not another entity is in the dependents of this entity
 bool Entity::inDependents(Entity * other){
-    __try{
+    try{
             return this->dependents.find(other) != dependents.end();
     }
-    __catch(std::exception e){
+    catch(std::exception e){
         return false;
     }
 }
@@ -189,10 +189,10 @@ void Entity::setOtherPosRelativeTo(Entity* other, int x, int y, int z){
 
 //Whether or not another entity is in the ghosts of this entity
 bool Entity::inGhosts(const Entity * other){
-    __try{
+    try{
             return this->ghosts.find(other) != ghosts.end();
     }
-    __catch(std::exception e){
+    catch(std::exception e){
         return false;
     }
 }
@@ -215,10 +215,10 @@ void Entity::removeGhost(Entity * other){
 
 //Whether or not another entity is in the children of this entity
 bool Entity::inChildren(Entity * other){
-    __try{
+    try{
             return children.count(other) || inChildrenDeep(other);
     }
-    __catch(std::exception e){
+    catch(std::exception e){
         return false;
     }
 }
