@@ -879,6 +879,7 @@ TEST(EntityTest,Safe_Ghost_Forward_Deletion){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->addGhost(b);
+    a->addChild(b,0,0,0);
     delete b;
     EXPECT_FALSE(a->inGhosts(b)) << "Destructor doesn't safely remove from ghosts";
 }
