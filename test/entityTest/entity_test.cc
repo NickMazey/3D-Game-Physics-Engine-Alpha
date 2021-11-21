@@ -2,7 +2,6 @@
 #include "math.h"
 #include "entity.h"
 #include "util.h"
-#include <exception>
 
 
 std::string printInfo(const logic::Entity toPrint){
@@ -873,12 +872,7 @@ TEST(EntityTest,Safe_Ghost_Forward_Deletion){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->addGhost(b);
     delete b;
-    __try{
-        EXPECT_FALSE(a->inGhosts(b)) << "Destructor doesn't safely remove from ghosts";
-    }
-    __catch(std::exception){
-        SUCCEED();
-    }
+    EXPECT_FALSE(a->inGhosts(b)) << "Destructor doesn't safely remove from ghosts";
 }
 
 TEST(EntityTest,Safe_Ghost_Backward_Deletion){
@@ -886,12 +880,7 @@ TEST(EntityTest,Safe_Ghost_Backward_Deletion){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->addGhost(b);
     delete a;
-    __try{
     EXPECT_FALSE(b->inDependents(a)) << "Destructor doesn't safely remove from ghosts";
-    }
-    __catch(std::exception){
-        SUCCEED();
-    }
 }
 
 
@@ -900,12 +889,7 @@ TEST(EntityTest,Safe_Child_Deletion){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->addChild(b,0,0,0);
     delete b;
-    __try{
     EXPECT_FALSE(a->inChildren(b)) << "Destructor doesn't safely remove from children";
-    }
-    __catch(std::exception){
-        SUCCEED();
-    }
 }
 
 TEST(EntityTest,Safe_Parent_Deletion){
@@ -913,12 +897,7 @@ TEST(EntityTest,Safe_Parent_Deletion){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->addChild(b,0,0,0);
     delete a;
-    __try{
     EXPECT_FALSE(b->inDependents(a)) << "Destructor doesn't safely remove parents from dependents";
-    }
-    __catch(std::exception){
-        SUCCEED();
-    }
 }
 
 
