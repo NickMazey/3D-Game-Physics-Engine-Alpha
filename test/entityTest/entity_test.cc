@@ -867,6 +867,14 @@ TEST(EntityTest,Children_Chain_Rotate){
 
 
 //Exception Tests
+TEST(EntityTest, Delete_Doesnt_Break_Github){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addGhost(b);
+    delete b;
+    SUCCEED();
+}
+
 TEST(EntityTest,Safe_Ghost_Forward_Deletion){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
