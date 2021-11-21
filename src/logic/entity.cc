@@ -42,7 +42,7 @@ bool Entity::inDependents(Entity * other){
     __try{
             return this->dependents.find(other) != dependents.end();
     }
-    __catch(std::exception){
+    __catch(std::exception e){
         return false;
     }
 }
@@ -192,7 +192,7 @@ bool Entity::inGhosts(const Entity * other){
     __try{
             return this->ghosts.find(other) != ghosts.end();
     }
-    __catch(std::exception){
+    __catch(std::exception e){
         return false;
     }
 }
@@ -218,7 +218,7 @@ bool Entity::inChildren(Entity * other){
     __try{
             return children.count(other) || inChildrenDeep(other);
     }
-    __catch(std::exception){
+    __catch(std::exception e){
         return false;
     }
 }
