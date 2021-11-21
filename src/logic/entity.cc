@@ -20,9 +20,9 @@ Entity::Entity(int x, int y, int z, int width, int height, int depth){
 
 Entity::~Entity(){
     for(Entity * dependent : this->dependents){
-        dependent->removeDependent(this);
-        dependent->removeGhost(this);
-        dependent->removeChild(this);
+        //dependent->removeDependent(this);
+        //dependent->removeGhost(this);
+        //dependent->removeChild(this);
     }
 }
 
