@@ -20,5 +20,5 @@ jobs:
       run: |
         cd project_build
         cd build
-        ctest --output-on-failure
+        ctest --output-on-failure --debug
         
