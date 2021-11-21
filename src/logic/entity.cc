@@ -1,6 +1,7 @@
 #include "math.h"
 #include "entity.h"
 #include "util.h"
+#include "exception"
 namespace logic{
 int Entity::entityCount = 0;
 
@@ -38,7 +39,12 @@ bool Entity::operator<(const Entity &other) const{
 
 //Whether or not another entity is in the dependents of this entity
 bool Entity::inDependents(Entity * other){
+    __try{
             return this->dependents.find(other) != dependents.end();
+    }
+    __catch(std::exception){
+        return false;
+    }
 }
 
 //Adds to dependents
@@ -183,7 +189,12 @@ void Entity::setOtherPosRelativeTo(Entity* other, int x, int y, int z){
 
 //Whether or not another entity is in the ghosts of this entity
 bool Entity::inGhosts(const Entity * other){
+    __try{
             return this->ghosts.find(other) != ghosts.end();
+    }
+    __catch(std::exception){
+        return false;
+    }
 }
 
 //Adds a ghost to ghosts
@@ -204,7 +215,12 @@ void Entity::removeGhost(Entity * other){
 
 //Whether or not another entity is in the children of this entity
 bool Entity::inChildren(Entity * other){
+    __try{
             return children.count(other) || inChildrenDeep(other);
+    }
+    __catch(std::exception){
+        return false;
+    }
 }
 
 //Whether or not the entity is in this entity's children's children
