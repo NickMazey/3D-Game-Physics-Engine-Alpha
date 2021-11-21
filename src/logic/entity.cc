@@ -19,11 +19,16 @@ Entity::Entity(int x, int y, int z, int width, int height, int depth){
 }
 
 Entity::~Entity(){
+    std::set<Entity*> tempDependents;
     for(Entity * dependent : this->dependents){
+        tempDependents.insert(dependent);
+    }
+    for(Entity * dependent : tempDependents){
         dependent->removeDependent(this);
-        //dependent->removeGhost(this);
+        dependent->removeGhost(this);
         dependent->removeChild(this);
     }
+    
 }
 
 bool Entity::operator==(const Entity &other) const{
