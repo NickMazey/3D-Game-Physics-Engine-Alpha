@@ -17,6 +17,8 @@ target_include_directories(game_engine PUBLIC
 )
 
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage")
+set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
 
 enable_testing()
 add_subdirectory(test/entityTest)
