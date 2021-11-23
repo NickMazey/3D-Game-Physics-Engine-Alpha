@@ -21,33 +21,6 @@ target_link_libraries(
     gtest_main
 )
 
-#Taken from https://jhbell.com/using-cmake-and-gcov
-set(OBJECT_DIR ${CMAKE_BINARY_DIR}/test/entityTest/CMakeFiles/entity_test.dir)
-add_custom_target(gcov
-    COMMAND mkdir coverage
-    COMMAND ${CMAKE_MAKE_PROGRAM} test
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    )
-
-add_custom_command(TARGET gcov
-    COMMAND echo "=================== GCOV ===================="
-    COMMAND gcov -b ${CMAKE_SOURCE_DIR}/test/entityTest/*.cc -o ${OBJECT_DIR}
-    | grep -A 5 "entity.h" > CoverageSummary.tmp
-    COMMAND cat CoverageSummary.tmp
-    COMMAND echo "-- Coverage files have been output to ${CMAKE_BINARY_DIR}/coverage"
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/coverage
-    )
-
-add_custom_target(scrub
-    COMMAND ${CMAKE_MAKE_PROGRAM} clean
-    COMMAND rm -f ${OBJECT_DIR}/*.gcno
-    COMMAND rm -f ${OBJECT_DIR}/*.gcda
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-)
-set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES coverage)
-
-add_dependencies(gcov entity_test)
-
 target_include_directories(entity_test PUBLIC "${LIB}")
 
 include(GoogleTest)
