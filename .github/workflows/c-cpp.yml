@@ -28,8 +28,8 @@ jobs:
         cd build
         cd test
         cd entityTest/CMakeFiles/entity_test.dir/__/__/src/logic
-        gcov -b entity.cc
-        dir
+        gcov -k entity.cc
+        type entity.cc.gcov
 
 
 
