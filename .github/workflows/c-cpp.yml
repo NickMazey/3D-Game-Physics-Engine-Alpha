@@ -30,6 +30,12 @@ jobs:
         gcovr project_build -r src --html --html-details -o project_build/coverage/coverage-html.html
         cd project_build
         jar -cfM coverage.zip coverage
+    - name: Archive Report
+      uses: actions/upload-artifact@v2
+      with:
+          name: coverage
+          path: project_build/coverage.zip
+
 
 
 
