@@ -28,9 +28,8 @@ jobs:
         cd build
         cd test
         cd entityTest
-        dir
-        tree
-        
+        cd entity_test.dir
+        dir        
 
 
 
