@@ -28,6 +28,8 @@ jobs:
         mkdir coverage
         cd ..
         gcovr project_build -r src --html --html-details -o project_build/coverage/coverage-html.html
+        cd project_build
+        jar -cfM coverage.zip coverage
 
 
 
