@@ -22,4 +22,16 @@ jobs:
         cd build
         ctest --output-on-failure
         tree
+    - name: Generate Report
+      run: |
+        cd project_build
+        cd build
+        cd test
+        cd entityTest
+        dir
+        tree
+        
+
+
+
         
