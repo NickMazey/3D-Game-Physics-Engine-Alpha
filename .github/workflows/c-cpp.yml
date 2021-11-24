@@ -21,6 +21,4 @@ jobs:
         cd project_build
         cd build
         ctest --output-on-failure
-        cd test/entityTest/CMakeFiles/entity_test.dir/__/__/src/logic
-        dir
         
