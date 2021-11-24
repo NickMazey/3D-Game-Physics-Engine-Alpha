@@ -21,12 +21,13 @@ jobs:
         cd project_build
         cd build
         ctest --output-on-failure
-        tree
     - name: Generate Report
       run: |
         pip install gcovr
-        gcovr project_build -r src --html --html-details -o coverage-html.html
-        dir
+        cd project_build
+        mkdir coverage
+        cd ..
+        gcovr project_build -r src --html --html-details -o project_build/coverage/coverage-html.html
 
 
 
