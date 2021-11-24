@@ -27,7 +27,8 @@ jobs:
         cd project_build
         cd build
         cd test
-        tree
+        cd entityTest/CMakeFiles/entity_test.dir/__/__/src/logic
+        dir
 
 
 
