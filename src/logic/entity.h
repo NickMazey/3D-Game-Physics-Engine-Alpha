@@ -34,9 +34,14 @@ class Entity{
         //Destructor
         ~Entity();
 
+        //removes the given amount of hp from this entity
+        void removeHP(int toRemove);
+
+        //adds the given amount of hp to this entity
+        void addHP(int toAdd);
+
         //sets the x y and z move vectors
         void setMove(int x, int y, int z);
-
 
         //Applies movement
         void doMove();
@@ -59,13 +64,11 @@ class Entity{
         //sets where the entity is looking
         void setLook(double x, double y);
 
-
         //Applies look
         void doLook();
 
         //updates the entity's look angles by x and y
         void doLook(double x,double y);
-
 
         void setPos(int x, int y, int z);
 
@@ -130,6 +133,9 @@ class Entity{
         int getDepth() const{
             return depth;
         }
+        int getHP() const{
+            return hp;
+        }
         double getLookAngX() const{
             return lookAngX;
         }
@@ -142,8 +148,10 @@ class Entity{
 
         //Setters
         void setSolid(bool solid);
+        void setHP(int toSet);
     private:
         int id;
+        int hp;
         std::set<Entity *> dependents;
 
         //Movement
