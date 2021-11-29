@@ -105,7 +105,7 @@ class Entity{
         //whether or not this entity would collide with the other if it moved by x,y, and z
         bool wouldCollide(const Entity * other, int x,int y,int z);
 
-        //whether or not this entity would pass through the other if it moved by x,y, and z
+        //whether or not this entity would completely pass through the other if it moved by x,y, and z
         bool passesThrough(const Entity * other, int x,int y,int z);
 
         //Getters
