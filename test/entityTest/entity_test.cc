@@ -30,6 +30,15 @@ std::string printInfo(const logic::Entity toPrint){
     toReturn.append(" (");
     toReturn.append(std::to_string(logic::radiansToDegrees(toPrint.getLookAngY())));
     toReturn.append(" degrees) ");
+    toReturn.append(" Physics: ");
+    toReturn.append(std::to_string(toPrint.hasPhysics()));
+    toReturn.append(" Solid: ");
+    toReturn.append(std::to_string(toPrint.isSolid()));
+    toReturn.append(" Gravity: ");
+    toReturn.append(std::to_string(toPrint.getGravity()));
+    toReturn.append(" Friction: ");
+    toReturn.append(std::to_string(toPrint.getFriction()));
+
     
     toReturn.append(std::to_string(toPrint.getLookAngY()));
     return toReturn;
@@ -94,7 +103,6 @@ TEST(EntityTest, Unique_Ids_3){
     logic::Entity b (0,0,0,0,0,0);
     EXPECT_TRUE(b.getId() == 1) << "ID only changes within scope \n Entity:" << printInfo(b);
 }
-
 
 
 
@@ -468,7 +476,6 @@ TEST(EntityTest, Gravity_Init){
     EXPECT_EQ(a->getGravity(), 0) << "Entity's gravity isn't initialised to 0. \n Entity: " << printInfo(*a);
 }
 
-
 TEST(EntityTest, Friction_Init){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     EXPECT_EQ(a->getFriction(), 0.0) << "Entity's friction isn't initialised to 0. \n Entity: " << printInfo(*a);
@@ -551,10 +558,6 @@ TEST(EntityTest, Friction_Z_Negative){
     a->doMove(0,0,-10);
     EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == -5) << "Entity's friction doesn't apply properly to negative Z. \n Entity: " << printInfo(*a);
 }
-
-
-
-
 
 
 
