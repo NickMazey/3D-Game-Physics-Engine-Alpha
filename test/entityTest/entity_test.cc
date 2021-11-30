@@ -214,6 +214,20 @@ TEST(EntityTest, Movement_Z_Negative){
     EXPECT_TRUE(a.getZ() == -1) << "Entity didn't move - in Z axis. \n Entity:" << printInfo(a);
 }
 
+TEST(EntityTest, Absolute_Movement_Doesnt_Tick){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doMoveAbsolute(1,1,1);
+    a.doMove();
+    EXPECT_TRUE(a.getX() == 1 && a.getY() == 1 && a.getZ() == 1) << "Entity moved too much. \n Entity:" << printInfo(a);
+}
+
+TEST(EntityTest, Non_Absolute_Movement_Doesnt_Tick){
+    logic::Entity a (0,0,0,100,100,100);
+    a.doMove(1,1,1);
+    a.doMove();
+    EXPECT_TRUE(a.getX() == 1 && a.getY() == 1 && a.getZ() == 1) << "Entity moved too much. \n Entity:" << printInfo(a);
+}
+
 TEST(EntityTest, Movement_Single_Tick_None){
     logic::Entity a (0,0,0,100,100,100);
     a.doMove();
