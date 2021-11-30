@@ -354,6 +354,11 @@ TEST(EntityTest,Would_Collide_Self){
     EXPECT_FALSE(a.wouldCollide(&a,0,0,0)) << "The Entity would collide with itself after moving. \n Entity:" << printInfo(a);
 }
 
+TEST(EntityTest, Solid_Init){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    EXPECT_TRUE(a->isSolid()) << "Entity isn't initialised solid. \n Entity: " << printInfo(*a);
+}
+
 
 
 //Other Entity Collision Tests
@@ -449,6 +454,107 @@ TEST(EntityTest,Not_Colliding_Other_Negative_Z){
     logic::Entity b (50,50,-51,50,50,50);
     EXPECT_FALSE(a.isColliding(&b)) << "Entities are colliding. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
+
+
+
+//Physics Tests
+TEST(EntityTest, Physics_Init){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    EXPECT_FALSE(a->hasPhysics()) << "Entity's physics isn't initialised to false. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Gravity_Init){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    EXPECT_EQ(a->getGravity(), 0) << "Entity's gravity isn't initialised to 0. \n Entity: " << printInfo(*a);
+}
+
+
+TEST(EntityTest, Friction_Init){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    EXPECT_EQ(a->getFriction(), 0.0) << "Entity's friction isn't initialised to 0. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Set_Gravity_Positive_Guarded){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setGravity(10);
+    EXPECT_EQ(a->getGravity(), 0) << "Entity's gravity updates regardless of physics. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Set_Gravity_Negative_Guarded){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setGravity(-10);
+    EXPECT_EQ(a->getGravity(), 0) << "Entity's gravity updates regardless of physics. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Set_Gravity_Positive){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setPhysics(true);
+    a->setGravity(10);
+    EXPECT_EQ(a->getGravity(), 10) << "Entity's gravity doesn't update properly with positive values. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Set_Gravity_Negative){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setPhysics(true);
+    a->setGravity(-10);
+    EXPECT_EQ(a->getGravity(), -10) << "Entity's gravity doesn't update properly with negative values. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Set_Friction_Guarded){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setFriction(0.5);
+    EXPECT_EQ(a->getFriction(), 0.0) << "Entity's friction updates regardless of physics. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Set_Friction_Bounded_Positive){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setPhysics(true);
+    a->setFriction(10.0);
+    EXPECT_EQ(a->getFriction(),1.0) << "Entity's friction exceeds 1.0. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Set_Friction_Bounded_Negative){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setPhysics(true);
+    a->setFriction(-1.0);
+    EXPECT_EQ(a->getFriction(),0.0) << "Entity's friction goes below 0.0. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Friction_X_Positive){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setPhysics(true);
+    a->setFriction(0.5);
+    a->doMove(10,0,0);
+    EXPECT_TRUE(a->getX() == 5 && a->getY() == 0 && a->getZ() == 0) << "Entity's friction doesn't apply properly to positive X. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Friction_X_Negative){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setPhysics(true);
+    a->setFriction(0.5);
+    a->doMove(-10,0,0);
+    EXPECT_TRUE(a->getX() == -5 && a->getY() == 0 && a->getZ() == 0) << "Entity's friction doesn't apply properly to negative X. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Friction_Z_Positive){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setPhysics(true);
+    a->setFriction(0.5);
+    a->doMove(0,0,10);
+    EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == 5) << "Entity's friction doesn't apply properly to positive Z. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Friction_Z_Negative){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setPhysics(true);
+    a->setFriction(0.5);
+    a->doMove(0,0,-10);
+    EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == -5) << "Entity's friction doesn't apply properly to negative Z. \n Entity: " << printInfo(*a);
+}
+
+
+
+
 
 
 
