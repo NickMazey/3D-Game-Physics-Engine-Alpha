@@ -136,6 +136,12 @@ class Entity{
         int getHP() const{
             return hp;
         }
+        int getGravity() const{
+            return gravity;
+        }
+        float getFriction() const{
+            return friction;
+        }
         double getLookAngX() const{
             return lookAngX;
         }
@@ -145,10 +151,16 @@ class Entity{
         bool isSolid() const{
             return solid;
         }
+        bool hasPhysics() const{
+            return physics;
+        }
 
         //Setters
-        void setSolid(bool solid);
+        void setSolid(bool toSet);
         void setHP(int toSet);
+        void setPhysics(bool toSet);
+        void setGravity(int toSet);
+        void setFriction(float toSet);
     private:
         int id;
         int hp;
@@ -163,6 +175,7 @@ class Entity{
 
 
         //Collision
+        bool solid;
         int width;
         int height;
         int depth;
@@ -170,7 +183,6 @@ class Entity{
 
         //Physics
         bool physics;
-        bool solid;
         int gravity;
         float friction;
 
