@@ -364,6 +364,20 @@ TEST(EntityTest,Collides_Other){
     EXPECT_EQ(a.isColliding(&b),b.isColliding(&a)) << "Collisions aren't symmetric. \n Entity a isColliding:" << a.isColliding(&b) << "\n Entity b isColliding:" << b.isColliding(&a);
 }
 
+TEST(EntityTest, Doesnt_Collide_Self_Solid){
+    logic::Entity a (0,0,0,100,100,100);
+    logic::Entity b (0,0,0,100,100,100);
+    a.setSolid(false);
+    EXPECT_FALSE(a.isColliding(&b)) << "Entities are colliding, even though a isn't solid. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+}
+
+TEST(EntityTest, Doesnt_Collide_Other_Solid){
+    logic::Entity a (0,0,0,100,100,100);
+    logic::Entity b (0,0,0,100,100,100);
+    b.setSolid(false);
+    EXPECT_FALSE(a.isColliding(&b)) << "Entities are colliding, even though b isn't solid. \n Entity a: " << printInfo(a) << "\n Entity b: " << printInfo(b);
+}
+
 TEST(EntityTest,Collides_Other_Positive_X){
     logic::Entity a (0,0,0,50,50,50);
     logic::Entity b (50,50,50,50,50,50);
