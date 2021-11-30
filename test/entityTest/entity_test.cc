@@ -191,7 +191,24 @@ TEST(EntityTest, Multi_Entity_Movement){
     EXPECT_TRUE(a.getX() == 1 && b.getX() == -1 && a.getY() == 0 && b.getY() == 0 && a.getZ() == 0 && b.getZ() == 0) << "Entity movement impacted by other. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
+//Entity Placement Tests
+TEST(EntityTest, Set_Pos_X){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setPos(10,0,0);
+    EXPECT_TRUE(a->getX() == 10 && a->getY() == 0 && a->getZ() == 0) << "Entity's position wasn't set properly in X axis. \n Entity:" << printInfo(*a);
+}
 
+TEST(EntityTest, Set_Pos_Y){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setPos(0,10,0);
+    EXPECT_TRUE(a->getX() == 0 && a->getY() == 10 && a->getZ() == 0) << "Entity's position wasn't set properly in Y axis. \n Entity:" << printInfo(*a);
+}
+
+TEST(EntityTest, Set_Pos_Z){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setPos(0,0,10);
+    EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == 10) << "Entity's position wasn't set properly in Z axis. \n Entity:" << printInfo(*a);
+}
 
 //Entity Relative Placement Tests
 TEST(EntityTest, Position_Relative_No_Off){
@@ -1089,6 +1106,14 @@ TEST(EntityTest,Children_Chain_Rotate){
     b->addChild(c,10,10,10);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->getLookAngX() == c->getLookAngX() && c->getX() == a->getX() && c->getZ() == a->getZ() + 28) << "Look direction doesn't chain with children.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b) << "\n Entity c: " << printInfo(*c);
+}
+
+TEST(EntityTest, Children_Set_Pos){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
+    a->addChild(b,10,10,10);
+    a->setPos(10,10,10);
+    EXPECT_TRUE(b->getX() == a->getX() + 10 && b->getY() == a->getY() + 10 && b->getZ() == a->getZ() + 10) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
 
 
