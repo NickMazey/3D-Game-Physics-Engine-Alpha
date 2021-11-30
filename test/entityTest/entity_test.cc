@@ -7,6 +7,8 @@
 std::string printInfo(const logic::Entity toPrint){
     std::string toReturn = "ID: ";
     toReturn.append(std::to_string(toPrint.getId()));
+    toReturn.append(" HP: ");
+    toReturn.append(std::to_string(toPrint.getHP()));
     toReturn.append(" X: ");
     toReturn.append(std::to_string(toPrint.getX()));
     toReturn.append(" Y: ");
@@ -91,6 +93,81 @@ TEST(EntityTest, Unique_Ids_3){
     }
     logic::Entity b (0,0,0,0,0,0);
     EXPECT_TRUE(b.getId() == 1) << "ID only changes within scope \n Entity:" << printInfo(b);
+}
+
+
+
+
+//HP Tests
+TEST(EntityTest, HP_Init){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    EXPECT_TRUE(a->getHP() == -1) << "Entity's HP is initialised incorrecly. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Set_HP_Positive){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setHP(100);
+    EXPECT_EQ(a->getHP(), 100) << "Entity's HP isn't set correctly. \n Entity " << printInfo(*a);
+}
+
+TEST(EntityTest, Set_HP_Negative){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setHP(-100);
+    EXPECT_EQ(a->getHP(), -1) << "Entity's HP goes below -1. \n Entity " << printInfo(*a);
+}
+
+TEST(EntityTest, Add_HP_Guarded){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->addHP(10);
+    EXPECT_EQ(a->getHP(), -1) << "Entity shouldn't be able to have HP added to. \n Entity " << printInfo(*a);
+}
+
+TEST(EntityTest, Remove_HP_Guarded){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->removeHP(10);
+    EXPECT_EQ(a->getHP(), -1) << "Entity shouldn't be able to have HP removed from. \n Entity " << printInfo(*a);
+}
+
+TEST(EntityTest, Add_HP_Positive){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setHP(0);
+    a->addHP(100);
+    EXPECT_EQ(a->getHP(),100) << "Entity doesn't have HP added to properly. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Add_HP_Negative){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setHP(101);
+    a->addHP(-100);
+    EXPECT_EQ(a->getHP(),1) << "Entity doesn't have HP added to properly. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Add_HP_Negative_Bounded){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setHP(50);
+    a->addHP(-100);
+    EXPECT_EQ(a->getHP(),0) << "Entity doesn't have HP minimum of 0. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Remove_HP_Positive){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setHP(101);
+    a->removeHP(100);
+    EXPECT_EQ(a->getHP(),1) << "Entity doesn't have HP removed from properly. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Remove_HP_Positive_Bounded){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setHP(50);
+    a->removeHP(100);
+    EXPECT_EQ(a->getHP(),0) << "Entity doesn't have HP minimum of 0. \n Entity: " << printInfo(*a);
+}
+
+TEST(EntityTest, Remove_HP_Negative){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    a->setHP(0);
+    a->removeHP(-100);
+    EXPECT_EQ(a->getHP(),100) << "Entity doesn't have HP removed from properly. \n Entity: " << printInfo(*a);
 }
 
 
@@ -191,6 +268,8 @@ TEST(EntityTest, Multi_Entity_Movement){
     EXPECT_TRUE(a.getX() == 1 && b.getX() == -1 && a.getY() == 0 && b.getY() == 0 && a.getZ() == 0 && b.getZ() == 0) << "Entity movement impacted by other. \n Entity a:" << printInfo(a) << "\n Entity b:" << printInfo(b);
 }
 
+
+
 //Entity Placement Tests
 TEST(EntityTest, Set_Pos_X){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
@@ -209,6 +288,8 @@ TEST(EntityTest, Set_Pos_Z){
     a->setPos(0,0,10);
     EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == 10) << "Entity's position wasn't set properly in Z axis. \n Entity:" << printInfo(*a);
 }
+
+
 
 //Entity Relative Placement Tests
 TEST(EntityTest, Position_Relative_No_Off){
