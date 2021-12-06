@@ -1100,7 +1100,6 @@ TEST(EntityTest, Other_Rotated_180_Z_Doesnt_Collide){
 
 
 //Rotation Collision Prediction Tests
-
 TEST(EntityTest, Self_Rotated_45_X_Would_Collide){
     logic::Entity* a = new logic::Entity(0,0,0,50,100,100);
     logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
@@ -1224,7 +1223,7 @@ TEST(EntityTest, Rotation_Affects_Would_Collide_Movement_Z){
     logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
     logic::Entity* b = new logic::Entity(-100,0,100,50,50,50);
     a->doLook(logic::degreesToRadians(45),0);
-    EXPECT_TRUE(a->wouldCollide(b,0,0,100)) << "Would collide doesn't move properly on Z when rotated. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);;
+    EXPECT_TRUE(a->wouldCollide(b,0,0,100)) << "Would collide doesn't move properly on Z when rotated. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
 
 
@@ -1234,14 +1233,112 @@ TEST(EntityTest, Self_Rotated_45_Passes_Through_Pos_X){
     logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
     logic::Entity* b = new logic::Entity(100,0,100,50,50,50);
     a->doLook(logic::degreesToRadians(45),0);
-    EXPECT_TRUE(a->passesThrough(b,400,0,0));
+    EXPECT_TRUE(a->passesThrough(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
 
 TEST(EntityTest, Self_Rotated_45_Passes_Through_Neg_X){
     logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
-    logic::Entity* b = new logic::Entity(100,0,100,50,50,50);
+    logic::Entity* b = new logic::Entity(-100,0,-100,50,50,50);
     a->doLook(logic::degreesToRadians(45),0);
-    EXPECT_TRUE(a->passesThrough(b,-400,0,0));
+    EXPECT_TRUE(a->passesThrough(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);;
+}
+
+TEST(EntityTest, Self_Rotated_45_Passes_Through_Pos_Z){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(-100,0,100,50,50,50);
+    a->doLook(logic::degreesToRadians(45),0);
+    EXPECT_TRUE(a->passesThrough(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_45_Passes_Through_Neg_Z){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(100,0,-100,50,50,50);
+    a->doLook(logic::degreesToRadians(45),0);
+    EXPECT_TRUE(a->passesThrough(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);;
+}
+
+TEST(EntityTest, Self_Rotated_90_Passes_Through_Pos_X){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(0,0,100,50,50,50);
+    a->doLook(logic::degreesToRadians(90),0);
+    EXPECT_TRUE(a->passesThrough(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_90_Passes_Through_Neg_X){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(0,0,-100,50,50,50);
+    a->doLook(logic::degreesToRadians(90),0);
+    EXPECT_TRUE(a->passesThrough(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_90_Passes_Through_Pos_Z){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(100,0,0,50,50,50);
+    a->doLook(logic::degreesToRadians(90),0);
+    EXPECT_TRUE(a->passesThrough(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_90_Passes_Through_Neg_Z){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(-100,0,0,50,50,50);
+    a->doLook(logic::degreesToRadians(90),0);
+    EXPECT_TRUE(a->passesThrough(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_135_Passes_Through_Pos_X){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(-100,0,100,50,50,50);
+    a->doLook(logic::degreesToRadians(135),0);
+    EXPECT_TRUE(a->passesThrough(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_135_Passes_Through_Neg_X){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(100,0,-100,50,50,50);
+    a->doLook(logic::degreesToRadians(135),0);
+    EXPECT_TRUE(a->passesThrough(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_135_Passes_Through_Pos_Z){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(-100,0,-100,50,50,50);
+    a->doLook(logic::degreesToRadians(135),0);
+    EXPECT_TRUE(a->passesThrough(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_135_Passes_Through_Neg_Z){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(100,0,100,50,50,50);
+    a->doLook(logic::degreesToRadians(135),0);
+    EXPECT_TRUE(a->passesThrough(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_180_Passes_Through_Pos_X){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(-100,0,0,50,50,50);
+    a->doLook(logic::degreesToRadians(180),0);
+    EXPECT_TRUE(a->passesThrough(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_180_Passes_Through_Neg_X){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(100,0,0,50,50,50);
+    a->doLook(logic::degreesToRadians(180),0);
+    EXPECT_TRUE(a->passesThrough(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_180_Passes_Through_Pos_Z){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(0,0,-100,50,50,50);
+    a->doLook(logic::degreesToRadians(180),0);
+    EXPECT_TRUE(a->passesThrough(b,400,0,0)) << "Entity a doesn't pass through b on pos Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_180_Passes_Through_Neg_Z){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(0,0,100,50,50,50);
+    a->doLook(logic::degreesToRadians(180),0);
+    EXPECT_TRUE(a->passesThrough(b,-400,0,0)) << "Entity a doesn't pass through b on neg Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
 
 
