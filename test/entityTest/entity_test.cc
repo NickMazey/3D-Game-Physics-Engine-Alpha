@@ -1217,14 +1217,31 @@ TEST(EntityTest, Rotation_Affects_Would_Collide_Movement_X){
     logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
     logic::Entity* b = new logic::Entity(100,0,100,50,50,50);
     a->doLook(logic::degreesToRadians(45),0);
-    EXPECT_TRUE(a->wouldCollide(b,100,0,0));
+    EXPECT_TRUE(a->wouldCollide(b,100,0,0)) << "Would collide doesn't move properly on X when rotated. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
 
 TEST(EntityTest, Rotation_Affects_Would_Collide_Movement_Z){
     logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
     logic::Entity* b = new logic::Entity(-100,0,100,50,50,50);
     a->doLook(logic::degreesToRadians(45),0);
-    EXPECT_TRUE(a->wouldCollide(b,0,0,100));
+    EXPECT_TRUE(a->wouldCollide(b,0,0,100)) << "Would collide doesn't move properly on Z when rotated. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);;
+}
+
+
+
+//Rotation Collsion Prediction Passthrough Tests
+TEST(EntityTest, Self_Rotated_45_Passes_Through_Pos_X){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(100,0,100,50,50,50);
+    a->doLook(logic::degreesToRadians(45),0);
+    EXPECT_TRUE(a->passesThrough(b,400,0,0));
+}
+
+TEST(EntityTest, Self_Rotated_45_Passes_Through_Neg_X){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(100,0,100,50,50,50);
+    a->doLook(logic::degreesToRadians(45),0);
+    EXPECT_TRUE(a->passesThrough(b,-400,0,0));
 }
 
 
