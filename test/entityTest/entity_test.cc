@@ -842,6 +842,7 @@ TEST(EntityTest, Look_Y_Positive){
     a.doLook(0,logic::degreesToRadians(45));
     EXPECT_TRUE(a.getLookAngX() == 0.0 && a.getLookAngY() == logic::degreesToRadians(45)) << "Entity should be looking at " << logic::degreesToRadians(45) <<" radians on Y. \n Entity: " << printInfo(a);
 }
+
 TEST(EntityTest, Look_Y_Negative){
     logic::Entity a (0,0,0,100,100,100);
     a.doLook(0,logic::degreesToRadians(-45));
@@ -1099,6 +1100,7 @@ TEST(EntityTest, Other_Rotated_180_Z_Doesnt_Collide){
 
 
 //Rotation Collision Prediction Tests
+
 TEST(EntityTest, Self_Rotated_45_X_Would_Collide){
     logic::Entity* a = new logic::Entity(0,0,0,50,100,100);
     logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
@@ -1211,6 +1213,19 @@ TEST(EntityTest, Other_Rotated_180_Z_Wouldnt_Collide){
     EXPECT_FALSE(a->wouldCollide(b,0,0,0)) << "Entity b would collide on Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
 
+TEST(EntityTest, Rotation_Affects_Would_Collide_Movement_X){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(100,0,100,50,50,50);
+    a->doLook(logic::degreesToRadians(45),0);
+    EXPECT_TRUE(a->wouldCollide(b,100,0,0));
+}
+
+TEST(EntityTest, Rotation_Affects_Would_Collide_Movement_Z){
+    logic::Entity* a = new logic::Entity(0,0,0,50,50,50);
+    logic::Entity* b = new logic::Entity(-100,0,100,50,50,50);
+    a->doLook(logic::degreesToRadians(45),0);
+    EXPECT_TRUE(a->wouldCollide(b,0,0,100));
+}
 
 
 
@@ -1473,7 +1488,6 @@ TEST(EntityTest,Safe_Ghost_Backward_Deletion){
     delete a;
     EXPECT_FALSE(b->inDependents(a)) << "Destructor doesn't safely remove from ghosts";
 }
-
 
 TEST(EntityTest,Safe_Child_Deletion){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
