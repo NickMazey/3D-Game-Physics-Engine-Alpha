@@ -1065,7 +1065,7 @@ TEST(EntityTest, Self_Rotated_180_Z_Doesnt_Collide){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,50);
     logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
     a->doLook(logic::degreesToRadians(180),0);
-    EXPECT_FALSE(a->isColliding(b)) << "Entity a didn't collide on Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_FALSE(a->isColliding(b)) << "Entity a collided on Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
 
 TEST(EntityTest, Other_Rotated_45_Z_Collides){
@@ -1095,6 +1095,122 @@ TEST(EntityTest, Other_Rotated_180_Z_Doesnt_Collide){
     b->doLook(logic::degreesToRadians(180),0);
     EXPECT_FALSE(a->isColliding(b)) << "Entity b collided on Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
+
+
+
+//Rotation Collision Prediction Tests
+TEST(EntityTest, Self_Rotated_45_X_Would_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,50,100,100);
+    logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
+    a->doLook(logic::degreesToRadians(45),0);
+    EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity a wouldn't collide on X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_90_X_Would_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,50,100,100);
+    logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
+    a->doLook(logic::degreesToRadians(90),0);
+    EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity a wouldn't collide on X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_135_X_Would_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,50,100,100);
+    logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
+    a->doLook(logic::degreesToRadians(135),0);
+    EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity a wouldn't collide on X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_180_X_Wouldnt_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,50,100,100);
+    logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
+    a->doLook(logic::degreesToRadians(180),0);
+    EXPECT_FALSE(a->wouldCollide(b,0,0,0)) << "Entity a would collide on X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Other_Rotated_45_X_Would_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(100,0,0,50,100,100);
+    b->doLook(logic::degreesToRadians(45),0);
+    EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity b wouldn't collide on X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Other_Rotated_90_X_Would_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(100,0,0,50,100,100);
+    b->doLook(logic::degreesToRadians(90),0);
+    EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity b wouldn't collide on X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Other_Rotated_135_X_Would_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(100,0,0,50,100,100);
+    b->doLook(logic::degreesToRadians(135),0);
+    EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity b wouldn't collide on X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Other_Rotated_180_X_Wouldnt_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(100,0,0,50,100,100);
+    b->doLook(logic::degreesToRadians(180),0);
+    EXPECT_FALSE(a->wouldCollide(b,0,0,0)) << "Entity b would collide on X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_45_Z_Would_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,50);
+    logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
+    a->doLook(logic::degreesToRadians(45),0);
+    EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity a wouldn't collide on Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_90_Z_Would_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,50);
+    logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
+    a->doLook(logic::degreesToRadians(90),0);
+    EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity a wouldn't collide on Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_135_Z_Would_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,50);
+    logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
+    a->doLook(logic::degreesToRadians(135),0);
+    EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity a wouldn't collide on Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Self_Rotated_180_Z_Wouldnt_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,50);
+    logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
+    a->doLook(logic::degreesToRadians(180),0);
+    EXPECT_FALSE(a->wouldCollide(b,0,0,0)) << "Entity a would collide on Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Other_Rotated_45_Z_Would_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,100,100,100,50);
+    b->doLook(logic::degreesToRadians(45),0);
+    EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity b wouldn't collide on Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Other_Rotated_90_Z_Would_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,100,100,100,50);
+    b->doLook(logic::degreesToRadians(90),0);
+    EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity b wouldn't collide on Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Other_Rotated_135_Z_Would_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,100,100,100,50);
+    b->doLook(logic::degreesToRadians(135),0);
+    EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity b wouldn't collide on Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Other_Rotated_180_Z_Wouldnt_Collide){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,100,100,100,50);
+    b->doLook(logic::degreesToRadians(180),0);
+    EXPECT_FALSE(a->wouldCollide(b,0,0,0)) << "Entity b would collide on Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
 
 
 
