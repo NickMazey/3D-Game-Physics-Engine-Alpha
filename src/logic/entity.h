@@ -35,10 +35,10 @@ class Entity{
         ~Entity();
 
         //removes the given amount of hp from this entity
-        void removeHP(int toRemove);
+        void removeHP(const int toRemove);
 
         //adds the given amount of hp to this entity
-        void addHP(int toAdd);
+        void addHP(const int toAdd);
 
         //sets the x y and z move vectors
         void setMove(int x, int y, int z);
