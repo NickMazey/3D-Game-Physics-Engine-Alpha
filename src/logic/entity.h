@@ -125,6 +125,12 @@ class Entity{
         int getZ() const{
             return z;
         }
+        std::tuple<int,int,int> getCoordVector() const{
+            return std::make_tuple(coordVector[0],coordVector[1],coordVector[2]);
+        }
+        std::tuple<double,double> getLookVector() const{
+            return std::make_tuple(lookVector[0],lookVector[1]);
+        }
         int getWidth() const{
             return width;
         }
