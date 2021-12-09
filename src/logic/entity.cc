@@ -15,6 +15,10 @@ Entity::Entity(int x, int y, int z, int width, int height, int depth){
             this->id = entityCount;
             this->lookAngX = 0.0;
             this->lookAngY = 0.0;
+            this->hp = -1;
+            this->friction = 0.0;
+            this->solid = true;
+            this->physics = false;
             entityCount++;
 }
 
@@ -65,11 +69,19 @@ void Entity::removeDependent(Entity * other){
 }
 
 void Entity::removeHP(const int toRemove){
-    this->hp -= toRemove;
+    //This entity doesn't have HP
+    if(this->hp == -1){
+    } else{
+        if(this->hp - toRemove > 0){
+            this->hp -= toRemove;
+        } else{
+            this->hp = 0;
+        }
+    }
 }
 
 void Entity::addHP(const int toAdd){
-    this->hp += toAdd;
+    removeHP(toAdd * -1);
 }
         
 //sets the x y and z move vectors
@@ -132,16 +144,25 @@ int Entity::zHelper(const double x,const double z) const{
 
 //Applies movement
 void Entity::doMove(){
-            this->x += xHelper(coordVector[0],coordVector[2]);
             this->y += coordVector[1];
-            this->z += zHelper(coordVector[0],coordVector[2]);
+            if(physics){
+                this->x += xHelper(coordVector[0],coordVector[2]) * friction;
+                this->z += zHelper(coordVector[0],coordVector[2]) * friction;
+            } else{
+                this->x += xHelper(coordVector[0],coordVector[2]);
+                this->z += zHelper(coordVector[0],coordVector[2]);
+            }
             this->updateChildren();
 }
 
 //updates the entity's x,y, and z co-ordinates by x,y, and z
 void Entity::doMove(int x,int y,int z){
+            std::tuple<int,int,int> oldVector = getCoordVector();
             this->setMove(x,y,z);
             this->doMove();
+            int oldX,oldY,oldZ;
+            std::tie(oldX,oldY,oldZ) = oldVector;
+            this->setMove(oldX,oldY,oldZ);
 }
 
 //updates the entity's x,y, and z co-ordinates by x,y, and z without angle.
@@ -184,6 +205,7 @@ void Entity::setPos(int x, int y, int z){
             this->x = x;
             this->y = y;
             this->z = z;
+            this->updateChildren();
 }
 
 //sets position of entity relative to other entity + x,y, and z
@@ -281,7 +303,7 @@ void Entity::updateChildren(){
 
 //whether or not this entity is colliding with the other (atm uses bounding box)
 bool Entity::isColliding(const Entity * other){
-            if(!this->inGhosts(other) && *this != *other){
+            if(this->solid && other->isSolid() && !this->inGhosts(other) && *this != *other){
             //Assumes that x,y, and z are located at the center of the entity
 
             //Variables for this
@@ -339,7 +361,9 @@ void Entity::setSolid(const bool toSet){
 }
 
 void Entity::setHP(const int toSet){
-    this->hp = toSet;
+    if(toSet >= -1){
+        this->hp = toSet;
+    }
 }
 
 void Entity::setPhysics(const bool toSet){
@@ -348,11 +372,23 @@ void Entity::setPhysics(const bool toSet){
 
 
 void Entity::setGravity(const int toSet){
-    this->gravity = toSet;
+    if(physics){
+        this->gravity = toSet;
+    }
 }
 
 void Entity::setFriction(const float toSet){
-    this->friction = toSet;
+    if(physics){
+        if(toSet <= 1.0){
+            if(toSet >= 0){
+                this->friction = toSet;
+            } else{
+                this->friction = 0.0;
+            }
+        } else{
+            this->friction = 1.0;
+        }
+    }
 }
 
 }
