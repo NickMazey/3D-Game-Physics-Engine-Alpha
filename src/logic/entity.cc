@@ -64,6 +64,13 @@ void Entity::removeDependent(Entity * other){
     }
 }
 
+void Entity::removeHP(const int toRemove){
+    this->hp -= toRemove;
+}
+
+void Entity::addHP(const int toAdd){
+    this->hp += toAdd;
+}
         
 //sets the x y and z move vectors
 void Entity::setMove(int x, int y, int z){
@@ -172,7 +179,7 @@ void Entity::doLook(double x,double y){
             doLook();
 }
 
-
+//Sets this entity's position to x,y, and z
 void Entity::setPos(int x, int y, int z){
             this->x = x;
             this->y = y;
@@ -320,4 +327,32 @@ bool Entity::wouldCollide(const Entity * other, int x,int y,int z){
             //Can't collide
             return false;
 }
+
+//whether or not this entity would completely pass through the other if it moved by x,y, and z
+bool Entity::passesThrough(const Entity * other, int x,int y,int z){
+    //Unimplemented
+    return false;
+}
+
+void Entity::setSolid(const bool toSet){
+    this->solid = toSet;
+}
+
+void Entity::setHP(const int toSet){
+    this->hp = toSet;
+}
+
+void Entity::setPhysics(const bool toSet){
+    this->physics = toSet;
+}
+
+
+void Entity::setGravity(const int toSet){
+    this->gravity = toSet;
+}
+
+void Entity::setFriction(const float toSet){
+    this->friction = toSet;
+}
+
 }
