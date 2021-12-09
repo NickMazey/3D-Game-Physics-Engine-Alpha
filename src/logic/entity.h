@@ -70,6 +70,7 @@ class Entity{
         //updates the entity's look angles by x and y
         void doLook(double x,double y);
 
+        //Sets this entity's position to x,y, and z
         void setPos(int x, int y, int z);
 
         //sets position of entity relative to other entity + x,y, and z
@@ -156,11 +157,11 @@ class Entity{
         }
 
         //Setters
-        void setSolid(bool toSet);
-        void setHP(int toSet);
-        void setPhysics(bool toSet);
-        void setGravity(int toSet);
-        void setFriction(float toSet);
+        void setSolid(const bool toSet);
+        void setHP(const int toSet);
+        void setPhysics(const bool toSet);
+        void setGravity(const int toSet);
+        void setFriction(const float toSet);
     private:
         int id;
         int hp;
