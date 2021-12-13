@@ -46,11 +46,17 @@ class Entity{
         //Applies movement
         void doMove();
 
-        //Applies x rotation
+        //Applies x rotation for movement
         int xHelper(const double x, const double z) const;
 
-        //Applies z rotation
+        //Applies z rotation for movement
         int zHelper(const double x, const double z) const;
+
+        //Returns the width of this entity with rotation
+        double effectiveWidth() const;
+
+        //Returns the depth of this entity with rotation
+        double effectiveDepth() const;
 
         //updates the entity's x,y, and z co-ordinates by x,y, and z
         void doMove(int x,int y,int z);
