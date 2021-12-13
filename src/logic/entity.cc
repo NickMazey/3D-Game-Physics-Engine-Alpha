@@ -306,33 +306,10 @@ bool Entity::isColliding(const Entity * other){
             if(this->solid && other->isSolid() && !this->inGhosts(other) && *this != *other){
             //Assumes that x,y, and z are located at the center of the entity
 
-            //Variables for this
-            int xMin,xMax,yMin,yMax,zMin,zMax;
-            xMin = x - (width / 2);
-            xMax = x + (width / 2);
-            yMin = y - (height / 2);
-            yMax = y + (height / 2);
-            zMin = z - (depth / 2);
-            zMax = z + (depth / 2);
-
-            Entity otherConst = *other;
-            //Variables for the other
-            int otherXMin, otherXMax,otherYMin, otherYMax,otherZMin, otherZMax,otherWidth,otherHeight,otherDepth;
-            otherWidth = otherConst.getWidth();
-            otherHeight = otherConst.getHeight();
-            otherDepth = otherConst.getDepth();
-            otherXMin = otherConst.getX() - (otherWidth / 2);
-            otherXMax = otherConst.getX() + (otherWidth / 2);
-            otherYMin = otherConst.getY() - (otherHeight / 2);
-            otherYMax = otherConst.getY() + (otherHeight / 2);
-            otherZMin = otherConst.getZ() - (otherDepth / 2);
-            otherZMax = otherConst.getZ() + (otherDepth / 2);
-
             //This line starts somewhere before the max of the other object and ends somewhere after the min of the other object
-            return (xMin <= otherXMax && xMax >= otherXMin) && //X axis
-                   (yMin <= otherYMax && yMax >= otherYMin) && //Y axis
-                   (zMin <= otherZMax && zMax >= otherZMin);   //Z axis
-                
+            return (getMinX() <= other->getMaxX() && getMaxX() >= other->getMinX()) && //X axis
+                   (getMinY() <= other->getMaxY() && getMaxY() >= other->getMinY()) && //Y axis
+                   (getMinZ() <= other->getMaxZ() && getMaxZ() >= other->getMinZ());   //Z axis
             }
 
             //Would've already returned otherwise, must not be colliding
@@ -390,5 +367,31 @@ void Entity::setFriction(const float toSet){
         }
     }
 }
+
+int Entity::getMinX() const{
+    return x - (width / 2);
+}
+
+int Entity::getMaxX() const{
+    return x + (width / 2);
+}
+
+int Entity::getMinY() const{
+    return y - (height / 2);
+}
+
+int Entity::getMaxY() const{
+    return y + (height / 2);
+}
+
+int Entity::getMinZ() const{
+    return z - (depth / 2);
+}
+
+int Entity::getMaxZ() const{
+    return z + (depth / 2);
+}
+
+
 
 }
