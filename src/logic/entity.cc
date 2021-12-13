@@ -91,7 +91,7 @@ void Entity::setMove(int x, int y, int z){
             this->coordVector[2] = z;
 }
 
-//Applies x rotation
+//Applies x rotation for movement
 int Entity::xHelper(const double x,const double z) const{
     double xComponent = cos(lookAngX) * (x);
     double zComponent = 0;
@@ -117,7 +117,7 @@ int Entity::xHelper(const double x,const double z) const{
     return xComponent + zComponent;
 }
 
-//Applies z rotation
+//Applies z rotation for movement
 int Entity::zHelper(const double x,const double z) const{
     double zComponent = cos(lookAngX) * (z);
     double xComponent = 0;
@@ -140,6 +140,16 @@ int Entity::zHelper(const double x,const double z) const{
         }
     }
     return zComponent + xComponent;
+}
+
+//Returns the width of this entity with rotation
+double Entity::effectiveWidth() const{
+    return abs(cos(lookAngX)) * width + abs(sin(lookAngX)) * depth;
+}
+
+//Returns the depth of this entity with rotation
+double Entity::effectiveDepth() const{
+    return abs(cos(lookAngX)) * depth + abs(sin(lookAngX)) * width;
 }
 
 //Applies movement
@@ -369,11 +379,11 @@ void Entity::setFriction(const float toSet){
 }
 
 int Entity::getMinX() const{
-    return x - (width / 2);
+    return x - (effectiveWidth() / 2);
 }
 
 int Entity::getMaxX() const{
-    return x + (width / 2);
+    return x + (effectiveWidth() / 2);
 }
 
 int Entity::getMinY() const{
@@ -385,11 +395,11 @@ int Entity::getMaxY() const{
 }
 
 int Entity::getMinZ() const{
-    return z - (depth / 2);
+    return z - (effectiveDepth() / 2);
 }
 
 int Entity::getMaxZ() const{
-    return z + (depth / 2);
+    return z + (effectiveDepth() / 2);
 }
 
 
