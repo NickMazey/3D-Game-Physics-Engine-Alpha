@@ -109,6 +109,15 @@ class Entity{
         //Updates children
         void updateChildren();
 
+        //Returns the distance to another entity on X
+        int distToOtherX(const Entity * other);
+        
+        //Returns the distance to another entity on Y
+        int distToOtherY(const Entity * other);
+
+        //Returns the distance to another entity on Z
+        int distToOtherZ(const Entity * other);
+
         //whether or not this entity is colliding with the other (atm uses bounding box)
         bool isColliding(const Entity * other);
 
