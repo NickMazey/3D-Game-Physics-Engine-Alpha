@@ -125,6 +125,12 @@ class Entity{
         int getZ() const{
             return z;
         }
+        int getMinX() const;
+        int getMaxX() const;
+        int getMinY() const;
+        int getMaxY() const;
+        int getMinZ() const;
+        int getMaxZ() const;
         std::tuple<int,int,int> getCoordVector() const{
             return std::make_tuple(coordVector[0],coordVector[1],coordVector[2]);
         }
