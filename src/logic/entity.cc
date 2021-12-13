@@ -329,9 +329,10 @@ bool Entity::isColliding(const Entity * other){
 //whether or not this entity would collide with the other if it moved by x,y, and z
 bool Entity::wouldCollide(const Entity * other, int x,int y,int z){
             if(!this->inGhosts(other) && *this != *other){
-                Entity created(this->x,this->y,this->z,this->width,this->height,this->depth);
-                created.doMove(x,y,z);
-                return created.isColliding(other);
+                Entity* created = new Entity(this->x,this->y,this->z,this->width,this->height,this->depth);
+                created->doLook(lookAngX, lookAngY);
+                created->doMove(x,y,z);
+                return created->isColliding(other);
             }
             //Can't collide
             return false;
