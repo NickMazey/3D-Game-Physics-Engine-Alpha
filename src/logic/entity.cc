@@ -310,6 +310,41 @@ void Entity::updateChildren(){
     }
 }
 
+//Returns the distance to another entity on X
+int Entity::distToOtherX(const Entity * other) const{
+    if(getMaxX() >= other->getMinX() && getMinX() <= other->getMaxX()){//They're colliding on X
+        return 0;
+    }
+    else if(getMaxX() < other->getMinX()){//This entity is behind the other one on X
+        return other->getMinX() - getMaxX();
+    } else{//This entity is in front of the other one on X
+        return other->getMaxX() - getMinX();
+    }
+}
+        
+//Returns the distance to another entity on Y
+int Entity::distToOtherY(const Entity * other) const{
+    if(getMaxY() >= other->getMinY() && getMinY() <= other->getMaxY()){//They're colliding on Y
+        return 0;
+    }
+    else if(getMaxY() < other->getMinY()){//This entity is behind the other one on Y
+        return other->getMinY() - getMaxY();
+    } else{//This entity is in front of the other one on Y
+        return other->getMaxY() - getMinY();
+    }
+}
+
+//Returns the distance to another entity on Z
+int Entity::distToOtherZ(const Entity * other) const{
+    if(getMaxZ() >= other->getMinZ() && getMinZ() <= other->getMaxZ()){//They're colliding on Z
+        return 0;
+    }
+    else if(getMaxZ() < other->getMinZ()){//This entity is behind the other one on Z
+        return other->getMinZ() - getMaxZ();
+    } else{//This entity is in front of the other one on Z
+        return other->getMaxZ() - getMinZ();
+    }
+}
 
 //whether or not this entity is colliding with the other (atm uses bounding box)
 bool Entity::isColliding(const Entity * other){
@@ -340,7 +375,11 @@ bool Entity::wouldCollide(const Entity * other, int x,int y,int z){
 
 //whether or not this entity would completely pass through the other if it moved by x,y, and z
 bool Entity::passesThrough(const Entity * other, int x,int y,int z){
-    //Unimplemented
+    //If it would collide then it won't pass through
+    if(!wouldCollide(other,x,y,z)){
+
+    }
+    //Hasn't returned yet, must not be passing through
     return false;
 }
 
