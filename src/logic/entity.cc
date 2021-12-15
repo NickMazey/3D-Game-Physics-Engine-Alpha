@@ -375,45 +375,15 @@ bool Entity::wouldCollide(const Entity * other, int x,int y,int z){
 
 //whether or not this entity would completely pass through the other if it moved by x,y, and z
 bool Entity::passesThrough(const Entity * other, int x,int y,int z){
-    //If it would collide then it won't pass through
+    //If it would collide (on either side of the entity) then it must not have passed through
     if(!wouldCollide(other,x,y,z)){
         //Is it even moving enough to reach the other entity
-        if((distToOtherX(other) == 0 || distToOtherX(other) > 0 && distToOtherX(other) < x || distToOtherX(other) < 0 && distToOtherX(other) > x) && //X
+        int rotX = xHelper(x,z);
+        int rotZ = zHelper(x,z);
+        if((distToOtherX(other) == 0 || distToOtherX(other) > 0 && distToOtherX(other) < rotX || distToOtherX(other) < 0 && distToOtherX(other) > rotX) && //X
         (distToOtherY(other) == 0 || distToOtherY(other) > 0 && distToOtherY(other) < y || distToOtherY(other) < 0 && distToOtherY(other) > y) && //Y
-        (distToOtherZ(other) == 0 || distToOtherZ(other) > 0 && distToOtherZ(other) < z || distToOtherZ(other) < 0 && distToOtherZ(other) > z)){  //Z
-            Entity* created = new Entity(this->x,this->y,this->z,this->width,this->height,this->depth);
-            created->doLook(lookAngX,lookAngY);
-            double vector[3] = {x,y,z};
-            double vectorScales[3] = {0}; //How much to scale each vector by per step
-            int largestVector = -1; //Unknown which vector is largest for scaling
-            if(abs(x) >= abs(z) && abs(x) >= abs(y)){
-                largestVector = 0;
-            } else if(abs(y) >= abs(x) && abs(y) >= abs(z)){
-                largestVector = 1;
-            } else{
-                largestVector = 2;
-            }
-            for (int i = 0; i < 3; i++){
-                if(vector[i] != 0){
-                    vectorScales[i] = vector[i] / vector[largestVector];
-            }
-            }
-            bool collidesAtSomePoint = false;
-            if(!collidesAtSomePoint && distToOtherX(other) != 0){ //X axis
-                double toMove[3] = {0};
-                toMove[0] == distToOtherX(other);
-                if(largestVector == 0){
-                    toMove[1] == vectorScales[1] * toMove[0];
-                    toMove[2] == vectorScales[2] * toMove[0];
-                } else{
-                    for(int i = 0; i < 3; i++){
-                        if(i != 0 ){
-                            toMove[i] = (toMove[0] / vectorScales[0]) * vectorScales[i];
-                        }
-                    }
-                }
-            }
-
+        (distToOtherZ(other) == 0 || distToOtherZ(other) > 0 && distToOtherZ(other) < rotZ || distToOtherZ(other) < 0 && distToOtherZ(other) > rotZ)){  //Z
+            return true;
         }
     }
     //Hasn't returned yet, must not be passing through
