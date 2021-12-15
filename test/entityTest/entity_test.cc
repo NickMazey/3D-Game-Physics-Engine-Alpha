@@ -883,7 +883,17 @@ TEST(EntityTest, Doesnt_Pass_Through_Move_Z_Neg_Wrong_Dir){
     EXPECT_FALSE(a->passesThrough(b,0,-400,0)) << "Entity a shouldn't pass through entity b on negative Z. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
 }
 
+TEST(EntityTest, Passes_Through_All_Pos){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(200,200,200,100,100,100);
+    EXPECT_TRUE(a->passesThrough(b,400,400,400)) << "Entity a doesn't pass through entity b on all dimensions at once positively. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+}
 
+TEST(EntityTest, Passes_Through_All_Neg){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(-200,-200,-200,100,100,100);
+    EXPECT_TRUE(a->passesThrough(b,-400,-400,-400)) << "Entity a doesn't pass through entity b on all dimensions at once negatively. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+}
 
 
 //Movement-Collision Tests
