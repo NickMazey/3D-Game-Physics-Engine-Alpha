@@ -362,6 +362,83 @@ TEST(EntityTest, Position_Relative_Neg_Z_Off){
 
 
 
+//Entity Distance Tests
+TEST(EntityTest, Distance_X_Positive){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(200,0,0,100,100,100);
+    EXPECT_EQ(a->distToOtherX(b),100) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Distance_X_Negative){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(-200,0,0,100,100,100);
+    EXPECT_EQ(a->distToOtherX(b),-100) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Distance_X_Positive_Inside){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
+    EXPECT_EQ(a->distToOtherX(b),0) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Distance_X_Negative_Inside){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(-100,0,0,100,100,100);
+    EXPECT_EQ(a->distToOtherX(b),0) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Distance_Y_Positive){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,200,0,100,100,100);
+    EXPECT_EQ(a->distToOtherY(b),100) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Distance_Y_Negative){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,-200,0,100,100,100);
+    EXPECT_EQ(a->distToOtherY(b),-100) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Distance_Y_Positive_Inside){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,100,0,100,100,100);
+    EXPECT_EQ(a->distToOtherY(b),0) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Distance_Y_Negative_Inside){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,-100,0,100,100,100);
+    EXPECT_EQ(a->distToOtherY(b),0) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+
+TEST(EntityTest, Distance_Z_Positive){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,200,100,100,100);
+    EXPECT_EQ(a->distToOtherZ(b),100) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Distance_Z_Negative){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,-200,100,100,100);
+    EXPECT_EQ(a->distToOtherZ(b),-100) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Distance_Z_Positive_Inside){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
+    EXPECT_EQ(a->distToOtherZ(b),0) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+TEST(EntityTest, Distance_Z_Negative_Inside){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,-100,100,100,100);
+    EXPECT_EQ(a->distToOtherZ(b),0) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+}
+
+
+
+
 //Self Collision Tests
 TEST(EntityTest,Collides_Self){
     logic::Entity a (0,0,0,100,100,100);
