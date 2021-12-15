@@ -17,6 +17,7 @@ Entity::Entity(int x, int y, int z, int width, int height, int depth){
             this->lookAngY = 0.0;
             this->hp = -1;
             this->friction = 0.0;
+            this->gravity = 0;
             this->solid = true;
             this->physics = false;
             entityCount++;
