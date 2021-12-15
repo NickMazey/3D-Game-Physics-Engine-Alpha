@@ -411,7 +411,6 @@ TEST(EntityTest, Distance_Y_Negative_Inside){
     EXPECT_EQ(a->distToOtherY(b),0) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
 }
 
-
 TEST(EntityTest, Distance_Z_Positive){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,200,100,100,100);
@@ -847,6 +846,43 @@ TEST(EntityTest, Doesnt_Pass_Through_Move_Z_Neg){
     logic::Entity* b = new logic::Entity(0,0,-200,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,0,-300)) << "Entity a shouldn't pass through entity b on negative Z. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
 }
+
+TEST(EntityTest, Doesnt_Pass_Through_Move_X_Pos_Wrong_Dir){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(-200,0,0,100,100,100);
+    EXPECT_FALSE(a->passesThrough(b,400,0,0)) << "Entity a shouldn't pass through entity b on positive X. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+}
+
+TEST(EntityTest, Doesnt_Pass_Through_Move_X_Neg_Wrong_Dir){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(200,0,0,100,100,100);
+    EXPECT_FALSE(a->passesThrough(b,-400,0,0)) << "Entity a shouldn't pass through entity b on negative X. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+}
+
+TEST(EntityTest, Doesnt_Pass_Through_Move_Y_Pos_Wrong_Dir){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,-200,0,100,100,100);
+    EXPECT_FALSE(a->passesThrough(b,0,400,0)) << "Entity a shouldn't pass through entity b on positive Y. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+}
+
+TEST(EntityTest, Doesnt_Pass_Through_Move_Y_Neg_Wrong_Dir){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,200,0,100,100,100);
+    EXPECT_FALSE(a->passesThrough(b,0,-400,0)) << "Entity a shouldn't pass through entity b on negative Y. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+}
+
+TEST(EntityTest, Doesnt_Pass_Through_Move_Z_Pos_Wrong_Dir){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,-200,100,100,100);
+    EXPECT_FALSE(a->passesThrough(b,0,400,0)) << "Entity a shouldn't pass through entity b on positive Z. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+}
+
+TEST(EntityTest, Doesnt_Pass_Through_Move_Z_Neg_Wrong_Dir){
+    logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
+    logic::Entity* b = new logic::Entity(0,0,200,100,100,100);
+    EXPECT_FALSE(a->passesThrough(b,0,-400,0)) << "Entity a shouldn't pass through entity b on negative Z. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+}
+
 
 
 
