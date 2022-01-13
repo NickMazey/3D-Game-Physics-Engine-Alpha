@@ -28,6 +28,10 @@ namespace logic
         entityCount++;
     }
 
+    Entity::Entity(){
+        
+    }
+
     Entity::~Entity()
     {
         std::set<Entity *> tempDependents;

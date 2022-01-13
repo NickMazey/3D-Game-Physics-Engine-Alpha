@@ -33,6 +33,9 @@ namespace logic
         //Constructor
         Entity(int x, int y, int z, int width, int height, int depth);
 
+        //Default Constructor (fixes an inheritance issue)
+        Entity();
+
         //Destructor
         ~Entity();
 
