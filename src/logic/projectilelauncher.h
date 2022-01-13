@@ -12,8 +12,12 @@ namespace logic
     class ProjectileLauncher : public Entity
     {
         public:
-            //Constructor
-            ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazineSize, bool hitScan, Entity projectile);
+            //Constructor (without projectile, sets hitscan to true)
+            ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazineSize, int damage);
+
+            //Constructor (with projectile, sets hitscan to false)
+            ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazineSize,int damage, Entity projectile);
+
 
             //Reloads the magazine of this projectile launcher
             void reload();
