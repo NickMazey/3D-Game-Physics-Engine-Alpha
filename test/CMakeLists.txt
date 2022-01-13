@@ -1,1 +1,2 @@
 add_subdirectory(entityTest)
+add_subdirectory(projectileLauncherTest)
