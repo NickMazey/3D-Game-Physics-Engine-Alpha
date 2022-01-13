@@ -8,6 +8,7 @@ target_link_libraries(
     projectilelauncher_test
     PUBLIC
     projectilelauncher
+    entity
     util
     gtest_main
 )
