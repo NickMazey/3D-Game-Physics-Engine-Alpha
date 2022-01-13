@@ -13,7 +13,7 @@ namespace logic
     {
         public:
             //Constructor
-            ProjectileLauncher(int ammo, int magazineSize, bool hitScan, Entity projectile);
+            ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazineSize, bool hitScan, Entity projectile);
 
             //Reloads the magazine of this projectile launcher
             void reload();
