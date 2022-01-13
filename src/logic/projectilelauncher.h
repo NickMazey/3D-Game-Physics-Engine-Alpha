@@ -53,7 +53,7 @@ namespace logic
                 return shootOffZ;
             }
             bool isHitScan() const{
-                return isHitScan;
+                return hitScan;
             }
             std::tuple<int,int,int> getVelocity() const{
                 return std::make_tuple(velocity[0],velocity[1],velocity[2]);
@@ -85,7 +85,7 @@ namespace logic
             int shootOffX;
             int shootOffY;
             int shootOffZ;
-            bool isHitScan;
+            bool hitScan;
             Entity projectile;
             Entity* lastHit;
     };
