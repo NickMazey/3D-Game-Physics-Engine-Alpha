@@ -8,4 +8,24 @@ namespace logic{
         return (180.0 * radians) / PI;
     }
     #undef PI
+
+    const int simplifyAngle(const int degrees){
+        if(-180 <= degrees && degrees <= 180){
+            return degrees;
+        } else if(degrees < -180){
+            int newDegrees = degrees % -360;
+            if(-180 <= newDegrees && newDegrees <= 180){
+                return newDegrees;
+            } else{
+                return newDegrees + 360;
+            }
+        }else {
+            int newDegrees = degrees % 360;
+            if(-180 <= newDegrees && newDegrees <= 180){
+                return newDegrees;
+            } else{
+                return newDegrees - 360;
+            }
+        }
+    }
 }
