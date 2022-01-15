@@ -128,7 +128,7 @@ namespace logic
         double zComponent = 0;
         if (sin(lookAngX) != 0)
         {
-            int angX = radiansToDegrees(lookAngX) % 360;
+            int angX = simplifyAngle(radiansToDegrees(lookAngX));
             //Positive
             if (angX > 0 && angX < 90)
             { //First Quad
@@ -163,7 +163,7 @@ namespace logic
         double xComponent = 0;
         if (sin(lookAngX) != 0)
         {
-            int angX = radiansToDegrees(lookAngX);
+            int angX = simplifyAngle(radiansToDegrees(lookAngX));
             //Positive
             if (angX > 0 && angX < 90)
             { //First Quad
