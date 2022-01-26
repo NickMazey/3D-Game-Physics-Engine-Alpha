@@ -263,6 +263,11 @@ namespace logic
         this->updateChildren();
     }
 
+    void Entity::doTick(){
+        this->doLook();
+        this->doMove();
+    }
+
     //updates the entity's look angles by x and y
     void Entity::doLook(double x, double y)
     {

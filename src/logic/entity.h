@@ -51,6 +51,9 @@ namespace logic
         //Applies movement
         void doMove();
 
+        //Does doMove and doLook methods for a game tick
+        void doTick();
+
         //Applies x rotation for movement
         int xHelper(const double x, const double z) const;
 
