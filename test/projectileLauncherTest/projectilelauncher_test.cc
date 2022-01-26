@@ -283,7 +283,12 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180_Neg
     EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -135 degrees";
 }
 
-
+TEST(ProjectileLauncherTest, Hitscan_Fire_hasHit){
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    std::set<logic::Entity*> entities;
+    proj->fire(entities);
+    EXPECT_TRUE(proj->hasHit()) << "hitscan projectilelaunchers don't immediately return that they've hit once fired";
+}
 
 
 
