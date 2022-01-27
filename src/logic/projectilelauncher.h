@@ -68,6 +68,9 @@ namespace logic
             Entity* getLastHit(){
                 return lastHit;
             }
+            Entity* getActiveProjectile(){
+                return activeProjectile;
+            }
             //Setters
             void setAmmo(const int toSet);
             void setMagazineSize(const int toSet);
@@ -91,6 +94,7 @@ namespace logic
             int shootOffZ;
             bool hitScan;
             Entity projectile;
+            Entity* activeProjectile;
             Entity* lastHit;
     };
 } // namespace logic
