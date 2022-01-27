@@ -321,7 +321,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo){
     EXPECT_EQ(proj->getAmmo(),90) << "non-hitscan projectilelaunchers decrease their ammo pool without reloading";
 }
 
-TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_Off_No_Tick){
+TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_Off_No_Tick){
     logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(0,0,0,5,5,5));
     std::set<logic::Entity*> entities;
@@ -331,7 +331,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_Off_
     EXPECT_NE(proj->getLastHit(),target) << "non-hitscan projectilelaunchers hit entities without ticking";
 }
 
-TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Tick){
+TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Tick){
     logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,5,5,5));
     std::set<logic::Entity*> entities;
@@ -342,7 +342,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Tick){
     EXPECT_EQ(proj->getLastHit(),target) << "non-hitscan projectilelaunchers don't hit entities with ticking";
 }
 
-TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_Off_Tick){
+TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_Off_Tick){
     logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(1,0,0,5,5,5));
     std::set<logic::Entity*> entities;
@@ -351,3 +351,5 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_Off_
     proj->doTick();
     EXPECT_EQ(proj->getLastHit(),proj) << "non-hitscan projectilelaunchers hit entities even though they don't move far enough in one tick";
 }
+
+TEST(ProjectileLauncherTest, Hitscn)
