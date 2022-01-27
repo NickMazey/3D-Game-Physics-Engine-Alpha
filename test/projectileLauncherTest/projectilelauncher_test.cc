@@ -293,3 +293,61 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_hasHit){
 
 
 
+//Non-hitscan Fire Tests
+TEST(ProjectileLauncherTest, Non_Hitscan_Fire_No_Ammo){
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0,logic::Entity(0,0,0,0,0,0));
+    std::set<logic::Entity*> entities;
+    bool fired = proj->fire(entities);
+    EXPECT_FALSE(fired) << "non-hitscan projectilelaunchers fire without any ammo";
+    EXPECT_EQ(proj->getLastHit(),proj) << "non-hitscan projectilelaunchers hit entities without firing";
+}
+
+TEST(ProjectileLauncherTest, Non_Hitscan_Fire_No_Ammo_Entity){
+    logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0,logic::Entity(0,0,0,0,0,0));
+    std::set<logic::Entity*> entities;
+    entities.insert(target);
+    bool fired = proj->fire(entities);
+    EXPECT_EQ(proj->getLastHit(),proj) << "non-hitscan projectilelaunchers hit entities without firing";
+}
+
+TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo){
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    std::set<logic::Entity*> entities;
+    bool fired = proj->fire(entities);
+    EXPECT_TRUE(fired) << "non-hitscan projectilelaunchers don't fire with ammo";
+    EXPECT_EQ(proj->getLastHit(),proj) << "non-hitscan projectilelaunchers hit entities without any to hit";
+    EXPECT_EQ(proj->getLoadedAmmo(),9) << "non-hitscan projectilelaunchers don't decrease their loaded ammo when fired";
+    EXPECT_EQ(proj->getAmmo(),90) << "non-hitscan projectilelaunchers decrease their ammo pool without reloading";
+}
+
+TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_Off_No_Tick){
+    logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(0,0,0,5,5,5));
+    std::set<logic::Entity*> entities;
+    entities.insert(target);
+    proj->fire(entities);
+    EXPECT_FALSE(proj->hasHit()) << "non-hitscan projectile launchers say they've hit before they hit anything";
+    EXPECT_NE(proj->getLastHit(),target) << "non-hitscan projectilelaunchers hit entities without ticking";
+}
+
+TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Tick){
+    logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,5,5,5));
+    std::set<logic::Entity*> entities;
+    entities.insert(target);
+    proj->fire(entities);
+    proj->doTick();
+    EXPECT_TRUE(proj->hasHit()) << "non-hitscan projectile launchers don't update hasHit when they hit something";
+    EXPECT_EQ(proj->getLastHit(),target) << "non-hitscan projectilelaunchers don't hit entities with ticking";
+}
+
+TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_Off_Tick){
+    logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(1,0,0,5,5,5));
+    std::set<logic::Entity*> entities;
+    entities.insert(target);
+    proj->fire(entities);
+    proj->doTick();
+    EXPECT_EQ(proj->getLastHit(),proj) << "non-hitscan projectilelaunchers hit entities even though they don't move far enough in one tick";
+}
