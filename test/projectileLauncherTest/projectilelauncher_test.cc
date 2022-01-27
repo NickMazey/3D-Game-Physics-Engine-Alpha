@@ -316,6 +316,9 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo){
     bool fired = proj->fire(entities);
     EXPECT_TRUE(fired) << "non-hitscan projectilelaunchers don't fire with ammo";
     EXPECT_EQ(proj->getLastHit(),proj) << "non-hitscan projectilelaunchers hit entities without any to hit";
+    EXPECT_EQ(proj->getActiveProjectile()->getX(),proj->getX() + proj->getShootOffX()) << "non-hitscan projectile launchers don't set their projectiles' initial X value properly";
+    EXPECT_EQ(proj->getActiveProjectile()->getY(),proj->getY() + proj->getShootOffY()) << "non-hitscan projectile launchers don't set their projectiles' initial Y value properly";
+    EXPECT_EQ(proj->getActiveProjectile()->getZ(),proj->getZ() + proj->getShootOffZ()) << "non-hitscan projectile launchers don't set their projectiles' initial Z value properly";
     EXPECT_EQ(proj->getLoadedAmmo(),9) << "non-hitscan projectilelaunchers don't decrease their loaded ammo when fired";
     EXPECT_EQ(proj->getAmmo(),90) << "non-hitscan projectilelaunchers decrease their ammo pool without reloading";
 }
@@ -366,6 +369,9 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Passthrough_Hi
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(50,50,50,1,1,1));
     std::set<logic::Entity*> entities;
     entities.insert(target);
+    proj->fire(entities);
+    proj->doTick();
+    EXPECT_EQ(proj->getLastHit(),target) << "non-hitscan projectile launchers don't hit entities when they pass through them";
 }
 
 TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_Off_Tick){
