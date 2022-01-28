@@ -26,7 +26,7 @@ namespace logic
             //Fires the projectile or casts a ray, returns if it immediately hits anything
             bool fire(std::set<Entity*> entities);
 
-            //Whether or not the last shot fired from this launcher has hit anything yet (always true if hitscan)
+            //Whether or not the last shot fired from this launcher has hit anything yet
             bool hasHit();
 
             //Returns the first entity this projectilelauncher would collide with (hitscan only)
