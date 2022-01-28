@@ -1,5 +1,6 @@
 #include <set>
 #include <tuple>
+#include <vector>
 #include "entity.h"
 #include "world.h"
 
@@ -32,7 +33,7 @@ namespace logic
             Entity* findFirstCollision(std::set<Entity*> entities);
 
             //Returns a list of Entities the ray cast by this launcher would passthrough (hitscan only)
-            std::set<Entity*> findCollisions(std::set<Entity*> entities);
+            std::vector<Entity*> findCollisions(std::set<Entity*> entities);
 
             //Getters
             int getAmmo() const{
