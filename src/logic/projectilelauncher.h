@@ -94,6 +94,7 @@ namespace logic
             int shootOffZ;
             bool hitScan;
             Entity projectile;
+            //TODO: Should be changed into a list in the future, will probably also need last hit to be a list that is removed from when used
             Entity* activeProjectile;
             Entity* lastHit;
     };
