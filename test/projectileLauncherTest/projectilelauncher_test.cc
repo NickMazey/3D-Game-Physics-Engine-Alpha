@@ -288,7 +288,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_hasHit){
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     proj->fire(entities);
-    EXPECT_TRUE(proj->hasHit()) << "hitscan projectilelaunchers don't immediately return that they've hit once fired";
+    EXPECT_FALSE(proj->hasHit()) << "hitscan projectilelaunchers return they've hit something when they haven't";
 }
 
 
