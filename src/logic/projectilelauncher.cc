@@ -28,7 +28,7 @@ namespace logic{
         if(ammo > (magazineSize - loadedAmmo)){
             ammo -= (magazineSize - loadedAmmo);
             loadedAmmo = magazineSize;
-        } else if(ammo > 0){
+        } else if(ammo >= 0){
             loadedAmmo += ammo;
             ammo = 0;
         } else{
