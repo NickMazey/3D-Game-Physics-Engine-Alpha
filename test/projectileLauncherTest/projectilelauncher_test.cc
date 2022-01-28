@@ -583,7 +583,7 @@ TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_Two_Entities_Can_Hit_O
 
 
 
-//Find Collisions Test
+//Find Collisions Tests
 TEST(ProjectileLauncherTest,Hitscan_Find_Collisions_No_Entities){
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     std::set<logic::Entity*> entities;
@@ -628,3 +628,47 @@ TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_Two_Entities_Can_Hit_One){
     EXPECT_EQ(proj->findCollisions(entities).at(0), targetA) << "findcollisions don't find the only entity they can hit";
 
 }
+
+
+
+//Reload Tests
+TEST(ProjectileLauncherTest, Reload_No_Ammo){
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,0,10,0);
+    proj->reload();
+    EXPECT_EQ(proj->getLoadedAmmo(),0) << "reload loads the magazine even though there isn't enough ammo to load it";
+}
+
+TEST(ProjetileLauncherTest, Reload_Empty_Mag_Plenty_Reserve){
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,0,10,0);
+    proj->setAmmo(100);
+    EXPECT_EQ(proj->getLoadedAmmo(),0) << "setAmmo also loads ammo";
+    proj->reload();
+    EXPECT_EQ(proj->getLoadedAmmo(), 10) << "reload doesn't reload empty mag";
+}
+
+TEST(ProjectileLauncherTest, Reload_No_Reserve_Ammo){
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,5,10,0);
+    proj->reload();
+    EXPECT_EQ(proj->getLoadedAmmo(), 5) << "reload adds ammo even if there isn't any in the mag";
+}
+
+TEST(ProjectileLauncherTest, Reload_Empty_Mag_Reserve_Less_Than_Mag_Size){
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,0,10,0);
+    proj->setAmmo(5);
+    proj->reload();
+    EXPECT_EQ(proj->getLoadedAmmo(),5) << "reload doesn't load the correct amount when ammo reserve is smaller than mag size";
+}
+
+TEST(ProjectileLauncherTest, Reload_Loaded_Mag_And_Reserve_Less_Than_Mag_Size){
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,5,10,0);
+    proj->setAmmo(2);
+    proj->reload();
+    EXPECT_EQ(proj->getLoadedAmmo(),7) << "reload doesn't load the correct amount when reserve and loaded combined are less than mag size";
+}
+
+TEST(ProjetileLauncherTest, Reload_Plenty_Reserve_Zero_Mag_Size){
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,0,0);
+    proj->reload();
+    EXPECT_EQ(proj->getLoadedAmmo(),0) << "reload loads ammo when the mag size is 0";
+}
+
