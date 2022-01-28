@@ -113,7 +113,7 @@ TEST(ProjectileLauncherTest, Init_Hitscan_Offsets){
 //Hitscan Fire Tests
 TEST(ProjectileLauncherTest, Hitscan_Fire_No_Ammo){
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     bool fired = proj->fire(entities);
     EXPECT_FALSE(fired) << "projectilelaunchers fire without any ammo";
     EXPECT_EQ(proj->getLastHit(),proj) << "hitscan projectilelaunchers hit entities without firing";
@@ -122,7 +122,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_No_Ammo){
 TEST(ProjectileLauncherTest, Hitscan_Fire_No_Ammo_Entity){
     logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     bool fired = proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),proj) << "hitscan projectilelaunchers hit entities without firing";
@@ -130,7 +130,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_No_Ammo_Entity){
 
 TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo){
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     bool fired = proj->fire(entities);
     EXPECT_TRUE(fired) << "projectilelaunchers don't fire with ammo";
     EXPECT_EQ(proj->getLastHit(),proj) << "projectilelaunchers hit entities without any to hit";
@@ -141,7 +141,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo){
 TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off){
     logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities in front of them";
@@ -150,7 +150,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off){
 TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Miss_No_Off_X){
     logic::Entity* target = new logic::Entity(-6,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),proj) << "hitscan projectilelaunchers hit entities that are out of their range on the x axis";
@@ -159,7 +159,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Miss_No_Off_X){
 TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Miss_No_Off_Y){
     logic::Entity* target = new logic::Entity(0,6,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),proj) << "hitscan projectilelaunchers hit entities that are out of their range on the y axis";
@@ -168,7 +168,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Miss_No_Off_Y){
 TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Miss_No_Off_Z){
     logic::Entity* target = new logic::Entity(0,0,6,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),proj) << "hitscan projectilelaunchers hit entities that are out of their range on the Z axis";
@@ -178,7 +178,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Hit_Off_X){
     logic::Entity* target = new logic::Entity(-6,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     proj->setShootOffX(-12);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities that are in their range on the x axis with offset";
@@ -188,7 +188,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Hit_Off_Y){
     logic::Entity* target = new logic::Entity(0,6,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     proj->setShootOffY(6);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities that are in their range on the y axis with offset";
@@ -198,7 +198,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Hit_Off_Z){
     logic::Entity* target = new logic::Entity(0,0,6,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     proj->setShootOffZ(6);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities that are in their range on the z axis with offset";
@@ -208,7 +208,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_45){
     logic::Entity* target = new logic::Entity(7,0,7,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     proj->setLook(logic::degreesToRadians(45),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated 45 degrees";
@@ -218,7 +218,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_90){
     logic::Entity* target = new logic::Entity(0,0,10,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     proj->setLook(logic::degreesToRadians(90),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated 90 degrees";
@@ -228,7 +228,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_135){
     logic::Entity* target = new logic::Entity(-7,0,7,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     proj->setLook(logic::degreesToRadians(135),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated 135 degrees";
@@ -238,7 +238,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180){
     logic::Entity* target = new logic::Entity(-10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     proj->setLook(logic::degreesToRadians(180),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated 135 degrees";
@@ -248,7 +248,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_45_Neg)
     logic::Entity* target = new logic::Entity(7,0,-7,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     proj->setLook(logic::degreesToRadians(-45),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -45 degrees";
@@ -258,7 +258,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_90_Neg)
     logic::Entity* target = new logic::Entity(0,0,-10,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     proj->setLook(logic::degreesToRadians(-90),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -90 degrees";
@@ -268,7 +268,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_135_Neg
     logic::Entity* target = new logic::Entity(-7,0,-7,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     proj->setLook(logic::degreesToRadians(-135),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -135 degrees";
@@ -278,7 +278,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180_Neg
     logic::Entity* target = new logic::Entity(-7,0,-7,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     proj->setLook(logic::degreesToRadians(-135),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -135 degrees";
@@ -286,7 +286,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180_Neg
 
 TEST(ProjectileLauncherTest, Hitscan_Fire_hasHit){
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     proj->fire(entities);
     EXPECT_TRUE(proj->hasHit()) << "hitscan projectilelaunchers don't immediately return that they've hit once fired";
 }
@@ -296,7 +296,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_hasHit){
 //Non-hitscan Fire Tests
 TEST(ProjectileLauncherTest, Non_Hitscan_Fire_No_Ammo){
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0,logic::Entity(0,0,0,0,0,0));
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     bool fired = proj->fire(entities);
     EXPECT_FALSE(fired) << "non-hitscan projectilelaunchers fire without any ammo";
     EXPECT_EQ(proj->getLastHit(),proj) << "non-hitscan projectilelaunchers hit entities without firing";
@@ -305,7 +305,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_No_Ammo){
 TEST(ProjectileLauncherTest, Non_Hitscan_Fire_No_Ammo_Entity){
     logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0,logic::Entity(0,0,0,0,0,0));
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     bool fired = proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(),proj) << "non-hitscan projectilelaunchers hit entities without firing";
@@ -313,7 +313,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_No_Ammo_Entity){
 
 TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo){
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(0,0,0,0,0,0));
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     bool fired = proj->fire(entities);
     EXPECT_TRUE(fired) << "non-hitscan projectilelaunchers don't fire with ammo";
     EXPECT_EQ(proj->getLastHit(),proj) << "non-hitscan projectilelaunchers hit entities without any to hit";
@@ -327,7 +327,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo){
 TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_Off_No_Tick){
     logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(0,0,0,1,1,1));
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     EXPECT_FALSE(proj->hasHit()) << "non-hitscan projectile launchers say they've hit before they hit anything";
@@ -337,7 +337,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_
 TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Tick_X){
     logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -348,7 +348,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Ti
 TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Tick_Y){
     logic::Entity* target = new logic::Entity(0,10,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(0,10,0,1,1,1));
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -358,7 +358,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Ti
 TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Tick_Z){
     logic::Entity* target = new logic::Entity(0,0,10,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(0,0,10,1,1,1));
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -368,7 +368,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Ti
 TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Passthrough_Hits_Tick){
     logic::Entity* target = new logic::Entity(10,10,10,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(50,50,50,1,1,1));
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -378,7 +378,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Passthrough_Hi
 TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_Off_Tick){
     logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(1,0,0,1,1,1));
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -388,7 +388,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_
 TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Miss_No_Off_X_Tick){
     logic::Entity* target = new logic::Entity(-6,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -398,7 +398,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Miss_No_Off_X_Tick){
 TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Miss_No_Off_Y_Tick){
     logic::Entity* target = new logic::Entity(0,10,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -408,7 +408,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Miss_No_Off_Y_Tick){
 TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Miss_No_Off_Z_Tick){
     logic::Entity* target = new logic::Entity(0,0,10,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -419,7 +419,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Hit_Off_X_Tick){
     logic::Entity* target = new logic::Entity(-6,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
     proj->setShootOffX(-12);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -430,7 +430,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Hit_Off_Y_Tick){
      logic::Entity* target = new logic::Entity(0,10,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
     proj->setShootOffY(10);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -441,7 +441,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Hit_Off_Z_Tick){
     logic::Entity* target = new logic::Entity(0,0,10,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
     proj->setShootOffZ(10);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -452,7 +452,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_45_
     logic::Entity* target = new logic::Entity(7,0,7,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
     proj->setLook(logic::degreesToRadians(45),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -463,7 +463,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_90_
     logic::Entity* target = new logic::Entity(0,0,10,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
     proj->setLook(logic::degreesToRadians(90),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -474,7 +474,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_135
     logic::Entity* target = new logic::Entity(-7,0,7,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
     proj->setLook(logic::degreesToRadians(135),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -485,7 +485,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180
     logic::Entity* target = new logic::Entity(-10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
     proj->setLook(logic::degreesToRadians(180),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -496,7 +496,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_45_
     logic::Entity* target = new logic::Entity(7,0,-7,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
     proj->setLook(logic::degreesToRadians(-45),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -507,7 +507,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_90_
     logic::Entity* target = new logic::Entity(0,0,-10,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
     proj->setLook(logic::degreesToRadians(-90),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -518,7 +518,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_135
     logic::Entity* target = new logic::Entity(-7,0,-7,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
     proj->setLook(logic::degreesToRadians(-135),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -529,7 +529,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180
     logic::Entity* target = new logic::Entity(-10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0,logic::Entity(10,0,0,1,1,1));
     proj->setLook(logic::degreesToRadians(180),0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
     proj->doTick();
@@ -541,14 +541,14 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180
 //Find First Collision Tests
 TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_No_Entities){
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     EXPECT_EQ(proj->findFirstCollision(entities),proj) << "findfirstcollision doesn't return itself without any entities to hit";
 }
 
 TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_One_Entity_Can_Hit){
     logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     EXPECT_EQ(proj->findFirstCollision(entities),target) << "findfirstcollision doesn't return the first entity it would hit";
 }
@@ -556,7 +556,7 @@ TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_One_Entity_Can_Hit){
 TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_One_Entity_Cant_Hit){
     logic::Entity* target = new logic::Entity(-10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     EXPECT_EQ(proj->findFirstCollision(entities),proj) << "findfirstcollision returns an entity that it doesn't hit";
 }
@@ -565,7 +565,7 @@ TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_Two_Entities_Can_Hit){
     logic::Entity* targetA = new logic::Entity(20,0,0,10,10,10);
     logic::Entity* targetB = new logic::Entity(10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(targetA);
     entities.insert(targetB);
     EXPECT_EQ(proj->findFirstCollision(entities),targetB) << "findfirstcollision doesn't return the first entity it can hit";
@@ -575,7 +575,7 @@ TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_Two_Entities_Can_Hit_O
     logic::Entity* targetA = new logic::Entity(10,0,0,10,10,10);
     logic::Entity* targetB = new logic::Entity(-10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(targetA);
     entities.insert(targetB);
     EXPECT_EQ(proj->findFirstCollision(entities),targetA) << "findfirstcollision doesn't returns the first entity it can hit";
@@ -586,14 +586,14 @@ TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_Two_Entities_Can_Hit_O
 //Find Collisions Tests
 TEST(ProjectileLauncherTest,Hitscan_Find_Collisions_No_Entities){
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     EXPECT_EQ(proj->findCollisions(entities).size(),0) << "findcollisions doesn't return an empty list when there are no entities";
 }
 
 TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_One_Entity_Can_Hit){
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     EXPECT_EQ(proj->findCollisions(entities).at(0),target) << "findcollisions find entities it would hit";
 }
@@ -601,7 +601,7 @@ TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_One_Entity_Can_Hit){
 TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_One_Entity_Cant_Hit){
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
     logic::Entity* target = new logic::Entity(-10,0,0,10,10,10);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     EXPECT_EQ(proj->findCollisions(entities).size(),0) << "findcollisions doesn't return an empty list when there are no entities it can hit";
 }
@@ -610,7 +610,7 @@ TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_Two_Entities_Can_Hit){
     logic::Entity* targetA = new logic::Entity(20,0,0,10,10,10);
     logic::Entity* targetB = new logic::Entity(10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(targetA);
     entities.insert(targetB);
     EXPECT_TRUE(proj->findCollisions(entities).at(0) == targetB && proj->findCollisions(entities).at(1) == targetA) << "findcollisions doesn't return multiple entities it can hit";
@@ -621,7 +621,7 @@ TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_Two_Entities_Can_Hit_One){
     logic::Entity* targetA = new logic::Entity(10,0,0,10,10,10);
     logic::Entity* targetB = new logic::Entity(-10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    std::set<logic::Entity*> entities;
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(targetA);
     entities.insert(targetB);
     EXPECT_EQ(proj->findCollisions(entities).size(),1) << "findcollisions doesn't return the right number of entities";
