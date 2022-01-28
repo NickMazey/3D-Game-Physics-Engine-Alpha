@@ -585,16 +585,46 @@ TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_Two_Entities_Can_Hit_O
 
 //Find Collisions Test
 TEST(ProjectileLauncherTest,Hitscan_Find_Collisions_No_Entities){
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    std::set<logic::Entity*> entities;
+    EXPECT_EQ(proj->findCollisions(entities).size(),0) << "findcollisions doesn't return an empty list when there are no entities";
 }
 
 TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_One_Entity_Can_Hit){
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
+    std::set<logic::Entity*> entities;
+    entities.insert(target);
+    EXPECT_EQ(proj->findCollisions(entities).at(0),target) << "findcollisions find entities it would hit";
 }
 
 TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_One_Entity_Cant_Hit){
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    logic::Entity* target = new logic::Entity(-10,0,0,10,10,10);
+    std::set<logic::Entity*> entities;
+    entities.insert(target);
+    EXPECT_EQ(proj->findCollisions(entities).size(),0) << "findcollisions doesn't return an empty list when there are no entities it can hit";
 }
 
 TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_Two_Entities_Can_Hit){
+    logic::Entity* targetA = new logic::Entity(20,0,0,10,10,10);
+    logic::Entity* targetB = new logic::Entity(10,0,0,10,10,10);
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    std::set<logic::Entity*> entities;
+    entities.insert(targetA);
+    entities.insert(targetB);
+    EXPECT_TRUE(proj->findCollisions(entities).at(0) == targetB && proj->findCollisions(entities).at(1) == targetA) << "findcollisions doesn't return multiple entities it can hit";
+
 }
 
 TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_Two_Entities_Can_Hit_One){
+    logic::Entity* targetA = new logic::Entity(10,0,0,10,10,10);
+    logic::Entity* targetB = new logic::Entity(-10,0,0,10,10,10);
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    std::set<logic::Entity*> entities;
+    entities.insert(targetA);
+    entities.insert(targetB);
+    EXPECT_EQ(proj->findCollisions(entities).size(),1) << "findcollisions doesn't return the right number of entities";
+    EXPECT_EQ(proj->findCollisions(entities).at(0), targetA) << "findcollisions don't find the only entity they can hit";
+
 }
