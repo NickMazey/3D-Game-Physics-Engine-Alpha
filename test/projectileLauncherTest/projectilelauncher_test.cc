@@ -535,3 +535,66 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180
     proj->doTick();
     EXPECT_EQ(proj->getLastHit(),target) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated 180 degrees";
 }
+
+
+
+//Find First Collision Tests
+TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_No_Entities){
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    std::set<logic::Entity*> entities;
+    EXPECT_EQ(proj->findFirstCollision(entities),proj) << "findfirstcollision doesn't return itself without any entities to hit";
+}
+
+TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_One_Entity_Can_Hit){
+    logic::Entity* target = new logic::Entity(10,0,0,10,10,10);
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    std::set<logic::Entity*> entities;
+    entities.insert(target);
+    EXPECT_EQ(proj->findFirstCollision(entities),target) << "findfirstcollision doesn't return the first entity it would hit";
+}
+
+TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_One_Entity_Cant_Hit){
+    logic::Entity* target = new logic::Entity(-10,0,0,10,10,10);
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    std::set<logic::Entity*> entities;
+    entities.insert(target);
+    EXPECT_EQ(proj->findFirstCollision(entities),proj) << "findfirstcollision returns an entity that it doesn't hit";
+}
+
+TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_Two_Entities_Can_Hit){
+    logic::Entity* targetA = new logic::Entity(20,0,0,10,10,10);
+    logic::Entity* targetB = new logic::Entity(10,0,0,10,10,10);
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    std::set<logic::Entity*> entities;
+    entities.insert(targetA);
+    entities.insert(targetB);
+    EXPECT_EQ(proj->findFirstCollision(entities),targetB) << "findfirstcollision doesn't return the first entity it can hit";
+}
+
+TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_Two_Entities_Can_Hit_One){
+    logic::Entity* targetA = new logic::Entity(10,0,0,10,10,10);
+    logic::Entity* targetB = new logic::Entity(-10,0,0,10,10,10);
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    std::set<logic::Entity*> entities;
+    entities.insert(targetA);
+    entities.insert(targetB);
+    EXPECT_EQ(proj->findFirstCollision(entities),targetA) << "findfirstcollision doesn't returns the first entity it can hit";
+}
+
+
+
+//Find Collisions Test
+TEST(ProjectileLauncherTest,Hitscan_Find_Collisions_No_Entities){
+}
+
+TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_One_Entity_Can_Hit){
+}
+
+TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_One_Entity_Cant_Hit){
+}
+
+TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_Two_Entities_Can_Hit){
+}
+
+TEST(ProjectileLauncherTest, Hitscan_Find_Collisions_Two_Entities_Can_Hit_One){
+}
