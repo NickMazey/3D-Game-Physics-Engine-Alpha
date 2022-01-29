@@ -972,6 +972,18 @@ TEST(EntityTest, Look_Y_Negative){
     EXPECT_TRUE(a.getLookAngX() == 0.0 && a.getLookAngY() == logic::degreesToRadians(-45)) << "Entity should be looking at " << logic::degreesToRadians(-45) <<" radians on Y. \n Entity: " << printInfo(a);
 }
 
+TEST(EntityTest, Look_Y_Bounded_Positive){
+    logic::Entity* ent = new logic::Entity(0,0,0,100,100,100);
+    ent->doLook(0,logic::degreesToRadians(91));
+    EXPECT_TRUE(ent->getLookAngY() == logic::degreesToRadians(90)) << "Entities don't have their look angY bounded positively to 90 degrees";
+}
+
+TEST(EntityTest, Look_Y_Bounded_Negative){
+    logic::Entity* ent = new logic::Entity(0,0,0,100,100,100);
+    ent->doLook(0,logic::degreesToRadians(-91));
+    EXPECT_TRUE(ent->getLookAngY() == logic::degreesToRadians(-90)) << "Entities don't have their look angY bounded positively to 90 degrees";
+}
+
 
 
 //Rotation Tests
