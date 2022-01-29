@@ -348,7 +348,6 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_45_Po
     delete proj;
 }
 
-/*
 TEST(ProjectileLauncherTest,GitHub_Performs_Differently_With_Fire){
     logic::Entity* target = new logic::Entity(7,7,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
@@ -367,7 +366,6 @@ TEST(ProjectileLauncherTest,GitHub_Performs_Differently_With_Fire){
     delete target;
     delete proj;
 }
-*/
 
 TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_90_Pos){
     logic::Entity* target = new logic::Entity(0,10,0,10,10,10);
