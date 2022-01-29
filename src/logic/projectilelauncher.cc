@@ -103,8 +103,8 @@ namespace logic{
                 //How much the line should move in each dimension per step with the given angles
                 double yCoeff = sin(getLookAngY());
                 double xzCoeff = cos(getLookAngY());
-                double xCoeff = xzCoeff * ((double)xHelper(100,0)) / 100;
-                double zCoeff = xzCoeff * ((double)zHelper(100,0)) / 100;                
+                double xCoeff = xzCoeff * cos(getLookAngX());
+                double zCoeff = xzCoeff * sin(getLookAngX());                
                 
                 //If it has hit on any dimension
                 bool hitOnDim = false;

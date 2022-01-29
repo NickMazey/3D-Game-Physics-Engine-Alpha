@@ -357,8 +357,8 @@ TEST(ProjectileLauncherTest,GitHub_Performs_Differently_With_Fire){
     entities.insert(target);
     double yCoeff = sin(proj->getLookAngY());
     double xzCoeff = cos(proj->getLookAngY());
-    double xCoeff = xzCoeff * ((double)proj->xHelper(100,0)) / 100;
-    double zCoeff = xzCoeff * ((double)proj->zHelper(100,0)) / 100;
+    double xCoeff = xzCoeff * cos(proj->getLookAngX());
+    double zCoeff = xzCoeff * sin(proj->getLookAngX());
     double scale = proj->distToOtherX(target) / xCoeff;
     double xMove = round(xCoeff * scale);
     double yMove = round(yCoeff * scale);
