@@ -354,20 +354,24 @@ TEST(ProjectileLauncherTest,GitHub_Performs_Differently_With_Fire){
     proj->setLook(0,logic::degreesToRadians(45));
     std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
+    logic::Entity* activeEntity = proj;
+    for(std::set<logic::Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
+        activeEntity = *iter;
+    }
     float yCoeff = sin(proj->getLookAngY());
     float xzCoeff = cos(proj->getLookAngY());
     float xCoeff = xzCoeff * cos(proj->getLookAngX());
     float zCoeff = xzCoeff * sin(proj->getLookAngX()); 
-    float scale = proj->distToOtherX(target) / xCoeff;
+    float scale = proj->distToOtherX(activeEntity) / xCoeff;
     float xMove = round(xCoeff * scale);
     float yMove = round(yCoeff * scale);
     float zMove = round(zCoeff * scale);
     logic::Entity* testProj = new logic::Entity(0,0,0,0,0,0);
     testProj->doMoveAbsolute(xMove,yMove,zMove);
-    bool collisionWorksProperly = testProj->isColliding(target);
+    bool collisionWorksProperly = testProj->isColliding(activeEntity);
     logic::Entity* testEnt = testProj;
     testEnt = proj;
-    FAIL() << "xCoeff " << xCoeff <<" yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove << " collisionWorks " << collisionWorksProperly << " pointersEqual " << (testEnt == proj);         
+    FAIL() << "xCoeff " << xCoeff <<" yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove << " collisionWorks " << collisionWorksProperly << " pointersEqual " << (testEnt == proj) << " proj " << proj << " target " << target << " activeentity " << activeEntity;         
     delete target;
     delete proj;
     delete testProj;
