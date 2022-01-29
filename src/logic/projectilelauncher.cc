@@ -1,4 +1,5 @@
 #include "projectilelauncher.h"
+#include <math.h>
 namespace logic{
     ProjectileLauncher::ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazineSize, int damage) : Entity(x,y,z,width,height,depth)
     {
@@ -38,12 +39,78 @@ namespace logic{
     }
 
     bool ProjectileLauncher::fire(std::set<Entity*> entities){
-        //Unimplemented
-        return false;
+        lastHit = this;
+        bool canFire = false;
+        if(loadedAmmo > 0){
+            loadedAmmo -= 1;
+            canFire = true;
+        } else if(magazineSize = 0){
+            canFire = true;
+        }
+        if(canFire){
+            if(hitScan){
+            Entity* closestHittableEntity = this;
+            for(std::set<Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
+                Entity* activeEntity = *iter;
+                if(activeEntity->isSolid() && !inGhosts(activeEntity)){
+                //Creating a point to check if this line passes through the other entity
+                Entity* testPoint = new Entity(getX() + shootOffX, getY() + shootOffY,getZ() + shootOffZ,0,0,0);
+                testPoint->setLook(getLookAngX(),getLookAngY());
+                
+                //How much the line should move in each dimension per step with the given angles
+                double yCoeff = sin(getLookAngY());
+                double xzCoeff = cos(getLookAngY());
+                double xCoeff = xzCoeff * ((double)xHelper(100,0)) / 100;
+                double zCoeff = xzCoeff * ((double)zHelper(100,0)) / 100;                
+                
+                //If it has hit on any dimension
+                bool hitOnDim = false;
+                double xMove,yMove,zMove,scale = 0;
+
+                //For x, y, and z
+                for(int i = 0; i < 3; i++){
+                    testPoint->setPos(getX() + shootOffX, getY() + shootOffY,getZ() + shootOffZ);
+                    switch (i){
+                        case 0:
+                            scale = testPoint->distToOtherX(activeEntity) / xCoeff;
+                            break;
+                        case 1:
+                            scale = testPoint->distToOtherY(activeEntity) / yCoeff;
+                            break;
+                        case 2:
+                            scale = testPoint->distToOtherZ(activeEntity) / zCoeff;
+                    }
+                    if(scale >= 0){
+                        xMove = scale * xCoeff;
+                        yMove = scale * yCoeff;
+                        zMove = scale * zCoeff;
+                        testPoint->doMoveAbsolute(xMove,yMove,zMove);
+                        if(testPoint->isColliding(activeEntity)){
+                         hitOnDim = true;
+                        break;
+                        }
+                    }
+                }
+
+                if(hitOnDim){
+                    if(closestHittableEntity == this){
+                        closestHittableEntity = activeEntity;
+                    } else{
+                        if (euclideanDistToOther(activeEntity) < euclideanDistToOther(closestHittableEntity)){
+                            closestHittableEntity = activeEntity;
+                        }
+                    }
+                }
+                }
+            }
+            lastHit = closestHittableEntity;
+            }
+        }
+        return canFire;
     }
 
     bool ProjectileLauncher::hasHit(){
-        return false;
+        return lastHit != this;
     }
 
     Entity* ProjectileLauncher::findFirstCollision(std::set<Entity*> entities){
