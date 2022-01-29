@@ -30,6 +30,7 @@ jobs:
         cd ..
         gcovr project_build -r src --html --html-details -o project_build/coverage/coverage-html.html
     - name: Archive Report
+      if: always()
       uses: actions/upload-artifact@v2
       with:
           name: coverage
