@@ -108,8 +108,7 @@ namespace logic{
                 
                 //If it has hit on any dimension
                 bool hitOnDim = false;
-                float xMove,yMove,zMove = 0;
-                int scale;
+                int xMove,yMove,zMove,scale = 0;
 
                 //For x, y, and z
                 for(int i = 0; i < 3; i++){
