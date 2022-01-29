@@ -26,6 +26,9 @@ namespace logic
             //Fires the projectile or casts a ray, returns if it immediately hits anything
             bool fire(std::set<Entity*> entities);
 
+            //Performs a tick for a projectilelauncher
+            void doTick();
+
             //Whether or not the last shot fired from this launcher has hit anything yet
             bool hasHit();
 
@@ -95,6 +98,8 @@ namespace logic
             int shootOffZ;
             bool hitScan;
             Entity projectile;
+            //TODO: For testing without a world, should be replaced to point to a list of entities in the future
+            std::set<Entity*> entities;
             //TODO: Should be changed into a list in the future, will probably also need last hit to be a list that is removed from when used
             Entity* activeProjectile;
             Entity* lastHit;
