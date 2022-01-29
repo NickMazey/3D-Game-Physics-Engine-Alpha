@@ -1,5 +1,6 @@
 #include "projectilelauncher.h"
 #include <math.h>
+#include <algorithm>
 namespace logic{
     ProjectileLauncher::ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazineSize, int damage) : Entity(x,y,z,width,height,depth)
     {
@@ -50,6 +51,47 @@ namespace logic{
         }
         if(canFire){
             if(hitScan){
+                lastHit = findFirstCollision(entities);
+            } else{ //Non-hitscan
+                activeProjectile = new Entity(getX() + shootOffX,getY() + shootOffY, getZ() + shootOffZ,projectile.getWidth(),projectile.getHeight(),projectile.getDepth());
+                activeProjectile->setLook(getLookAngX(),getLookAngY());
+                activeProjectile->setMove(velocity[0],velocity[1],velocity[2]);
+                activeProjectile->addGhost(this);
+            }
+        }
+        return canFire;
+    }
+
+    void ProjectileLauncher::doTick(){
+        Entity::doTick();
+        if(!hitScan && activeProjectile != this){
+            for(std::set<Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
+                Entity* activeEntity = *iter;
+                if(activeProjectile->passesThrough(activeEntity, velocity[0],velocity[1],velocity[2])){
+                    lastHit = activeEntity;
+                    delete activeProjectile;
+                    activeProjectile = this;
+                }
+        }
+        if(activeProjectile != this){
+            activeProjectile->doMove();
+            for(std::set<Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
+                Entity* activeEntity = *iter;
+                if(activeProjectile->isColliding(activeEntity)){
+                    lastHit = activeEntity;
+                    delete activeProjectile;
+                    activeProjectile = this;
+                }
+            }
+        } 
+        }
+    }
+
+    bool ProjectileLauncher::hasHit(){
+        return lastHit != this;
+    }
+
+    Entity* ProjectileLauncher::findFirstCollision(std::set<Entity*> entities){
             Entity* closestHittableEntity = this;
             for(std::set<Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
                 Entity* activeEntity = *iter;
@@ -104,51 +146,43 @@ namespace logic{
                 }
                 }
             }
-            lastHit = closestHittableEntity;
-            } else{ //Non-hitscan
-                activeProjectile = new Entity(getX() + shootOffX,getY() + shootOffY, getZ() + shootOffZ,projectile.getWidth(),projectile.getHeight(),projectile.getDepth());
-                activeProjectile->setLook(getLookAngX(),getLookAngY());
-                activeProjectile->setMove(velocity[0],velocity[1],velocity[2]);
-                activeProjectile->addGhost(this);
-            }
-        }
-        return canFire;
+            return closestHittableEntity;
     }
 
-    void ProjectileLauncher::doTick(){
-        Entity::doTick();
-        if(!hitScan && activeProjectile != this){
-            for(std::set<Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
-                Entity* activeEntity = *iter;
-                if(activeProjectile->passesThrough(activeEntity, velocity[0],velocity[1],velocity[2])){
-                    lastHit = activeEntity;
-                    delete activeProjectile;
-                    activeProjectile = this;
-                }
-        }
-        if(activeProjectile != this){
-            activeProjectile->doMove();
-            for(std::set<Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
-                Entity* activeEntity = *iter;
-                if(activeProjectile->isColliding(activeEntity)){
-                    lastHit = activeEntity;
-                    delete activeProjectile;
-                    activeProjectile = this;
-                }
-            }
-        } 
-        }
-    }
-
-    bool ProjectileLauncher::hasHit(){
-        return lastHit != this;
-    }
-
-    Entity* ProjectileLauncher::findFirstCollision(std::set<Entity*> entities){
-        return this;
-    }
 
     std::vector<Entity*> ProjectileLauncher::findCollisions(std::set<Entity*> entities){
+        std::set<Entity*> hittableEntities = std::set<Entity*>();
+
+        //Find Entites that can be hit
+        for(std::set<Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
+            std::set<Entity*> newEntities = std::set<Entity*>();
+            newEntities.insert(*iter);
+            Entity* firstCollision = findFirstCollision(newEntities);
+            if(firstCollision != this){
+                hittableEntities.insert(*iter);
+            }
+        }
+
+        //Ok, there are entities to hit, now we need to order them
+        if(hittableEntities.size() != 0){
+            //So that I can sort the vector by the distance between the entities and the projectilelauncher
+            std::vector<std::tuple<int,Entity*>> hitWithDist = std::vector<std::tuple<int,Entity*>>();
+            std::vector<Entity*> hitList = std::vector<Entity*>();
+            for(std::set<Entity*>::iterator iter = hittableEntities.begin(); iter != hittableEntities.end(); iter++){
+                Entity* activeEntity = *iter;
+                std::tuple<int,Entity*> distTup = std::make_tuple(this->euclideanDistToOther(activeEntity),activeEntity);
+                hitWithDist.push_back(distTup);
+            }
+            std::sort(hitWithDist.begin(),hitWithDist.end());
+            //Turning the vector of tuples into a vector of Entity pointers
+            for(std::tuple<int,Entity*> tup : hitWithDist){
+                int dist;
+                Entity* toAdd;
+                std::tie(dist,toAdd) = tup;
+                hitList.push_back(toAdd);
+            }
+            return hitList;
+        }
         return std::vector<Entity*>();
     }
 
