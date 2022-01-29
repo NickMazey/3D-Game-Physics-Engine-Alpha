@@ -107,30 +107,35 @@ TEST(EntityTest, Unique_Ids_3){
 TEST(EntityTest, HP_Init){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     EXPECT_TRUE(a->getHP() == -1) << "Entity's HP is initialised incorrecly. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Set_HP_Positive){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     a->setHP(100);
     EXPECT_EQ(a->getHP(), 100) << "Entity's HP isn't set correctly. \n Entity " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Set_HP_Negative){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     a->setHP(-100);
     EXPECT_EQ(a->getHP(), -1) << "Entity's HP goes below -1. \n Entity " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Add_HP_Guarded){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     a->addHP(10);
     EXPECT_EQ(a->getHP(), -1) << "Entity shouldn't be able to have HP added to. \n Entity " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Remove_HP_Guarded){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     a->removeHP(10);
     EXPECT_EQ(a->getHP(), -1) << "Entity shouldn't be able to have HP removed from. \n Entity " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Add_HP_Positive){
@@ -138,6 +143,7 @@ TEST(EntityTest, Add_HP_Positive){
     a->setHP(0);
     a->addHP(100);
     EXPECT_EQ(a->getHP(),100) << "Entity doesn't have HP added to properly. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Add_HP_Negative){
@@ -145,6 +151,7 @@ TEST(EntityTest, Add_HP_Negative){
     a->setHP(101);
     a->addHP(-100);
     EXPECT_EQ(a->getHP(),1) << "Entity doesn't have HP added to properly. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Add_HP_Negative_Bounded){
@@ -152,6 +159,7 @@ TEST(EntityTest, Add_HP_Negative_Bounded){
     a->setHP(50);
     a->addHP(-100);
     EXPECT_EQ(a->getHP(),0) << "Entity doesn't have HP minimum of 0. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Remove_HP_Positive){
@@ -159,6 +167,7 @@ TEST(EntityTest, Remove_HP_Positive){
     a->setHP(101);
     a->removeHP(100);
     EXPECT_EQ(a->getHP(),1) << "Entity doesn't have HP removed from properly. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Remove_HP_Positive_Bounded){
@@ -166,6 +175,7 @@ TEST(EntityTest, Remove_HP_Positive_Bounded){
     a->setHP(50);
     a->removeHP(100);
     EXPECT_EQ(a->getHP(),0) << "Entity doesn't have HP minimum of 0. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Remove_HP_Negative){
@@ -173,6 +183,7 @@ TEST(EntityTest, Remove_HP_Negative){
     a->setHP(0);
     a->removeHP(-100);
     EXPECT_EQ(a->getHP(),100) << "Entity doesn't have HP removed from properly. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 
@@ -294,18 +305,21 @@ TEST(EntityTest, Set_Pos_X){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     a->setPos(10,0,0);
     EXPECT_TRUE(a->getX() == 10 && a->getY() == 0 && a->getZ() == 0) << "Entity's position wasn't set properly in X axis. \n Entity:" << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Set_Pos_Y){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     a->setPos(0,10,0);
     EXPECT_TRUE(a->getX() == 0 && a->getY() == 10 && a->getZ() == 0) << "Entity's position wasn't set properly in Y axis. \n Entity:" << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Set_Pos_Z){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     a->setPos(0,0,10);
     EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == 10) << "Entity's position wasn't set properly in Z axis. \n Entity:" << printInfo(*a);
+    delete a;
 }
 
 
@@ -316,6 +330,8 @@ TEST(EntityTest, Position_Relative_No_Off){
     logic::Entity* b = new logic::Entity(100,100,100,100,100,100);
     a->setPosRelativeTo(b,0,0,0);
     EXPECT_TRUE(b->getX() == 100 && b->getY() == 100 && b->getZ() == 100 && a->getX() == b->getX() && a->getY() == b->getY() && a->getZ() == b-> getZ()) << "Entity a wasn't moved to b's position. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Position_Relative_Pos_X_Off){
@@ -323,6 +339,8 @@ TEST(EntityTest, Position_Relative_Pos_X_Off){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->setPosRelativeTo(b,10,0,0);
     EXPECT_TRUE(a->getX() == b->getX() + 10 && a->getY() == 0 && a->getZ() == 0) << "Entity a wasn't moved to b's position + 10 (x). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Position_Relative_Neg_X_Off){
@@ -330,6 +348,8 @@ TEST(EntityTest, Position_Relative_Neg_X_Off){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->setPosRelativeTo(b,-10,0,0);
     EXPECT_TRUE(a->getX() == b->getX() - 10 && a->getY() == 0 && a->getZ() == 0) << "Entity a wasn't moved to b's position - 10 (x). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Position_Relative_Pos_Y_Off){
@@ -337,6 +357,8 @@ TEST(EntityTest, Position_Relative_Pos_Y_Off){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->setPosRelativeTo(b,0,10,0);
     EXPECT_TRUE(a->getX() == 0 && a->getY() == b->getY() + 10 && a->getZ() == 0) << "Entity a wasn't moved to b's position + 10 (y). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Position_Relative_Neg_Y_Off){
@@ -344,6 +366,8 @@ TEST(EntityTest, Position_Relative_Neg_Y_Off){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->setPosRelativeTo(b,0,-10,0);
     EXPECT_TRUE(a->getX() == 0 && a->getY() == b->getY() - 10 && a->getZ() == 0) << "Entity a wasn't moved to b's position - 10 (y). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Position_Relative_Pos_Z_Off){
@@ -351,6 +375,8 @@ TEST(EntityTest, Position_Relative_Pos_Z_Off){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->setPosRelativeTo(b,0,0,10);
     EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == b->getZ() + 10) << "Entity a wasn't moved to b's position + 10 (z). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Position_Relative_Neg_Z_Off){
@@ -358,6 +384,8 @@ TEST(EntityTest, Position_Relative_Neg_Z_Off){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->setPosRelativeTo(b,0,0,-10);
     EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == b->getZ() - 10) << "Entity a wasn't moved to b's position - 10 (z). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 
@@ -367,72 +395,96 @@ TEST(EntityTest, Distance_X_Positive){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(200,0,0,100,100,100);
     EXPECT_EQ(a->distToOtherX(b),100) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Distance_X_Negative){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(-200,0,0,100,100,100);
     EXPECT_EQ(a->distToOtherX(b),-100) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Distance_X_Positive_Inside){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
     EXPECT_EQ(a->distToOtherX(b),0) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Distance_X_Negative_Inside){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(-100,0,0,100,100,100);
     EXPECT_EQ(a->distToOtherX(b),0) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Distance_Y_Positive){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,200,0,100,100,100);
     EXPECT_EQ(a->distToOtherY(b),100) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Distance_Y_Negative){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,-200,0,100,100,100);
     EXPECT_EQ(a->distToOtherY(b),-100) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Distance_Y_Positive_Inside){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,100,0,100,100,100);
     EXPECT_EQ(a->distToOtherY(b),0) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Distance_Y_Negative_Inside){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,-100,0,100,100,100);
     EXPECT_EQ(a->distToOtherY(b),0) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Distance_Z_Positive){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,200,100,100,100);
     EXPECT_EQ(a->distToOtherZ(b),100) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Distance_Z_Negative){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,-200,100,100,100);
     EXPECT_EQ(a->distToOtherZ(b),-100) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Distance_Z_Positive_Inside){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
     EXPECT_EQ(a->distToOtherZ(b),0) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Distance_Z_Negative_Inside){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,-100,100,100,100);
     EXPECT_EQ(a->distToOtherZ(b),0) << "Entity distance isn't calculated correctly. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 
@@ -452,6 +504,7 @@ TEST(EntityTest,Would_Collide_Self){
 TEST(EntityTest, Solid_Init){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     EXPECT_TRUE(a->isSolid()) << "Entity isn't initialised solid. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 
@@ -556,28 +609,33 @@ TEST(EntityTest,Not_Colliding_Other_Negative_Z){
 TEST(EntityTest, Physics_Init){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     EXPECT_FALSE(a->hasPhysics()) << "Entity's physics isn't initialised to false. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Gravity_Init){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     EXPECT_EQ(a->getGravity(), 0) << "Entity's gravity isn't initialised to 0. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Friction_Init){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     EXPECT_EQ(a->getFriction(), 0.0) << "Entity's friction isn't initialised to 0. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Set_Gravity_Positive_Guarded){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     a->setGravity(10);
     EXPECT_EQ(a->getGravity(), 0) << "Entity's gravity updates regardless of physics. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Set_Gravity_Negative_Guarded){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     a->setGravity(-10);
     EXPECT_EQ(a->getGravity(), 0) << "Entity's gravity updates regardless of physics. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Set_Gravity_Positive){
@@ -585,6 +643,7 @@ TEST(EntityTest, Set_Gravity_Positive){
     a->setPhysics(true);
     a->setGravity(10);
     EXPECT_EQ(a->getGravity(), 10) << "Entity's gravity doesn't update properly with positive values. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Set_Gravity_Negative){
@@ -592,12 +651,14 @@ TEST(EntityTest, Set_Gravity_Negative){
     a->setPhysics(true);
     a->setGravity(-10);
     EXPECT_EQ(a->getGravity(), -10) << "Entity's gravity doesn't update properly with negative values. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Set_Friction_Guarded){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     a->setFriction(0.5);
     EXPECT_EQ(a->getFriction(), 0.0) << "Entity's friction updates regardless of physics. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Set_Friction_Bounded_Positive){
@@ -605,6 +666,7 @@ TEST(EntityTest, Set_Friction_Bounded_Positive){
     a->setPhysics(true);
     a->setFriction(10.0);
     EXPECT_EQ(a->getFriction(),1.0) << "Entity's friction exceeds 1.0. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Set_Friction_Bounded_Negative){
@@ -612,6 +674,7 @@ TEST(EntityTest, Set_Friction_Bounded_Negative){
     a->setPhysics(true);
     a->setFriction(-1.0);
     EXPECT_EQ(a->getFriction(),0.0) << "Entity's friction goes below 0.0. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Friction_X_Positive){
@@ -620,6 +683,7 @@ TEST(EntityTest, Friction_X_Positive){
     a->setFriction(0.5);
     a->doMove(10,0,0);
     EXPECT_TRUE(a->getX() == 5 && a->getY() == 0 && a->getZ() == 0) << "Entity's friction doesn't apply properly to positive X. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Friction_X_Negative){
@@ -628,6 +692,7 @@ TEST(EntityTest, Friction_X_Negative){
     a->setFriction(0.5);
     a->doMove(-10,0,0);
     EXPECT_TRUE(a->getX() == -5 && a->getY() == 0 && a->getZ() == 0) << "Entity's friction doesn't apply properly to negative X. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Friction_Z_Positive){
@@ -636,6 +701,7 @@ TEST(EntityTest, Friction_Z_Positive){
     a->setFriction(0.5);
     a->doMove(0,0,10);
     EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == 5) << "Entity's friction doesn't apply properly to positive Z. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 TEST(EntityTest, Friction_Z_Negative){
@@ -644,6 +710,7 @@ TEST(EntityTest, Friction_Z_Negative){
     a->setFriction(0.5);
     a->doMove(0,0,-10);
     EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == -5) << "Entity's friction doesn't apply properly to negative Z. \n Entity: " << printInfo(*a);
+    delete a;
 }
 
 
@@ -660,6 +727,8 @@ TEST(EntityTest,In_Ghosts){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->addGhost(b);
     EXPECT_TRUE(a->inGhosts(b)) << "Entity b is not counted as in the ghosts of a.";
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest,Remove_Ghosts){
@@ -668,6 +737,8 @@ TEST(EntityTest,Remove_Ghosts){
     a->addGhost(b);
     a->removeGhost(b);
     EXPECT_TRUE(!a->inGhosts(b)) << "Entity b is not removed from the ghosts of a.";
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest,Ghost_Collision){
@@ -676,6 +747,8 @@ TEST(EntityTest,Ghost_Collision){
     a->addGhost(b);
     EXPECT_TRUE(a->inGhosts(b) && !a->isColliding(b)) << "B in ghosts of A : " << a->inGhosts(b) << " \nA isn't colliding with B: " << !a->isColliding(b);
 
+    delete a;
+    delete b;
 }
 
 
@@ -743,156 +816,208 @@ TEST(EntityTest, Passes_Through_X_Pos){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(200,0,0,100,100,100);
     EXPECT_TRUE(a->passesThrough(b,400,0,0)) << "Entity a doesn't pass through entity b on positive X. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, PassesThrough_X_Neg){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(-200,0,0,100,100,100);
     EXPECT_TRUE(a->passesThrough(b,-400,0,0)) << "Entity a doesn't pass through entity b on negative X. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Passes_Through_Y_Pos){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,200,0,100,100,100);
     EXPECT_TRUE(a->passesThrough(b,0,400,0))<< "Entity a doesn't pass through entity b on positive Y. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Passes_Through_Y_Neg){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,-200,0,100,100,100);
     EXPECT_TRUE(a->passesThrough(b,0,-400,0))<< "Entity a doesn't pass through entity b on negative y. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b); 
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Passes_Through_Z_Pos){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,200,100,100,100);
     EXPECT_TRUE(a->passesThrough(b,0,0,400))<< "Entity a doesn't pass through entity b on positive Z. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Passes_Through_Z_Neg){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,-200,100,100,100);
     EXPECT_TRUE(a->passesThrough(b,0,0,-400))<< "Entity a doesn't pass through entity b on negative Z. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Still_X_Pos){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(200,0,0,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,0,0)) << "Entity a shouldn't pass through entity b on positive X. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Still_X_Neg){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(-200,0,0,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,0,0)) << "Entity a shouldn't pass through entity b on negative X. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Still_Y_Pos){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,200,0,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,0,0)) << "Entity a shouldn't pass through entity b on positive Y. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Still_Y_Neg){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,-200,0,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,0,0)) << "Entity a shouldn't pass through entity b on negative Y. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Still_Z_Pos){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,200,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,0,0)) << "Entity a shouldn't pass through entity b on positive Z. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Still_Z_Neg){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,-200,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,0,0)) << "Entity a shouldn't pass through entity b on negative Z. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Move_X_Pos){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(200,0,0,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,300,0,0)) << "Entity a shouldn't pass through entity b on positive X. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Move_X_Neg){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(-200,0,0,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,-300,0,0)) << "Entity a shouldn't pass through entity b on negative X. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Move_Y_Pos){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,200,0,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,300,0)) << "Entity a shouldn't pass through entity b on positive Y. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Move_Y_Neg){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,-200,0,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,-300,0)) << "Entity a shouldn't pass through entity b on negative Y. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Move_Z_Pos){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,200,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,0,300)) << "Entity a shouldn't pass through entity b on positive Z. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Move_Z_Neg){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,-200,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,0,-300)) << "Entity a shouldn't pass through entity b on negative Z. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Move_X_Pos_Wrong_Dir){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(-200,0,0,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,400,0,0)) << "Entity a shouldn't pass through entity b on positive X. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Move_X_Neg_Wrong_Dir){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(200,0,0,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,-400,0,0)) << "Entity a shouldn't pass through entity b on negative X. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Move_Y_Pos_Wrong_Dir){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,-200,0,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,400,0)) << "Entity a shouldn't pass through entity b on positive Y. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Move_Y_Neg_Wrong_Dir){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,200,0,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,-400,0)) << "Entity a shouldn't pass through entity b on negative Y. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Move_Z_Pos_Wrong_Dir){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,-200,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,400,0)) << "Entity a shouldn't pass through entity b on positive Z. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Doesnt_Pass_Through_Move_Z_Neg_Wrong_Dir){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,200,100,100,100);
     EXPECT_FALSE(a->passesThrough(b,0,-400,0)) << "Entity a shouldn't pass through entity b on negative Z. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Passes_Through_All_Pos){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(200,200,200,100,100,100);
     EXPECT_TRUE(a->passesThrough(b,400,400,400)) << "Entity a doesn't pass through entity b on all dimensions at once positively. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Passes_Through_All_Neg){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(-200,-200,-200,100,100,100);
     EXPECT_TRUE(a->passesThrough(b,-400,-400,-400)) << "Entity a doesn't pass through entity b on all dimensions at once negatively. \n Entity a:" << printInfo(*a) << "\n Entity b:" << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 
@@ -976,12 +1101,14 @@ TEST(EntityTest, Look_Y_Bounded_Positive){
     logic::Entity* ent = new logic::Entity(0,0,0,100,100,100);
     ent->doLook(0,logic::degreesToRadians(91));
     EXPECT_TRUE(ent->getLookAngY() == logic::degreesToRadians(90)) << "Entities don't have their look angY bounded positively to 90 degrees";
+    delete ent;
 }
 
 TEST(EntityTest, Look_Y_Bounded_Negative){
     logic::Entity* ent = new logic::Entity(0,0,0,100,100,100);
     ent->doLook(0,logic::degreesToRadians(-91));
     EXPECT_TRUE(ent->getLookAngY() == logic::degreesToRadians(-90)) << "Entities don't have their look angY bounded positively to 90 degrees";
+    delete ent;
 }
 
 
@@ -1114,7 +1241,7 @@ TEST(EntityTest,Movement_Rotated_45_Pos_X_And_Z){
     a->doLook(logic::degreesToRadians(45),0);
     a->doMove(10,0,10);
     EXPECT_TRUE(a->getX() == 0 && a->getY() == 0 && a->getZ() == 14) << "Entity didn't move correctly with multiple directions.\n Entity: " << printInfo(*a);
-
+    delete a;
 }
 
 
@@ -1125,6 +1252,8 @@ TEST(EntityTest, Self_Rotated_45_X_Collides){
     logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->isColliding(b)) << "Entity a didn't collide on X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_90_X_Collides){
@@ -1132,6 +1261,8 @@ TEST(EntityTest, Self_Rotated_90_X_Collides){
     logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
     a->doLook(logic::degreesToRadians(90),0);
     EXPECT_TRUE(a->isColliding(b)) << "Entity a didn't collide on X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_135_X_Collides){
@@ -1139,6 +1270,8 @@ TEST(EntityTest, Self_Rotated_135_X_Collides){
     logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
     a->doLook(logic::degreesToRadians(135),0);
     EXPECT_TRUE(a->isColliding(b)) << "Entity a didn't collide on X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_180_X_Doesnt_Collide){
@@ -1146,6 +1279,8 @@ TEST(EntityTest, Self_Rotated_180_X_Doesnt_Collide){
     logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
     a->doLook(logic::degreesToRadians(180),0);
     EXPECT_FALSE(a->isColliding(b)) << "Entity a collided on X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_45_X_Collides){
@@ -1153,6 +1288,8 @@ TEST(EntityTest, Other_Rotated_45_X_Collides){
     logic::Entity* b = new logic::Entity(100,0,0,50,100,100);
     b->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->isColliding(b)) << "Entity b didn't collide on X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_90_X_Collides){
@@ -1160,6 +1297,8 @@ TEST(EntityTest, Other_Rotated_90_X_Collides){
     logic::Entity* b = new logic::Entity(100,0,0,50,100,100);
     b->doLook(logic::degreesToRadians(90),0);
     EXPECT_TRUE(a->isColliding(b)) << "Entity b didn't collide on X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_135_X_Collides){
@@ -1167,6 +1306,8 @@ TEST(EntityTest, Other_Rotated_135_X_Collides){
     logic::Entity* b = new logic::Entity(100,0,0,50,100,100);
     b->doLook(logic::degreesToRadians(135),0);
     EXPECT_TRUE(a->isColliding(b)) << "Entity b didn't collide on X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_180_X_Doesnt_Collide){
@@ -1174,6 +1315,8 @@ TEST(EntityTest, Other_Rotated_180_X_Doesnt_Collide){
     logic::Entity* b = new logic::Entity(100,0,0,50,100,100);
     b->doLook(logic::degreesToRadians(180),0);
     EXPECT_FALSE(a->isColliding(b)) << "Entity b collided on X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_45_Z_Collides){
@@ -1181,6 +1324,8 @@ TEST(EntityTest, Self_Rotated_45_Z_Collides){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->isColliding(b)) << "Entity a didn't collide on Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_90_Z_Collides){
@@ -1188,6 +1333,8 @@ TEST(EntityTest, Self_Rotated_90_Z_Collides){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
     a->doLook(logic::degreesToRadians(90),0);
     EXPECT_TRUE(a->isColliding(b)) << "Entity a didn't collide on Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_135_Z_Collides){
@@ -1195,6 +1342,8 @@ TEST(EntityTest, Self_Rotated_135_Z_Collides){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
     a->doLook(logic::degreesToRadians(135),0);
     EXPECT_TRUE(a->isColliding(b)) << "Entity a didn't collide on Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_180_Z_Doesnt_Collide){
@@ -1202,6 +1351,8 @@ TEST(EntityTest, Self_Rotated_180_Z_Doesnt_Collide){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
     a->doLook(logic::degreesToRadians(180),0);
     EXPECT_FALSE(a->isColliding(b)) << "Entity a collided on Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_45_Z_Collides){
@@ -1209,6 +1360,8 @@ TEST(EntityTest, Other_Rotated_45_Z_Collides){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,50);
     b->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->isColliding(b)) << "Entity b didn't collide on Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_90_Z_Collides){
@@ -1216,6 +1369,8 @@ TEST(EntityTest, Other_Rotated_90_Z_Collides){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,50);
     b->doLook(logic::degreesToRadians(90),0);
     EXPECT_TRUE(a->isColliding(b)) << "Entity b didn't collide on Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_135_Z_Collides){
@@ -1223,6 +1378,8 @@ TEST(EntityTest, Other_Rotated_135_Z_Collides){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,50);
     b->doLook(logic::degreesToRadians(135),0);
     EXPECT_TRUE(a->isColliding(b)) << "Entity b didn't collide on Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_180_Z_Doesnt_Collide){
@@ -1230,6 +1387,8 @@ TEST(EntityTest, Other_Rotated_180_Z_Doesnt_Collide){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,50);
     b->doLook(logic::degreesToRadians(180),0);
     EXPECT_FALSE(a->isColliding(b)) << "Entity b collided on Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 
@@ -1240,6 +1399,8 @@ TEST(EntityTest, Self_Rotated_45_X_Would_Collide){
     logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity a wouldn't collide on X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_90_X_Would_Collide){
@@ -1247,6 +1408,8 @@ TEST(EntityTest, Self_Rotated_90_X_Would_Collide){
     logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
     a->doLook(logic::degreesToRadians(90),0);
     EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity a wouldn't collide on X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_135_X_Would_Collide){
@@ -1254,6 +1417,8 @@ TEST(EntityTest, Self_Rotated_135_X_Would_Collide){
     logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
     a->doLook(logic::degreesToRadians(135),0);
     EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity a wouldn't collide on X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_180_X_Wouldnt_Collide){
@@ -1261,6 +1426,8 @@ TEST(EntityTest, Self_Rotated_180_X_Wouldnt_Collide){
     logic::Entity* b = new logic::Entity(100,0,0,100,100,100);
     a->doLook(logic::degreesToRadians(180),0);
     EXPECT_FALSE(a->wouldCollide(b,0,0,0)) << "Entity a would collide on X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_45_X_Would_Collide){
@@ -1268,6 +1435,8 @@ TEST(EntityTest, Other_Rotated_45_X_Would_Collide){
     logic::Entity* b = new logic::Entity(100,0,0,50,100,100);
     b->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity b wouldn't collide on X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_90_X_Would_Collide){
@@ -1275,6 +1444,8 @@ TEST(EntityTest, Other_Rotated_90_X_Would_Collide){
     logic::Entity* b = new logic::Entity(100,0,0,50,100,100);
     b->doLook(logic::degreesToRadians(90),0);
     EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity b wouldn't collide on X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_135_X_Would_Collide){
@@ -1282,6 +1453,8 @@ TEST(EntityTest, Other_Rotated_135_X_Would_Collide){
     logic::Entity* b = new logic::Entity(100,0,0,50,100,100);
     b->doLook(logic::degreesToRadians(135),0);
     EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity b wouldn't collide on X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_180_X_Wouldnt_Collide){
@@ -1289,6 +1462,8 @@ TEST(EntityTest, Other_Rotated_180_X_Wouldnt_Collide){
     logic::Entity* b = new logic::Entity(100,0,0,50,100,100);
     b->doLook(logic::degreesToRadians(180),0);
     EXPECT_FALSE(a->wouldCollide(b,0,0,0)) << "Entity b would collide on X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_45_Z_Would_Collide){
@@ -1296,6 +1471,8 @@ TEST(EntityTest, Self_Rotated_45_Z_Would_Collide){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity a wouldn't collide on Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_90_Z_Would_Collide){
@@ -1303,6 +1480,8 @@ TEST(EntityTest, Self_Rotated_90_Z_Would_Collide){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
     a->doLook(logic::degreesToRadians(90),0);
     EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity a wouldn't collide on Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_135_Z_Would_Collide){
@@ -1310,6 +1489,8 @@ TEST(EntityTest, Self_Rotated_135_Z_Would_Collide){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
     a->doLook(logic::degreesToRadians(135),0);
     EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity a wouldn't collide on Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_180_Z_Wouldnt_Collide){
@@ -1317,6 +1498,8 @@ TEST(EntityTest, Self_Rotated_180_Z_Wouldnt_Collide){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,100);
     a->doLook(logic::degreesToRadians(180),0);
     EXPECT_FALSE(a->wouldCollide(b,0,0,0)) << "Entity a would collide on Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_45_Z_Would_Collide){
@@ -1324,6 +1507,8 @@ TEST(EntityTest, Other_Rotated_45_Z_Would_Collide){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,50);
     b->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity b wouldn't collide on Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_90_Z_Would_Collide){
@@ -1331,6 +1516,8 @@ TEST(EntityTest, Other_Rotated_90_Z_Would_Collide){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,50);
     b->doLook(logic::degreesToRadians(90),0);
     EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity b wouldn't collide on Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_135_Z_Would_Collide){
@@ -1338,6 +1525,8 @@ TEST(EntityTest, Other_Rotated_135_Z_Would_Collide){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,50);
     b->doLook(logic::degreesToRadians(135),0);
     EXPECT_TRUE(a->wouldCollide(b,0,0,0)) << "Entity b wouldn't collide on Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Other_Rotated_180_Z_Wouldnt_Collide){
@@ -1345,6 +1534,8 @@ TEST(EntityTest, Other_Rotated_180_Z_Wouldnt_Collide){
     logic::Entity* b = new logic::Entity(0,0,100,100,100,50);
     b->doLook(logic::degreesToRadians(180),0);
     EXPECT_FALSE(a->wouldCollide(b,0,0,0)) << "Entity b would collide on Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Rotation_Affects_Would_Collide_Movement_X){
@@ -1352,6 +1543,8 @@ TEST(EntityTest, Rotation_Affects_Would_Collide_Movement_X){
     logic::Entity* b = new logic::Entity(100,0,100,50,50,50);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->wouldCollide(b,100,0,0)) << "Would collide doesn't move properly on X when rotated. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Rotation_Affects_Would_Collide_Movement_Z){
@@ -1359,6 +1552,8 @@ TEST(EntityTest, Rotation_Affects_Would_Collide_Movement_Z){
     logic::Entity* b = new logic::Entity(-100,0,100,50,50,50);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->wouldCollide(b,0,0,100)) << "Would collide doesn't move properly on Z when rotated. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 
@@ -1369,6 +1564,8 @@ TEST(EntityTest, Self_Rotated_45_Passes_Through_Pos_X){
     logic::Entity* b = new logic::Entity(100,0,100,50,50,50);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->passesThrough(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_45_Passes_Through_Neg_X){
@@ -1376,6 +1573,8 @@ TEST(EntityTest, Self_Rotated_45_Passes_Through_Neg_X){
     logic::Entity* b = new logic::Entity(-100,0,-100,50,50,50);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->passesThrough(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);;
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_45_Passes_Through_Pos_Z){
@@ -1383,6 +1582,8 @@ TEST(EntityTest, Self_Rotated_45_Passes_Through_Pos_Z){
     logic::Entity* b = new logic::Entity(-100,0,100,50,50,50);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->passesThrough(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_45_Passes_Through_Neg_Z){
@@ -1390,6 +1591,8 @@ TEST(EntityTest, Self_Rotated_45_Passes_Through_Neg_Z){
     logic::Entity* b = new logic::Entity(100,0,-100,50,50,50);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->passesThrough(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);;
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_90_Passes_Through_Pos_X){
@@ -1397,6 +1600,8 @@ TEST(EntityTest, Self_Rotated_90_Passes_Through_Pos_X){
     logic::Entity* b = new logic::Entity(0,0,100,50,50,50);
     a->doLook(logic::degreesToRadians(90),0);
     EXPECT_TRUE(a->passesThrough(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_90_Passes_Through_Neg_X){
@@ -1404,6 +1609,8 @@ TEST(EntityTest, Self_Rotated_90_Passes_Through_Neg_X){
     logic::Entity* b = new logic::Entity(0,0,-100,50,50,50);
     a->doLook(logic::degreesToRadians(90),0);
     EXPECT_TRUE(a->passesThrough(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_90_Passes_Through_Pos_Z){
@@ -1411,6 +1618,8 @@ TEST(EntityTest, Self_Rotated_90_Passes_Through_Pos_Z){
     logic::Entity* b = new logic::Entity(-100,0,0,50,50,50);
     a->doLook(logic::degreesToRadians(90),0);
     EXPECT_TRUE(a->passesThrough(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_90_Passes_Through_Neg_Z){
@@ -1418,6 +1627,8 @@ TEST(EntityTest, Self_Rotated_90_Passes_Through_Neg_Z){
     logic::Entity* b = new logic::Entity(100,0,0,50,50,50);
     a->doLook(logic::degreesToRadians(90),0);
     EXPECT_TRUE(a->passesThrough(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_135_Passes_Through_Pos_X){
@@ -1425,6 +1636,8 @@ TEST(EntityTest, Self_Rotated_135_Passes_Through_Pos_X){
     logic::Entity* b = new logic::Entity(-100,0,100,50,50,50);
     a->doLook(logic::degreesToRadians(135),0);
     EXPECT_TRUE(a->passesThrough(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_135_Passes_Through_Neg_X){
@@ -1432,6 +1645,8 @@ TEST(EntityTest, Self_Rotated_135_Passes_Through_Neg_X){
     logic::Entity* b = new logic::Entity(100,0,-100,50,50,50);
     a->doLook(logic::degreesToRadians(135),0);
     EXPECT_TRUE(a->passesThrough(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_135_Passes_Through_Pos_Z){
@@ -1439,6 +1654,8 @@ TEST(EntityTest, Self_Rotated_135_Passes_Through_Pos_Z){
     logic::Entity* b = new logic::Entity(-100,0,-100,50,50,50);
     a->doLook(logic::degreesToRadians(135),0);
     EXPECT_TRUE(a->passesThrough(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_135_Passes_Through_Neg_Z){
@@ -1446,6 +1663,8 @@ TEST(EntityTest, Self_Rotated_135_Passes_Through_Neg_Z){
     logic::Entity* b = new logic::Entity(100,0,100,50,50,50);
     a->doLook(logic::degreesToRadians(135),0);
     EXPECT_TRUE(a->passesThrough(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_180_Passes_Through_Pos_X){
@@ -1453,6 +1672,8 @@ TEST(EntityTest, Self_Rotated_180_Passes_Through_Pos_X){
     logic::Entity* b = new logic::Entity(-100,0,0,50,50,50);
     a->doLook(logic::degreesToRadians(180),0);
     EXPECT_TRUE(a->passesThrough(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_180_Passes_Through_Neg_X){
@@ -1460,6 +1681,8 @@ TEST(EntityTest, Self_Rotated_180_Passes_Through_Neg_X){
     logic::Entity* b = new logic::Entity(100,0,0,50,50,50);
     a->doLook(logic::degreesToRadians(180),0);
     EXPECT_TRUE(a->passesThrough(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_180_Passes_Through_Pos_Z){
@@ -1467,6 +1690,8 @@ TEST(EntityTest, Self_Rotated_180_Passes_Through_Pos_Z){
     logic::Entity* b = new logic::Entity(0,0,-100,50,50,50);
     a->doLook(logic::degreesToRadians(180),0);
     EXPECT_TRUE(a->passesThrough(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Self_Rotated_180_Passes_Through_Neg_Z){
@@ -1474,6 +1699,8 @@ TEST(EntityTest, Self_Rotated_180_Passes_Through_Neg_Z){
     logic::Entity* b = new logic::Entity(0,0,100,50,50,50);
     a->doLook(logic::degreesToRadians(180),0);
     EXPECT_TRUE(a->passesThrough(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 
@@ -1484,6 +1711,8 @@ TEST(EntityTest, Position_Relative_No_Rotate){
     logic::Entity* b = new logic::Entity(100,100,100,100,100,100);
     b->setOtherPosRelativeTo(a,10,10,10);
     EXPECT_TRUE(a->getX() == b->getX() + 10 && a->getY() == b->getY() + 10 && a->getZ() == b->getZ() + 10) << "Entity a wasn't moved properly to b (+10x,+10y,+10z). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Position_Relative_45_Pos_X){
@@ -1492,6 +1721,8 @@ TEST(EntityTest, Position_Relative_45_Pos_X){
     b->doLook(logic::degreesToRadians(45),0);
     b->setOtherPosRelativeTo(a,10,0,0);
     EXPECT_TRUE(a->getX() == b->getX() + 7 && a->getY() == b->getY() && a->getZ() == b->getZ() + 7) << "Entity a wasn't moved properly to b with rotation (45 degrees). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Position_Relative_45_Neg_X){
@@ -1500,6 +1731,8 @@ TEST(EntityTest, Position_Relative_45_Neg_X){
     b->doLook(logic::degreesToRadians(-45),0);
     b->setOtherPosRelativeTo(a,10,0,0);
     EXPECT_TRUE(a->getX() == b->getX() + 7 && a->getY() == b->getY() && a->getZ() == b->getZ() - 7) << "Entity a wasn't moved properly to b with rotation (45 degrees). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Position_Relative_45_Pos_Z){
@@ -1508,6 +1741,8 @@ TEST(EntityTest, Position_Relative_45_Pos_Z){
     b->doLook(logic::degreesToRadians(45),0);
     b->setOtherPosRelativeTo(a,0,0,10);
     EXPECT_TRUE(a->getX() == b->getX() - 7 && a->getY() == b->getY() && a->getZ() == b->getZ() + 7) << "Entity a wasn't moved properly to b with rotation (45 degrees). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Position_Relative_45_Neg_Z){
@@ -1516,6 +1751,8 @@ TEST(EntityTest, Position_Relative_45_Neg_Z){
     b->doLook(logic::degreesToRadians(-45),0);
     b->setOtherPosRelativeTo(a,0,0,10);
     EXPECT_TRUE(a->getX() == b->getX() + 7 && a->getY() == b->getY() && a->getZ() == b->getZ() + 7) << "Entity a wasn't moved properly to b with rotation (45 degrees). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 
@@ -1525,6 +1762,8 @@ TEST(EntityTest, Not_In_Children){
     logic::Entity* a = new logic::Entity(0,0,0,100,100,100);
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     EXPECT_FALSE(a->inChildren(b)) << "B shouldn't be considered a child of A.";
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, In_Children){
@@ -1532,6 +1771,8 @@ TEST(EntityTest, In_Children){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->addChild(b,0,0,0);
     EXPECT_TRUE(a->inChildren(b)) << "B should be considered a child of A.";
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, One_Way_Children){
@@ -1540,6 +1781,8 @@ TEST(EntityTest, One_Way_Children){
     a->addChild(b,0,0,0);
     b->addChild(a,0,0,0);
     EXPECT_FALSE(b->inChildren(a)) << "A shouldn't be considered a child of B.";
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Children_Offset){
@@ -1547,6 +1790,8 @@ TEST(EntityTest, Children_Offset){
     logic::Entity* b = new logic::Entity(0,0,0,100,100,100);
     a->addChild(b,10,10,10);
     EXPECT_TRUE(b->getX() == a->getX() + 10 && b->getY() == a->getY() + 10 && b->getZ() == a->getZ() + 10) << "B wasn't moved to the correct offset (a + 10,10,10). \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Children_Look_Ang){
@@ -1555,6 +1800,8 @@ TEST(EntityTest, Children_Look_Ang){
     a->addChild(b,0,0,0);
     a->doLook(logic::degreesToRadians(45),logic::degreesToRadians(45));
     EXPECT_TRUE(a->getLookAngX() == b->getLookAngX() && a->getLookAngY() == b->getLookAngY()) << "B and A aren't looking the same direction. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Children_Rotation_X_Pos){
@@ -1563,6 +1810,8 @@ TEST(EntityTest, Children_Rotation_X_Pos){
     a->addChild(b,10,0,0);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't rotate properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Children_Rotation_X_Neg){
@@ -1571,6 +1820,8 @@ TEST(EntityTest, Children_Rotation_X_Neg){
     a->addChild(b,10,0,0);
     a->doLook(logic::degreesToRadians(-45),0);
     EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() - 7) << "B didn't rotate properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Children_Rotation_Z_Pos){
@@ -1579,6 +1830,8 @@ TEST(EntityTest, Children_Rotation_Z_Pos){
     a->addChild(b,0,0,10);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(b->getX() == a->getX() - 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't rotate properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Children_Rotation_Z_Neg){
@@ -1588,6 +1841,8 @@ TEST(EntityTest, Children_Rotation_Z_Neg){
     a->doLook(logic::degreesToRadians(-45),0);
     a->updateChildren();
     EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't rotate properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Children_Move_X_Pos){
@@ -1596,6 +1851,8 @@ TEST(EntityTest, Children_Move_X_Pos){
     a->addChild(b,10,0,0);
     a->doMoveAbsolute(10,10,10);
     EXPECT_TRUE(b->getX() == a->getX() + 10 && b->getZ() == a->getZ() && b->getY() == a->getY()) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Children_Move_X_Neg){
@@ -1604,6 +1861,8 @@ TEST(EntityTest, Children_Move_X_Neg){
     a->addChild(b,-10,0,0);
     a->doMoveAbsolute(10,10,10);
     EXPECT_TRUE(b->getX() == a->getX() - 10 && b->getZ() == a->getZ() && b->getY() == a->getY()) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Children_Move_Y_Pos){
@@ -1612,6 +1871,8 @@ TEST(EntityTest, Children_Move_Y_Pos){
     a->addChild(b,0,10,0);
     a->doMoveAbsolute(10,10,10);
     EXPECT_TRUE(b->getX() == a->getX() && b->getZ() == a->getZ() && b->getY() == a->getY() + 10) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Children_Move_Y_Neg){
@@ -1620,6 +1881,8 @@ TEST(EntityTest, Children_Move_Y_Neg){
     a->addChild(b,0,-10,0);
     a->doMoveAbsolute(10,10,10);
     EXPECT_TRUE(b->getX() == a->getX() && b->getZ() == a->getZ() && b->getY() == a->getY() - 10) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Children_Move_Z_Pos){
@@ -1628,6 +1891,8 @@ TEST(EntityTest, Children_Move_Z_Pos){
     a->addChild(b,0,0,10);
     a->doMoveAbsolute(10,10,10);
     EXPECT_TRUE(b->getX() == a->getX() && b->getZ() == a->getZ() + 10 && b->getY() == a->getY()) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest, Children_Move_Z_Neg){
@@ -1636,6 +1901,8 @@ TEST(EntityTest, Children_Move_Z_Neg){
     a->addChild(b,0,0,-10);
     a->doMoveAbsolute(10,10,10);
     EXPECT_TRUE(b->getX() == a->getX() && b->getZ() == a->getZ() - 10 && b->getY() == a->getY()) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest,Children_Move_And_Rotate_X_Pos){
@@ -1645,6 +1912,8 @@ TEST(EntityTest,Children_Move_And_Rotate_X_Pos){
     a->setLook(logic::degreesToRadians(45),0);
     a->doMove(10,10,10);
     EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest,Children_Move_And_Rotate_X_Neg){
@@ -1654,6 +1923,8 @@ TEST(EntityTest,Children_Move_And_Rotate_X_Neg){
     a->setLook(logic::degreesToRadians(-45),0);
     a->doMove(10,10,10);
     EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() - 7) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest,Children_Move_And_Rotate_Z_Pos){
@@ -1663,6 +1934,8 @@ TEST(EntityTest,Children_Move_And_Rotate_Z_Pos){
     a->setLook(logic::degreesToRadians(45),0);
     a->doMove(10,10,10);
     EXPECT_TRUE(b->getX() == a->getX() - 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest,Children_Move_And_Rotate_Z_Neg){
@@ -1672,6 +1945,8 @@ TEST(EntityTest,Children_Move_And_Rotate_Z_Neg){
     a->setLook(logic::degreesToRadians(-45),0);
     a->doMove(10,10,10);
     EXPECT_TRUE(b->getX() == a->getX() + 7 && b->getY() == a->getY() && b->getZ() == a->getZ() + 7) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 TEST(EntityTest,Children_Chain_In){
@@ -1681,6 +1956,9 @@ TEST(EntityTest,Children_Chain_In){
     a->addChild(b,0,0,0);
     b->addChild(c,0,0,0);
     EXPECT_TRUE(a->inChildren(c)) << "In child doesn't chain.";
+    delete a;
+    delete b;
+    delete c;
 }
 
 TEST(EntityTest,Children_Chain_Move){
@@ -1691,6 +1969,9 @@ TEST(EntityTest,Children_Chain_Move){
     b->addChild(c,10,10,10);
     a->doMove(10,0,0);
     EXPECT_EQ(a->getX() + 20, c->getX()) << "Movement doesn't chain with children.";
+    delete a;
+    delete b;
+    delete c;
 }
 
 TEST(EntityTest,Children_Chain_Rotate){
@@ -1701,6 +1982,9 @@ TEST(EntityTest,Children_Chain_Rotate){
     b->addChild(c,10,10,10);
     a->doLook(logic::degreesToRadians(45),0);
     EXPECT_TRUE(a->getLookAngX() == c->getLookAngX() && c->getX() == a->getX() && c->getZ() == a->getZ() + 28) << "Look direction doesn't chain with children.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b) << "\n Entity c: " << printInfo(*c);
+    delete a;
+    delete b;
+    delete c;
 }
 
 TEST(EntityTest, Children_Set_Pos){
@@ -1709,6 +1993,8 @@ TEST(EntityTest, Children_Set_Pos){
     a->addChild(b,10,10,10);
     a->setPos(10,10,10);
     EXPECT_TRUE(b->getX() == a->getX() + 10 && b->getY() == a->getY() + 10 && b->getZ() == a->getZ() + 10) << "B didn't move properly with A.\n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    delete a;
+    delete b;
 }
 
 
@@ -1719,6 +2005,7 @@ TEST(EntityTest, Delete_Doesnt_Break_Github){
     a->addGhost(b);
     delete b;
     SUCCEED();
+    delete a;
 }
 
 TEST(EntityTest,Safe_Ghost_Forward_Deletion){
@@ -1728,6 +2015,7 @@ TEST(EntityTest,Safe_Ghost_Forward_Deletion){
     a->addChild(b,0,0,0);
     delete b;
     EXPECT_FALSE(a->inGhosts(b)) << "Destructor doesn't safely remove from ghosts";
+    delete a;
 }
 
 TEST(EntityTest,Safe_Ghost_Backward_Deletion){
@@ -1736,6 +2024,7 @@ TEST(EntityTest,Safe_Ghost_Backward_Deletion){
     a->addGhost(b);
     delete a;
     EXPECT_FALSE(b->inDependents(a)) << "Destructor doesn't safely remove from ghosts";
+    delete b;
 }
 
 TEST(EntityTest,Safe_Child_Deletion){
@@ -1744,6 +2033,7 @@ TEST(EntityTest,Safe_Child_Deletion){
     a->addChild(b,0,0,0);
     delete b;
     EXPECT_FALSE(a->inChildren(b)) << "Destructor doesn't safely remove from children";
+    delete a;
 }
 
 TEST(EntityTest,Safe_Parent_Deletion){
@@ -1752,6 +2042,7 @@ TEST(EntityTest,Safe_Parent_Deletion){
     a->addChild(b,0,0,0);
     delete a;
     EXPECT_FALSE(b->inDependents(a)) << "Destructor doesn't safely remove parents from dependents";
+    delete b;
 }
 
 
