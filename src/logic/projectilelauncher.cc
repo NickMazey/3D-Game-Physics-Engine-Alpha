@@ -124,9 +124,9 @@ namespace logic{
                             scale = ((double)testPoint->distToOtherZ(activeEntity) / zCoeff);
                     }
                     if(scale >= 0){
-                        xMove = scale * xCoeff;
-                        yMove = scale * yCoeff;
-                        zMove = scale * zCoeff;
+                        xMove = round(scale * xCoeff);
+                        yMove = round(scale * yCoeff);
+                        zMove = round(scale * zCoeff);
                         testPoint->doMoveAbsolute(xMove,yMove,zMove);
                         if(testPoint->isColliding(activeEntity)){
                          hitOnDim = true;
