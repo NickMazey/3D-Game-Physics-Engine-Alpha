@@ -115,13 +115,13 @@ namespace logic{
                     testPoint->setPos(getX() + shootOffX, getY() + shootOffY,getZ() + shootOffZ);
                     switch (i){
                         case 0:
-                            scale = testPoint->distToOtherX(activeEntity) / xCoeff;
+                            scale = ((double)testPoint->distToOtherX(activeEntity)) / xCoeff;
                             break;
                         case 1:
-                            scale = testPoint->distToOtherY(activeEntity) / yCoeff;
+                            scale = ((double)testPoint->distToOtherY(activeEntity) / yCoeff);
                             break;
                         case 2:
-                            scale = testPoint->distToOtherZ(activeEntity) / zCoeff;
+                            scale = ((double)testPoint->distToOtherZ(activeEntity) / zCoeff);
                     }
                     if(scale >= 0){
                         xMove = scale * xCoeff;
