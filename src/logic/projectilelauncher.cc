@@ -108,20 +108,21 @@ namespace logic{
                 
                 //If it has hit on any dimension
                 bool hitOnDim = false;
-                float xMove,yMove,zMove,scale = 0;
+                float xMove,yMove,zMove = 0;
+                int scale;
 
                 //For x, y, and z
                 for(int i = 0; i < 3; i++){
                     testPoint->setPos(getX() + shootOffX, getY() + shootOffY,getZ() + shootOffZ);
                     switch (i){
                         case 0:
-                            scale = testPoint->distToOtherX(activeEntity) / xCoeff;
+                            scale = round(testPoint->distToOtherX(activeEntity) / xCoeff);
                             break;
                         case 1:
-                            scale = testPoint->distToOtherY(activeEntity) / yCoeff;
+                            scale = round(testPoint->distToOtherY(activeEntity) / yCoeff);
                             break;
                         case 2:
-                            scale = testPoint->distToOtherZ(activeEntity) / zCoeff;
+                            scale = round(testPoint->distToOtherZ(activeEntity) / zCoeff);
                             break;
                     }
                     if(scale >= 0){
