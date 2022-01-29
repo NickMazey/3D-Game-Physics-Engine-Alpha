@@ -118,10 +118,10 @@ namespace logic{
                             scale = ((double)testPoint->distToOtherX(activeEntity)) / xCoeff;
                             break;
                         case 1:
-                            scale = ((double)testPoint->distToOtherY(activeEntity) / yCoeff);
+                            scale = ((double)testPoint->distToOtherY(activeEntity)) / yCoeff;
                             break;
                         case 2:
-                            scale = ((double)testPoint->distToOtherZ(activeEntity) / zCoeff);
+                            scale = ((double)testPoint->distToOtherZ(activeEntity)) / zCoeff;
                             break;
                     }
                     if(scale >= 0){
