@@ -260,6 +260,11 @@ namespace logic
     {
         this->lookAngX += lookVector[0];
         this->lookAngY += lookVector[1];
+        if(this->lookAngY > degreesToRadians(90)){
+            this->lookAngY = degreesToRadians(90);
+        } else if(this->lookAngY < degreesToRadians(-90)){
+            this->lookAngY = degreesToRadians(-90);
+        }
         this->updateChildren();
     }
 
