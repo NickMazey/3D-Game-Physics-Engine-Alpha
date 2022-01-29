@@ -2,6 +2,7 @@
 #include "projectilelauncher.h"
 #include "util.h"
 #include <set>
+#include "math.h"
 
 //Initialisation Tests
 TEST(ProjectileLauncherTest, Init_Hitscan_Test_Entity_Values){
@@ -346,6 +347,27 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_45_Po
     delete target;
     delete proj;
 }
+
+/*
+TEST(ProjectileLauncherTest,GitHub_Performs_Differently_With_Fire){
+    logic::Entity* target = new logic::Entity(7,7,0,10,10,10);
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    proj->setLook(0,logic::degreesToRadians(45));
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
+    entities.insert(target);
+    double yCoeff = sin(proj->getLookAngY());
+    double xzCoeff = cos(proj->getLookAngY());
+    double xCoeff = xzCoeff * ((double)proj->xHelper(100,0)) / 100;
+    double zCoeff = xzCoeff * ((double)proj->zHelper(100,0)) / 100;
+    double scale = proj->distToOtherX(target) / xCoeff;
+    double xMove = round(xCoeff * scale);
+    double yMove = round(yCoeff * scale);
+    double zMove = round(zCoeff * scale);
+    FAIL() << "xCoeff " << xCoeff <<" yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove;         
+    delete target;
+    delete proj;
+}
+*/
 
 TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_90_Pos){
     logic::Entity* target = new logic::Entity(0,10,0,10,10,10);
