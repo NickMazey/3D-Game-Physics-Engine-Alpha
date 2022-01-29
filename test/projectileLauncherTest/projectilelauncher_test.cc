@@ -2,7 +2,7 @@
 #include "projectilelauncher.h"
 #include "util.h"
 #include <set>
-#include "math.h"
+#include <math.h>
 
 //Initialisation Tests
 TEST(ProjectileLauncherTest, Init_Hitscan_Test_Entity_Values){
@@ -362,9 +362,13 @@ TEST(ProjectileLauncherTest,GitHub_Performs_Differently_With_Fire){
     double xMove = round(xCoeff * scale);
     double yMove = round(yCoeff * scale);
     double zMove = round(zCoeff * scale);
-    FAIL() << "xCoeff " << xCoeff <<" yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove;         
+    logic::Entity* testProj = new logic::Entity(0,0,0,0,0,0);
+    testProj->doMoveAbsolute(xMove,yMove,zMove);
+    bool collisionWorksProperly = testProj->isColliding(target);
+    FAIL() << "xCoeff " << xCoeff <<" yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove << " collisionWorks " << collisionWorksProperly;         
     delete target;
     delete proj;
+    delete testProj;
 }
 
 TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_90_Pos){
