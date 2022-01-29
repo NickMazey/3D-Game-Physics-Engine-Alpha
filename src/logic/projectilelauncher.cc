@@ -101,14 +101,14 @@ namespace logic{
                 testPoint->setLook(getLookAngX(),getLookAngY());
                 
                 //How much the line should move in each dimension per step with the given angles
-                double yCoeff = sin(getLookAngY());
-                double xzCoeff = cos(getLookAngY());
-                double xCoeff = xzCoeff * cos(getLookAngX());
-                double zCoeff = xzCoeff * sin(getLookAngX());                
+                float yCoeff = sin(getLookAngY());
+                float xzCoeff = cos(getLookAngY());
+                float xCoeff = xzCoeff * cos(getLookAngX());
+                float zCoeff = xzCoeff * sin(getLookAngX());                
                 
                 //If it has hit on any dimension
                 bool hitOnDim = false;
-                double xMove,yMove,zMove,scale = 0;
+                float xMove,yMove,zMove,scale = 0;
 
                 //For x, y, and z
                 for(int i = 0; i < 3; i++){
