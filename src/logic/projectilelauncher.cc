@@ -39,6 +39,7 @@ namespace logic{
     }
 
     bool ProjectileLauncher::fire(std::set<Entity*> entities){
+        this->entities = entities;
         lastHit = this;
         bool canFire = false;
         if(loadedAmmo > 0){
@@ -104,9 +105,39 @@ namespace logic{
                 }
             }
             lastHit = closestHittableEntity;
+            } else{ //Non-hitscan
+                activeProjectile = new Entity(getX() + shootOffX,getY() + shootOffY, getZ() + shootOffZ,projectile.getWidth(),projectile.getHeight(),projectile.getDepth());
+                activeProjectile->setLook(getLookAngX(),getLookAngY());
+                activeProjectile->setMove(velocity[0],velocity[1],velocity[2]);
+                activeProjectile->addGhost(this);
             }
         }
         return canFire;
+    }
+
+    void ProjectileLauncher::doTick(){
+        Entity::doTick();
+        if(!hitScan && activeProjectile != this){
+            for(std::set<Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
+                Entity* activeEntity = *iter;
+                if(activeProjectile->passesThrough(activeEntity, velocity[0],velocity[1],velocity[2])){
+                    lastHit = activeEntity;
+                    delete activeProjectile;
+                    activeProjectile = this;
+                }
+        }
+        if(activeProjectile != this){
+            activeProjectile->doMove();
+            for(std::set<Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
+                Entity* activeEntity = *iter;
+                if(activeProjectile->isColliding(activeEntity)){
+                    lastHit = activeEntity;
+                    delete activeProjectile;
+                    activeProjectile = this;
+                }
+            }
+        } 
+        }
     }
 
     bool ProjectileLauncher::hasHit(){
