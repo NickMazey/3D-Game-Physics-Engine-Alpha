@@ -22,6 +22,7 @@ jobs:
         cd build
         ctest --output-on-failure
     - name: Generate Report
+      if: always()
       run: |
         pip install gcovr
         cd project_build
