@@ -126,6 +126,9 @@ namespace logic
         //Returns the distance to another entity on Z
         int distToOtherZ(const Entity *other) const;
 
+        //Returns the euclidean distance to another entity
+        int euclideanDistToOther(const Entity *other) const;
+
         //whether or not this entity is colliding with the other (atm uses bounding box)
         bool isColliding(const Entity *other);
 
