@@ -145,6 +145,7 @@ namespace logic{
                         }
                     }
                 }
+                delete testPoint;
                 }
             }
             return closestHittableEntity;
