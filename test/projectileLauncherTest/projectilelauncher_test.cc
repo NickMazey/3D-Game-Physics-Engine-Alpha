@@ -433,7 +433,8 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_45_Po
     std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
-    EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities in front of them when looking 45 degrees up";
+    logic::Entity *lastHit = proj->getLastHit();
+    EXPECT_EQ(lastHit,target) << "hitscan projectilelaunchers don't hit entities in front of them when looking 45 degrees up";
     delete target;
     delete proj;
 }
