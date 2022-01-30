@@ -47,7 +47,12 @@ namespace logic{
             loadedAmmo -= 1;
             canFire = true;
         } else if(magazineSize == 0){
-            canFire = true;
+            if(ammo > 0){
+                ammo -= 1;
+                canFire = true;
+            } else if(ammo == -1){
+                canFire = true;
+            }
         }
         if(canFire){
             if(hitScan){
