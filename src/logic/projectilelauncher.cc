@@ -46,7 +46,7 @@ namespace logic{
         if(loadedAmmo > 0){
             loadedAmmo -= 1;
             canFire = true;
-        } else if(magazineSize = 0){
+        } else if(magazineSize == 0){
             canFire = true;
         }
         if(canFire){
