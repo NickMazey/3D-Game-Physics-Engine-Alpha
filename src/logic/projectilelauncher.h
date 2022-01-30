@@ -99,7 +99,7 @@ namespace logic
             bool hitScan;
             Entity projectile;
             //TODO: For testing without a world, should be replaced to point to a list of entities in the future
-            std::set<Entity*> entities;
+            std::set<Entity*> entList;
             //TODO: Should be changed into a list in the future, will probably also need last hit to be a list that is removed from when used
             Entity* activeProjectile;
             Entity* lastHit;

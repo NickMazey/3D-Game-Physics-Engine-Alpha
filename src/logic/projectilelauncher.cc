@@ -40,7 +40,7 @@ namespace logic{
     }
 
     bool ProjectileLauncher::fire(std::set<Entity*> entities){
-        this->entities = entities;
+        this->entList = entities;
         lastHit = this;
         bool canFire = false;
         if(loadedAmmo > 0){
@@ -70,7 +70,7 @@ namespace logic{
     void ProjectileLauncher::doTick(){
         Entity::doTick();
         if(!hitScan && activeProjectile != this){
-            for(std::set<Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
+            for(std::set<Entity*>::iterator iter = entList.begin(); iter != entList.end(); iter++){
                 Entity* activeEntity = *iter;
                 if(activeProjectile->passesThrough(activeEntity, velocity[0],velocity[1],velocity[2])){
                     lastHit = activeEntity;
@@ -80,7 +80,7 @@ namespace logic{
         }
         if(activeProjectile != this){
             activeProjectile->doMove();
-            for(std::set<Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
+            for(std::set<Entity*>::iterator iter = entList.begin(); iter != entList.end(); iter++){
                 Entity* activeEntity = *iter;
                 if(activeProjectile->isColliding(activeEntity)){
                     lastHit = activeEntity;
