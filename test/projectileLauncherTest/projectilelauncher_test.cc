@@ -435,6 +435,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_45_Po
     entities.insert(target);
     bool didFire = proj->fire(entities);
     logic::Entity *lastHit = proj->getLastHit();
+    EXPECT_TRUE(didFire) << "didn't fire";
     EXPECT_EQ(lastHit, target) << "hitscan projectilelaunchers don't hit entities in front of them when looking 45 degrees up";
     delete target;
     delete proj;
