@@ -20,9 +20,7 @@ jobs:
       run: |
         cd project_build
         cd build
-        cd test
-        ctest --test-dir entityTest --output-on-failure --output-log ../entitylog.txt
-        ctest --test-dir projectileLauncherTest --output-on-failure --output-log ../projectilelog.txt
+        ctest --output-on-failure
     - name: Generate Report
       if: always()
       run: |
