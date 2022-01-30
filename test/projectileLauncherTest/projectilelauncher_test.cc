@@ -369,9 +369,13 @@ TEST(ProjectileLauncherTest,GitHub_Performs_Differently_With_Fire){
     logic::Entity* testProj = new logic::Entity(proj->getX() + proj->getShootOffX(),proj->getShootOffY() + proj->getY(),proj->getZ() + proj->getShootOffZ(),0,0,0);
     testProj->doMoveAbsolute(xMove,yMove,zMove);
     bool collisionWorksProperly = testProj->isColliding(activeEntity);
+    logic::Entity* lastHit = proj;
+    if(collisionWorksProperly){
+        lastHit = activeEntity;
+    }
     logic::Entity* testEnt = testProj;
     testEnt = proj;
-    FAIL() << "xCoeff " << xCoeff <<" yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove << " collisionWorks " << collisionWorksProperly << " pointersEqual " << (testEnt == proj) << " proj " << proj << " target " << target << " activeentity " << activeEntity;         
+    FAIL() << "xCoeff " << xCoeff <<" yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove << " collisionWorks " << collisionWorksProperly << " pointersEqual " << (testEnt == proj) << " proj " << proj << " target " << target << " activeentity " << activeEntity << " lastHit " << lastHit;         
     delete target;
     delete proj;
     delete testProj;
