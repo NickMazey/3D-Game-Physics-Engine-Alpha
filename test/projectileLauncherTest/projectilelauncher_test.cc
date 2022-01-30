@@ -369,7 +369,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180_Neg
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, GitHub_Performs_Differently_With_Fire)
+TEST(ProjectileLauncherTest, GitHub_Consistency)
 {
     logic::Entity *target = new logic::Entity(7, 7, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0);
@@ -397,7 +397,7 @@ TEST(ProjectileLauncherTest, Hitscan_Y_45_Pos)
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_90_Pos)
+TEST(ProjectileLauncherTest, Hitscan_Y_90_Pos)
 {
     logic::Entity *target = new logic::Entity(0, 10, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0);
@@ -410,7 +410,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_90_Po
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_45_Neg)
+TEST(ProjectileLauncherTest, Hitscan_Y_45_Neg)
 {
     logic::Entity *target = new logic::Entity(7, -7, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0);
@@ -423,7 +423,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_45_Ne
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_90_Neg)
+TEST(ProjectileLauncherTest, Hitscan_Y_90_Neg)
 {
     logic::Entity *target = new logic::Entity(0, -10, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0);
@@ -483,7 +483,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo)
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_Off_No_Tick)
+TEST(ProjectileLauncherTest, Non_Hitscan_Doesnt_Hit_No_Off_No_Tick)
 {
     logic::Entity *target = new logic::Entity(10, 0, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(0, 0, 0, 1, 1, 1));
@@ -496,7 +496,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Tick_X)
+TEST(ProjectileLauncherTest, Non_Hitscan_Hits_No_Off_Tick_X)
 {
     logic::Entity *target = new logic::Entity(10, 0, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(10, 0, 0, 1, 1, 1));
@@ -510,7 +510,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Ti
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Tick_Y)
+TEST(ProjectileLauncherTest, Non_Hitscan_Hits_No_Off_Tick_Y)
 {
     logic::Entity *target = new logic::Entity(0, 10, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(0, 10, 0, 1, 1, 1));
@@ -523,7 +523,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Ti
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Tick_Z)
+TEST(ProjectileLauncherTest, Non_Hitscan_Hits_No_Off_Tick_Z)
 {
     logic::Entity *target = new logic::Entity(0, 0, 10, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(0, 0, 10, 1, 1, 1));
@@ -536,7 +536,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hits_No_Off_Ti
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Passthrough_Hits_Tick)
+TEST(ProjectileLauncherTest, Non_Hitscan_Passthrough_Hits_Tick)
 {
     logic::Entity *target = new logic::Entity(10, 10, 10, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(50, 50, 50, 1, 1, 1));
@@ -549,7 +549,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Passthrough_Hi
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_Off_Tick)
+TEST(ProjectileLauncherTest, Non_Hitscan_Doesnt_Hit_No_Off_Tick)
 {
     logic::Entity *target = new logic::Entity(10, 0, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(1, 0, 0, 1, 1, 1));
@@ -562,7 +562,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Doesnt_Hit_No_
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Miss_No_Off_X_Tick)
+TEST(ProjectileLauncherTest, Non_HitscanMiss_No_Off_X_Tick)
 {
     logic::Entity *target = new logic::Entity(-6, 0, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(10, 0, 0, 1, 1, 1));
@@ -575,7 +575,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Miss_No_Off_X_Tick)
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Miss_No_Off_Y_Tick)
+TEST(ProjectileLauncherTest, Non_Hitscan_Miss_No_Off_Y_Tick)
 {
     logic::Entity *target = new logic::Entity(0, 10, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(10, 0, 0, 1, 1, 1));
@@ -588,7 +588,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Miss_No_Off_Y_Tick)
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Miss_No_Off_Z_Tick)
+TEST(ProjectileLauncherTest, Non_Hitscan_Miss_No_Off_Z_Tick)
 {
     logic::Entity *target = new logic::Entity(0, 0, 10, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(10, 0, 0, 1, 1, 1));
@@ -601,7 +601,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Miss_No_Off_Z_Tick)
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Hit_Off_X_Tick)
+TEST(ProjectileLauncherTest, Non_Hitscan_Hit_Off_X_Tick)
 {
     logic::Entity *target = new logic::Entity(-6, 0, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(10, 0, 0, 1, 1, 1));
@@ -615,7 +615,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Hit_Off_X_Tick)
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Hit_Off_Y_Tick)
+TEST(ProjectileLauncherTest, Non_Hitscan_Hit_Off_Y_Tick)
 {
     logic::Entity *target = new logic::Entity(0, 10, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(10, 0, 0, 1, 1, 1));
@@ -629,7 +629,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Hit_Off_Y_Tick)
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Hit_Off_Z_Tick)
+TEST(ProjectileLauncherTest, Non_Hitscan_Hit_Off_Z_Tick)
 {
     logic::Entity *target = new logic::Entity(0, 0, 10, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(10, 0, 0, 1, 1, 1));
@@ -643,7 +643,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Hit_Off_Z_Tick)
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_45_Tick)
+TEST(ProjectileLauncherTest, Non_Hitscan_Hit_No_Off_45_Tick)
 {
     logic::Entity *target = new logic::Entity(7, 0, 7, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(10, 0, 0, 1, 1, 1));
@@ -657,7 +657,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_45_
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_90_Tick)
+TEST(ProjectileLauncherTest, Non_Hitscan_Hit_No_Off_90_Tick)
 {
     logic::Entity *target = new logic::Entity(0, 0, 10, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(10, 0, 0, 1, 1, 1));
@@ -671,7 +671,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_90_
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_135_Tick)
+TEST(ProjectileLauncherTest, Non_Hitscan_Hit_No_Off_135_Tick)
 {
     logic::Entity *target = new logic::Entity(-7, 0, 7, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(10, 0, 0, 1, 1, 1));
@@ -685,7 +685,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_135
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180_Tick)
+TEST(ProjectileLauncherTest, Non_Hitscan_Hit_No_Off_180_Tick)
 {
     logic::Entity *target = new logic::Entity(-10, 0, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(10, 0, 0, 1, 1, 1));
