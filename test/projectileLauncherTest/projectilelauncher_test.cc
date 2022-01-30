@@ -373,7 +373,7 @@ TEST(ProjectileLauncherTest, GitHub_Performs_Differently_With_Fire)
 {
     logic::Entity *target = new logic::Entity(7, 7, 0, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0);
-    bool collisionWorksProperly = false;
+    //bool collisionWorksProperly = false;
     proj->setLook(0, logic::degreesToRadians(45));
     std::set<logic::Entity *> entities = std::set<logic::Entity *>();
     entities.insert(target);
