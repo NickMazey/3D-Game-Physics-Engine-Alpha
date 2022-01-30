@@ -347,8 +347,8 @@ TEST(ProjectileLauncherTest,GitHub_Performs_Differently_With_Fire){
     float yCoeff,xzCoeff,xCoeff,zCoeff = 0;
     int scale,xMove,yMove,zMove = 0;
     logic::Entity* lastHit = proj;
-
-
+    if(proj->isHitScan()){
+    logic::Entity* closestEnt = proj;
     for(std::set<logic::Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
         activeEntity = *iter;
         if(activeEntity->isSolid() && !proj->inGhosts(activeEntity)){
@@ -386,18 +386,18 @@ TEST(ProjectileLauncherTest,GitHub_Performs_Differently_With_Fire){
             }
             }
             if(hitOnDim){
-                    if(lastHit == proj){
-                        lastHit = activeEntity;
+                    if(closestEnt == proj){
+                        closestEnt = activeEntity;
                     } else{
-                        if (proj->euclideanDistToOther(activeEntity) < proj->euclideanDistToOther(lastHit)){
-                            lastHit = activeEntity;
+                        if (proj->euclideanDistToOther(activeEntity) < proj->euclideanDistToOther(closestEnt)){
+                            closestEnt = activeEntity;
                         }
                     }
                 }
             }
         }
-
-
+        lastHit = closestEnt;
+    }
     logic::Entity* testEnt = target;
     testEnt = proj;
     FAIL() << "xCoeff " << xCoeff <<" yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove << " collisionWorks " << collisionWorksProperly << " pointersEqual " << (testEnt == proj) << " proj " << proj << " target " << target << " activeentity " << activeEntity << " lastHit " << lastHit;         
