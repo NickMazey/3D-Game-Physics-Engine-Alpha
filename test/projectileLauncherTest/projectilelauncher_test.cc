@@ -379,6 +379,7 @@ TEST(ProjectileLauncherTest, GitHub_Performs_Differently_With_Fire)
     entities.insert(target);
     bool didFire = proj->fire(entities);
     logic::Entity *hitLast = proj->getLastHit();
+    /*
     logic::Entity *activeEntity = proj;
     float yCoeff, xzCoeff, xCoeff, zCoeff = 0;
     int scale, xMove, yMove, zMove = 0;
@@ -454,8 +455,9 @@ TEST(ProjectileLauncherTest, GitHub_Performs_Differently_With_Fire)
 
     logic::Entity *testEnt = target;
     testEnt = proj;
+    */
     //FAIL() << "xCoeff " << xCoeff << " yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove << " collisionWorks " << collisionWorksProperly << " pointersEqual " << (testEnt == proj) << " proj " << proj << " target " << target << " activeentity " << activeEntity << " lastHit " << lastHit << " fired " << didFire << " hitLast " << hitLast;
-    EXPECT_EQ(proj->getLastHit(), target) << "this should work according to above" << "xCoeff " << xCoeff << " yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove << " collisionWorks " << collisionWorksProperly << " pointersEqual " << (testEnt == proj) << " proj " << proj << " target " << target << " activeentity " << activeEntity << " lastHit " << lastHit << " fired " << didFire << " hitLast " << hitLast;
+    EXPECT_EQ(proj->getLastHit(), target) << "this should work according to above"; //<< "xCoeff " << xCoeff << " yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove << " collisionWorks " << collisionWorksProperly << " pointersEqual " << (testEnt == proj) << " proj " << proj << " target " << target << " activeentity " << activeEntity << " lastHit " << lastHit << " fired " << didFire << " hitLast " << hitLast;
     delete target;
     delete proj;
 }
