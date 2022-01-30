@@ -536,7 +536,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Hits_No_Off_Tick_Z)
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Non_Hitscan_Passthrough_Hits_Tick)
+TEST(ProjectileLauncherTest, Non_Hitscan_Passthrough_Hits)
 {
     logic::Entity *target = new logic::Entity(10, 10, 10, 10, 10, 10);
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, logic::Entity(50, 50, 50, 1, 1, 1));
