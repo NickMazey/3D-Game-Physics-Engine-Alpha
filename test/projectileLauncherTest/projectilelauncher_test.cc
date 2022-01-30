@@ -336,6 +336,75 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180_Neg
     delete proj;
 }
 
+TEST(ProjectileLauncherTest,GitHub_Performs_Differently_With_Fire){
+    logic::Entity* target = new logic::Entity(7,7,0,10,10,10);
+    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
+    bool collisionWorksProperly = false;
+    proj->setLook(0,logic::degreesToRadians(45));
+    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
+    entities.insert(target);
+    logic::Entity* activeEntity = proj;
+    float yCoeff,xzCoeff,xCoeff,zCoeff = 0;
+    int scale,xMove,yMove,zMove = 0;
+    logic::Entity* lastHit = proj;
+
+
+    for(std::set<logic::Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
+        activeEntity = *iter;
+        if(activeEntity->isSolid() && !proj->inGhosts(activeEntity)){
+            logic::Entity* testProj = new logic::Entity(proj->getX() + proj->getShootOffX(),proj->getShootOffY() + proj->getY(),proj->getZ() + proj->getShootOffZ(),0,0,0);
+            testProj->setLook(proj->getLookAngX(),proj->getLookAngY());
+            yCoeff = sin(proj->getLookAngY());
+            xzCoeff = cos(proj->getLookAngY());
+            xCoeff = xzCoeff * cos(proj->getLookAngX());
+            zCoeff = xzCoeff * sin(proj->getLookAngX()); 
+
+            bool hitOnDim = false;
+
+            for(int i = 0; i < 3; i++){
+            switch (i){
+                        case 0:
+                            scale = round(testProj->distToOtherX(activeEntity) / xCoeff);
+                            break;
+                        case 1:
+                            scale = round(testProj->distToOtherY(activeEntity) / yCoeff);
+                            break;
+                        case 2:
+                            scale = round(testProj->distToOtherZ(activeEntity) / zCoeff);
+                            break;
+            }
+            if(scale >= 0){
+                xMove = round(xCoeff * scale);
+                yMove = round(yCoeff * scale);
+                zMove = round(zCoeff * scale);
+                testProj->doMoveAbsolute(xMove,yMove,zMove);
+                if(testProj->isColliding(activeEntity)){
+                    collisionWorksProperly = true;
+                    hitOnDim = true;
+                    break;
+            }
+            }
+            }
+            if(hitOnDim){
+                    if(lastHit == proj){
+                        lastHit = activeEntity;
+                    } else{
+                        if (proj->euclideanDistToOther(activeEntity) < proj->euclideanDistToOther(lastHit)){
+                            lastHit = activeEntity;
+                        }
+                    }
+                }
+            }
+        }
+
+
+    logic::Entity* testEnt = target;
+    testEnt = proj;
+    FAIL() << "xCoeff " << xCoeff <<" yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove << " collisionWorks " << collisionWorksProperly << " pointersEqual " << (testEnt == proj) << " proj " << proj << " target " << target << " activeentity " << activeEntity << " lastHit " << lastHit;         
+    delete target;
+    delete proj;
+}
+
 TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_45_Pos){
     logic::Entity* target = new logic::Entity(7,7,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
@@ -348,38 +417,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_45_Po
     delete proj;
 }
 
-TEST(ProjectileLauncherTest,GitHub_Performs_Differently_With_Fire){
-    logic::Entity* target = new logic::Entity(7,7,0,10,10,10);
-    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    proj->setLook(0,logic::degreesToRadians(45));
-    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
-    entities.insert(target);
-    logic::Entity* activeEntity = proj;
-    for(std::set<logic::Entity*>::iterator iter = entities.begin(); iter != entities.end(); iter++){
-        activeEntity = *iter;
-    }
-    float yCoeff = sin(proj->getLookAngY());
-    float xzCoeff = cos(proj->getLookAngY());
-    float xCoeff = xzCoeff * cos(proj->getLookAngX());
-    float zCoeff = xzCoeff * sin(proj->getLookAngX()); 
-    float scale = proj->distToOtherX(activeEntity) / xCoeff;
-    float xMove = round(xCoeff * scale);
-    float yMove = round(yCoeff * scale);
-    float zMove = round(zCoeff * scale);
-    logic::Entity* testProj = new logic::Entity(proj->getX() + proj->getShootOffX(),proj->getShootOffY() + proj->getY(),proj->getZ() + proj->getShootOffZ(),0,0,0);
-    testProj->doMoveAbsolute(xMove,yMove,zMove);
-    bool collisionWorksProperly = testProj->isColliding(activeEntity);
-    logic::Entity* lastHit = proj;
-    if(collisionWorksProperly){
-        lastHit = activeEntity;
-    }
-    logic::Entity* testEnt = testProj;
-    testEnt = proj;
-    FAIL() << "xCoeff " << xCoeff <<" yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove << " collisionWorks " << collisionWorksProperly << " pointersEqual " << (testEnt == proj) << " proj " << proj << " target " << target << " activeentity " << activeEntity << " lastHit " << lastHit;         
-    delete target;
-    delete proj;
-    delete testProj;
-}
+
 
 TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_90_Pos){
     logic::Entity* target = new logic::Entity(0,10,0,10,10,10);
