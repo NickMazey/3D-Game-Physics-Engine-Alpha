@@ -426,20 +426,19 @@ TEST(ProjectileLauncherTest, GitHub_Performs_Differently_With_Fire)
     delete proj;
 }
 
-TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_45_Pos){
-    logic::Entity* target = new logic::Entity(7,7,0,10,10,10);
-    logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    proj->setLook(0,logic::degreesToRadians(45));
-    std::set<logic::Entity*> entities = std::set<logic::Entity*>();
+TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_45_Pos)
+{
+    logic::Entity *target = new logic::Entity(7, 7, 0, 10, 10, 10);
+    logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0);
+    proj->setLook(0, logic::degreesToRadians(45));
+    std::set<logic::Entity *> entities = std::set<logic::Entity *>();
     entities.insert(target);
-    proj->fire(entities);
+    bool didFire = proj->fire(entities);
     logic::Entity *lastHit = proj->getLastHit();
-    EXPECT_EQ(lastHit,target) << "hitscan projectilelaunchers don't hit entities in front of them when looking 45 degrees up";
+    EXPECT_EQ(lastHit, target) << "hitscan projectilelaunchers don't hit entities in front of them when looking 45 degrees up";
     delete target;
     delete proj;
 }
-
-
 
 TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_Y_90_Pos){
     logic::Entity* target = new logic::Entity(0,10,0,10,10,10);
