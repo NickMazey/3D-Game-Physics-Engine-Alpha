@@ -366,7 +366,7 @@ TEST(ProjectileLauncherTest,GitHub_Performs_Differently_With_Fire){
     float xMove = round(xCoeff * scale);
     float yMove = round(yCoeff * scale);
     float zMove = round(zCoeff * scale);
-    logic::Entity* testProj = new logic::Entity(0,0,0,0,0,0);
+    logic::Entity* testProj = new logic::Entity(proj->getX() + proj->getShootOffX(),proj->getShootOffY() + proj->getY(),proj->getZ() + proj->getShootOffZ(),0,0,0);
     testProj->doMoveAbsolute(xMove,yMove,zMove);
     bool collisionWorksProperly = testProj->isColliding(activeEntity);
     logic::Entity* testEnt = testProj;
