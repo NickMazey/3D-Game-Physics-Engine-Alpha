@@ -325,13 +325,13 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_135_Neg
 }
 
 TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180_Neg){
-    logic::Entity* target = new logic::Entity(-7,0,-7,10,10,10);
+    logic::Entity* target = new logic::Entity(-10,0,0,10,10,10);
     logic::ProjectileLauncher* proj = new logic::ProjectileLauncher(0,0,0,0,0,0,100,10,0);
-    proj->setLook(logic::degreesToRadians(-135),0);
+    proj->setLook(logic::degreesToRadians(-180),0);
     std::set<logic::Entity*> entities = std::set<logic::Entity*>();
     entities.insert(target);
     proj->fire(entities);
-    EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -135 degrees";
+    EXPECT_EQ(proj->getLastHit(),target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -180 degrees";
     delete target;
     delete proj;
 }
@@ -419,7 +419,9 @@ TEST(ProjectileLauncherTest, GitHub_Performs_Differently_With_Fire)
 
     logic::Entity *testEnt = target;
     testEnt = proj;
-    FAIL() << "xCoeff " << xCoeff << " yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove << " collisionWorks " << collisionWorksProperly << " pointersEqual " << (testEnt == proj) << " proj " << proj << " target " << target << " activeentity " << activeEntity << " lastHit " << lastHit;
+    bool didFire = proj->fire(entities);
+    logic::Entity *hitLast = proj->getLastHit(); 
+    FAIL() << "xCoeff " << xCoeff << " yCoeff " << yCoeff << " zCoeff " << zCoeff << " xMove " << xMove << " yMove " << yMove << " zMove " << zMove << " collisionWorks " << collisionWorksProperly << " pointersEqual " << (testEnt == proj) << " proj " << proj << " target " << target << " activeentity " << activeEntity << " lastHit " << lastHit << " fired " << didFire << " hitLast " << hitLast;
     delete target;
     delete proj;
 }
