@@ -136,43 +136,24 @@ namespace logic
                 testPoint->setLook(getLookAngX(), getLookAngY());
 
                 //How much the line should move in each dimension per step with the given angles
-                float yCoeff = sin(getLookAngY());
-                float xzCoeff = cos(getLookAngY());
-                float xCoeff = xzCoeff * cos(getLookAngX());
-                float zCoeff = xzCoeff * sin(getLookAngX());
+                int yCoeff = round(sin(getLookAngY()) * 1000.0f);
+                int xzCoeff = round(cos(getLookAngY()) * 1000.0f);
+                int xCoeff = (round(cos(getLookAngX())  * 1000.0f) * xzCoeff) / 1000;
+                int zCoeff = (round(sin(getLookAngX())  * 1000.0f) * xzCoeff) /1000;
 
                 //If it has hit on any dimension
                 bool hitOnDim = false;
-                int xMove, yMove, zMove, scale = 0;
+                int xMove, yMove, zMove = 0;
+                int distance = euclideanDistToOther(activeEntity);
 
                 //For x, y, and z
-                for (int i = 0; i < 3; i++)
+                xMove = (distance * xCoeff) / 1000;
+                yMove = (distance * yCoeff) / 1000;
+                zMove = (distance * zCoeff) / 1000;
+                testPoint->doMoveAbsolute(xMove, yMove, zMove);
+                if (testPoint->isColliding(activeEntity))
                 {
-                    testPoint->setPos(getX() + shootOffX, getY() + shootOffY, getZ() + shootOffZ);
-                    switch (i)
-                    {
-                    case 0:
-                        scale = round(testPoint->distToOtherX(activeEntity) / xCoeff);
-                        break;
-                    case 1:
-                        scale = round(testPoint->distToOtherY(activeEntity) / yCoeff);
-                        break;
-                    case 2:
-                        scale = round(testPoint->distToOtherZ(activeEntity) / zCoeff);
-                        break;
-                    }
-                    if (scale >= 0)
-                    {
-                        xMove = round(scale * xCoeff);
-                        yMove = round(scale * yCoeff);
-                        zMove = round(scale * zCoeff);
-                        testPoint->doMoveAbsolute(xMove, yMove, zMove);
-                        if (testPoint->isColliding(activeEntity))
-                        {
-                            hitOnDim = true;
-                            break;
-                        }
-                    }
+                    hitOnDim = true;
                 }
 
                 if (hitOnDim)

@@ -452,7 +452,7 @@ namespace logic
     }
 
     int Entity::euclideanDistToOther(const Entity* other) const{
-        return sqrt(pow(distToOtherX(other),2.0) + pow(distToOtherY(other),2.0) + pow(distToOtherZ(other), 2.0));
+        return round(sqrt(pow(distToOtherX(other),2.0) + pow(distToOtherY(other),2.0) + pow(distToOtherZ(other), 2.0)));
     }
 
     //whether or not this entity is colliding with the other (atm uses bounding box)
