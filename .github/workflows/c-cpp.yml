@@ -14,11 +14,29 @@ jobs:
       run: |
         mkdir project_build
         cd project_build
-        cmake .. -B build
+        cmake.exe -G "MinGW Makefiles" .. -B build
         cmake --build build
     - name: Test
       run: |
         cd project_build
         cd build
         ctest --output-on-failure
+    - name: Generate Report
+      if: always()
+      run: |
+        pip install gcovr
+        cd project_build
+        mkdir coverage
+        cd ..
+        gcovr project_build -r src --html --html-details -o project_build/coverage/coverage-html.html
+    - name: Archive Report
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+          name: coverage
+          path: project_build/coverage
+
+
+
+
         
