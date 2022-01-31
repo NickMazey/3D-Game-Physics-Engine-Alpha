@@ -1,4 +1,5 @@
 #include "projectilelauncher.h"
+#include "util.h"
 #include <math.h>
 #include <algorithm>
 namespace logic
@@ -9,10 +10,13 @@ namespace logic
         setMagazineSize(magazineSize);
         setDamage(damage);
         setHitscan(true);
-        shootOffX, shootOffY, shootOffZ = 0;
-        this->projectile = *this;
-        this->activeProjectile = this;
-        this->lastHit = this;
+        this->loadedAmmo = 0;
+        setShootOffX(0);
+        setShootOffY(0);
+        setShootOffZ(0);
+        setProjectile(*this);
+        setActiveProjectile(this);
+        setLastHit(this);
         reload();
     }
 
@@ -23,7 +27,7 @@ namespace logic
         velocity[1] = projectile.getY();
         velocity[2] = projectile.getZ();
         projectile.setPos(0, 0, 0);
-        this->projectile = projectile;
+        setProjectile(projectile);
     }
 
     void ProjectileLauncher::reload()
@@ -50,8 +54,9 @@ namespace logic
     bool ProjectileLauncher::fire(std::set<Entity *> entities)
     {
         this->entList = entities;
-        lastHit = this;
-        bool canFire = false;
+        setLastHit(this);
+        bool canFire;
+        canFire = false;
         if (loadedAmmo > 0)
         {
             loadedAmmo -= 1;
@@ -135,10 +140,10 @@ namespace logic
                 Entity *testPoint = new Entity(getX() + shootOffX, getY() + shootOffY, getZ() + shootOffZ, 0, 0, 0);
 
                 //How much the line should move in each dimension per step with the given angles
-                int yCoeff = round(sin(getLookAngY()) * 1000.0f);
-                int xzCoeff = round(cos(getLookAngY()) * 1000.0f);
-                int xCoeff = (round(cos(getLookAngX())  * 1000.0f) * xzCoeff) / 1000;
-                int zCoeff = (round(sin(getLookAngX())  * 1000.0f) * xzCoeff) /1000;
+                int yCoeff = round(approxSin(getLookAngY()) * 1000.0f);
+                int xzCoeff = round(approxCos(getLookAngY()) * 1000.0f);
+                int xCoeff = (round(approxCos(getLookAngX())  * 1000.0f) * xzCoeff) / 1000;
+                int zCoeff = (round(approxSin(getLookAngX())  * 1000.0f) * xzCoeff) /1000;
 
                 int xMove, yMove, zMove = 0;
                 int distance = euclideanDistToOther(activeEntity);
@@ -269,5 +274,13 @@ namespace logic
     void ProjectileLauncher::setProjectile(const Entity toSet)
     {
         this->projectile = toSet;
+    }
+
+    void ProjectileLauncher::setLastHit(Entity* toSet){
+        this->lastHit = toSet;
+    }
+
+    void ProjectileLauncher::setActiveProjectile(Entity* toSet){
+        this->activeProjectile = toSet;
     }
 }

@@ -84,6 +84,8 @@ namespace logic
             void setShootOffZ(const int toSet);
             void setHitscan(const bool toSet);
             void setProjectile(const Entity toSet);
+            void setLastHit(Entity *toSet);
+            void setActiveProjectile(Entity *toSet);
 
 
 
