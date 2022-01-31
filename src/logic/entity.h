@@ -55,16 +55,16 @@ namespace logic
         void doTick();
 
         //Applies x rotation for movement
-        int xHelper(const double x, const double z) const;
+        int xHelper(const int x, const int z) const;
 
         //Applies z rotation for movement
-        int zHelper(const double x, const double z) const;
+        int zHelper(const int x, const int z) const;
 
         //Returns the width of this entity with rotation
-        double effectiveWidth() const;
+        float effectiveWidth() const;
 
         //Returns the depth of this entity with rotation
-        double effectiveDepth() const;
+        float effectiveDepth() const;
 
         //updates the entity's x,y, and z co-ordinates by x,y, and z
         void doMove(int x, int y, int z);
@@ -73,16 +73,16 @@ namespace logic
         void doMoveAbsolute(int x, int y, int z);
 
         //sets the look vector angles
-        void setLookVector(double x, double y);
+        void setLookVector(float x, float y);
 
         //sets where the entity is looking
-        void setLook(double x, double y);
+        void setLook(float x, float y);
 
         //Applies look
         void doLook();
 
         //updates the entity's look angles by x and y
-        void doLook(double x, double y);
+        void doLook(float x, float y);
 
         //Sets this entity's position to x,y, and z
         void setPos(int x, int y, int z);
@@ -165,7 +165,7 @@ namespace logic
         {
             return std::make_tuple(coordVector[0], coordVector[1], coordVector[2]);
         }
-        std::tuple<double, double> getLookVector() const
+        std::tuple<float, float> getLookVector() const
         {
             return std::make_tuple(lookVector[0], lookVector[1]);
         }
@@ -193,11 +193,11 @@ namespace logic
         {
             return friction;
         }
-        double getLookAngX() const
+        float getLookAngX() const
         {
             return lookAngX;
         }
-        double getLookAngY() const
+        float getLookAngY() const
         {
             return lookAngY;
         }
@@ -242,10 +242,10 @@ namespace logic
         float friction;
 
         //Rendering
-        double lookAngX;
-        double lookAngY;
+        float lookAngX;
+        float lookAngY;
         int fov;
-        double lookVector[2] = {0.0}; // Radians
+        float lookVector[2] = {0.0}; // Radians
     };
 } // namespace logic
 #endif //GAME_ENGINE_LOGIC_ENTIY_H

@@ -14,6 +14,7 @@ namespace logic
         this->x = x;
         this->y = y;
         this->z = z;
+        this->fov = 0.0f; //fov isn't used yet
         this->width = width;
         this->height = height;
         this->depth = depth;
@@ -122,83 +123,83 @@ namespace logic
     }
 
     //Applies x rotation for movement
-    int Entity::xHelper(const double x, const double z) const
+    int Entity::xHelper(const int x, const int z) const
     {
-        double xComponent = cos(lookAngX) * (x);
-        double zComponent = 0;
-        if (sin(lookAngX) != 0)
+        float xComponent = approxCos(lookAngX) * (x);
+        float zComponent = 0;
+        if (approxSin(lookAngX) != 0)
         {
             int angX = simplifyAngle(radiansToDegrees(lookAngX));
             //Positive
             if (angX > 0 && angX < 90)
             { //First Quad
-                zComponent = z * sin(lookAngX + degreesToRadians(180));
+                zComponent = z * approxSin(lookAngX + degreesToRadians(180));
             }
             else if (angX == 90 || angX == -90)
             { //90 Degrees
-                zComponent = -z * sin(lookAngX);
+                zComponent = -z * approxSin(lookAngX);
             }
             else if (angX > 90 && angX < 180)
             { //Second Quad
-                zComponent = -z * sin(lookAngX);
+                zComponent = -z * approxSin(lookAngX);
             }
             //Negative
             else if (angX < 0 && angX > -90)
             { //First Quad
-                zComponent = -z * sin(lookAngX);
+                zComponent = -z * approxSin(lookAngX);
             }
             else if (angX < -90 && angX > -180)
             { //Second Quad
-                xComponent = x * sin(lookAngX);
-                zComponent = z * sin(lookAngX - degreesToRadians(90));
+                xComponent = x * approxSin(lookAngX);
+                zComponent = z * approxSin(lookAngX - degreesToRadians(90));
             }
         }
-        return xComponent + zComponent;
+        return round(xComponent + zComponent);
     }
 
     //Applies z rotation for movement
-    int Entity::zHelper(const double x, const double z) const
+    int Entity::zHelper(const int x, const int z) const
     {
-        double zComponent = cos(lookAngX) * (z);
-        double xComponent = 0;
-        if (sin(lookAngX) != 0)
+        float zComponent = approxCos(lookAngX) * (z);
+        float xComponent = 0;
+        if (approxSin(lookAngX) != 0)
         {
             int angX = simplifyAngle(radiansToDegrees(lookAngX));
             //Positive
             if (angX > 0 && angX < 90)
             { //First Quad
-                xComponent = x * sin(lookAngX);
+                xComponent = x * approxSin(lookAngX);
             }
             else if (angX == 90 || angX == -90)
             { //90 Degrees
-                xComponent = x * sin(lookAngX);
+                xComponent = x * approxSin(lookAngX);
             }
             else if (angX > 90 && angX < 180)
             { //Second Quad
-                xComponent = x * sin(lookAngX);
+                xComponent = x * approxSin(lookAngX);
             }
             //Negative
             else if (angX < 0 && angX > -90)
             { //First Quad
-                xComponent = x * sin(lookAngX);
+                xComponent = x * approxSin(lookAngX);
             }
             else if (angX < -90 && angX > -180)
             { //Second Quad
-                zComponent = z * sin(lookAngX);
-                xComponent = x * cos(lookAngX);
+                zComponent = z * approxSin(lookAngX);
+                xComponent = x * approxCos(lookAngX);
             }
         }
-        return zComponent + xComponent;
+        return round(zComponent + xComponent);
     }
 
     //Returns the width of this entity with rotation
-    double Entity::effectiveWidth() const
+    float Entity::effectiveWidth() const
     {
         return abs(cos(lookAngX)) * width + abs(sin(lookAngX)) * depth;
     }
 
     //Returns the depth of this entity with rotation
-    double Entity::effectiveDepth() const
+    float Entity::effectiveDepth() const
     {
         return abs(cos(lookAngX)) * depth + abs(sin(lookAngX)) * width;
     }
@@ -241,14 +242,14 @@ namespace logic
     }
 
     //sets the look vector angles
-    void Entity::setLookVector(double x, double y)
+    void Entity::setLookVector(float x, float y)
     {
         this->lookVector[0] = x;
         this->lookVector[1] = y;
     }
 
     //sets where the entity is looking
-    void Entity::setLook(double x, double y)
+    void Entity::setLook(float x, float y)
     {
         this->lookAngX = x;
         this->lookAngY = y;
@@ -274,7 +275,7 @@ namespace logic
     }
 
     //updates the entity's look angles by x and y
-    void Entity::doLook(double x, double y)
+    void Entity::doLook(float x, float y)
     {
         this->setLookVector(x, y);
         doLook();
