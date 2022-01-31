@@ -45,9 +45,9 @@ std::string printInfo(const logic::Entity toPrint){
 
 //Consistency Tests
 TEST(EntityTest,Platform_Consistency){
-    double radians = logic::degreesToRadians(90);
-    double sin90 = sin(radians);
-    double cos90 = cos(radians);
+    float radians = logic::degreesToRadians(90);
+    float sin90 = logic::approxSin(radians);
+    float cos90 = logic::approxCos(radians);
     EXPECT_TRUE((int) sin90 == 1 && (int)cos90 == 0) << " Sin 90 actually gives: " << sin90 << " \n Cos 90 actually gives: " << cos90;
 }
 
