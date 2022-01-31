@@ -133,7 +133,6 @@ namespace logic
             {
                 //Creating a point to check if this line passes through the other entity
                 Entity *testPoint = new Entity(getX() + shootOffX, getY() + shootOffY, getZ() + shootOffZ, 0, 0, 0);
-                testPoint->setLook(getLookAngX(), getLookAngY());
 
                 //How much the line should move in each dimension per step with the given angles
                 int yCoeff = round(sin(getLookAngY()) * 1000.0f);
@@ -141,8 +140,6 @@ namespace logic
                 int xCoeff = (round(cos(getLookAngX())  * 1000.0f) * xzCoeff) / 1000;
                 int zCoeff = (round(sin(getLookAngX())  * 1000.0f) * xzCoeff) /1000;
 
-                //If it has hit on any dimension
-                bool hitOnDim = false;
                 int xMove, yMove, zMove = 0;
                 int distance = euclideanDistToOther(activeEntity);
 
@@ -150,13 +147,8 @@ namespace logic
                 xMove = (distance * xCoeff) / 1000;
                 yMove = (distance * yCoeff) / 1000;
                 zMove = (distance * zCoeff) / 1000;
-                testPoint->doMoveAbsolute(xMove, yMove, zMove);
+                testPoint->doMove(xMove, yMove, zMove);
                 if (testPoint->isColliding(activeEntity))
-                {
-                    hitOnDim = true;
-                }
-
-                if (hitOnDim)
                 {
                     if (closestHittableEntity == this)
                     {
