@@ -6,5 +6,11 @@ namespace logic{
     
     //simplifies a given angle to between -180 and 180 degrees
     const int simplifyAngle(const int degrees);
+
+    //Gives an approximation of sine
+    const float approxSin(const int degrees);
+
+    //Gives an approximation of cos
+    const float approxCos(const int degrees);
 }
 #endif //GAME_ENGINE_LOGIC_UTIL_H
