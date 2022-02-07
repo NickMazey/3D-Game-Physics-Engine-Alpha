@@ -5,16 +5,18 @@
 #include <exception>
 
 #include "util.h"
+
 namespace logic
 {
     int Entity::entityCount = 0;
+
 
     Entity::Entity(int x, int y, int z, int width, int height, int depth)
     {
         this->x = x;
         this->y = y;
         this->z = z;
-        this->fov = 0.0f; //fov isn't used yet
+        this->fov = 0.0f;
         this->width = width;
         this->height = height;
         this->depth = depth;
@@ -29,9 +31,20 @@ namespace logic
         entityCount++;
     }
 
-    Entity::Entity(){
-        
+    Entity::Entity()
+    {
     }
+
+
+    bool Entity::operator==(const Entity &other) const
+    {
+        return id == other.getId();
+    }
+    bool Entity::operator!=(const Entity &other) const
+    {
+        return !operator==(other);
+    }
+
 
     Entity::~Entity()
     {
@@ -48,46 +61,125 @@ namespace logic
         }
     }
 
-    bool Entity::operator==(const Entity &other) const
-    {
-        return id == other.getId();
-    }
-    bool Entity::operator!=(const Entity &other) const
-    {
-        return !operator==(other);
-    }
 
-    bool Entity::operator<(const Entity &other) const
-    {
-        return id < other.getId();
-    }
-
-    //Whether or not another entity is in the dependents of this entity
-    bool Entity::inDependents(Entity *other)
-    {
-        try
-        {
-            return this->dependents.find(other) != dependents.end();
-        }
-        catch (std::exception e)
-        {
-            return false;
-        }
-    }
-
-    //Adds to dependents
     void Entity::addDependent(Entity *other)
     {
         this->dependents.insert(other);
     }
 
-    //Removes from dependents
     void Entity::removeDependent(Entity *other)
     {
         if (inDependents(other))
         {
             this->dependents.erase(other);
         }
+    }
+
+    bool Entity::inDependents(Entity *other)
+    {
+        try
+        {
+            return this->dependents.find(other) != dependents.end();
+        }
+        catch (std::exception& e)
+        {
+            return false;
+        }
+    }
+
+
+    void Entity::addGhost(Entity *other)
+    {
+        this->ghosts.insert(other);
+        other->addDependent(this);
+        this->addDependent(other);
+    }
+
+    void Entity::removeGhost(Entity *other)
+    {
+        if (inGhosts(other))
+        {
+            this->ghosts.erase(other);
+        }
+        other->removeDependent(this);
+        this->removeDependent(other);
+    }
+
+    bool Entity::inGhosts(const Entity *other)
+    {
+        try
+        {
+            return this->ghosts.find(other) != ghosts.end();
+        }
+        catch (std::exception& e)
+        {
+            return false;
+        }
+    }
+
+
+    void Entity::addChild(Entity *other, int offX, int offY, int offZ)
+    {
+        if (!inChildren(other) && !other->inChildren(this))
+        {
+            std::tuple<int, int, int> offsets = std::make_tuple(offX, offY, offZ);
+            this->children.insert(ChildPair(other, offsets));
+            other->addDependent(this);
+            this->addDependent(other);
+            updateChildren();
+        }
+    }
+
+    void Entity::removeChild(Entity *other)
+    {
+        if (inChildren(other))
+        {
+            this->children.erase(other);
+        }
+        other->removeDependent(this);
+        this->removeDependent(other);
+    }
+    
+    bool Entity::inChildren(Entity *other)
+    {
+        try
+        {
+            return children.count(other) || inChildrenDeep(other);
+        }
+        catch (std::exception& e)
+        {
+            return false;
+        }
+    }
+
+    bool Entity::inChildrenDeep(Entity *other)
+    {
+        for (ChildMap::iterator iter = children.begin(); iter != children.end(); iter++)
+        {
+            if (iter->first->inChildren(other))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void Entity::updateChildren()
+    {
+        for (ChildMap::iterator iter = children.begin(); iter != children.end(); iter++)
+        {
+            std::tuple<int, int, int> offset = iter->second;
+            Entity *child = iter->first;
+            int xOff, yOff, zOff;
+            std::tie(xOff, yOff, zOff) = offset;
+            setOtherPosRelativeTo(child, xOff, yOff, zOff);
+            child->setLook(lookAngX, lookAngY);
+        }
+    }
+
+    void Entity::addHP(const int toAdd)
+    {
+        removeHP(toAdd * -1);
     }
 
     void Entity::removeHP(const int toRemove)
@@ -109,12 +201,7 @@ namespace logic
         }
     }
 
-    void Entity::addHP(const int toAdd)
-    {
-        removeHP(toAdd * -1);
-    }
 
-    //sets the x y and z move vectors
     void Entity::setMove(int x, int y, int z)
     {
         this->coordVector[0] = x;
@@ -122,7 +209,6 @@ namespace logic
         this->coordVector[2] = z;
     }
 
-    //Applies x rotation for movement
     int Entity::xHelper(const int x, const int z) const
     {
         float xComponent = approxCos(lookAngX) * (x);
@@ -157,7 +243,6 @@ namespace logic
         return round(xComponent + zComponent);
     }
 
-    //Applies z rotation for movement
     int Entity::zHelper(const int x, const int z) const
     {
         float zComponent = approxCos(lookAngX) * (z);
@@ -192,19 +277,6 @@ namespace logic
         return round(zComponent + xComponent);
     }
 
-    //Returns the width of this entity with rotation
-    float Entity::effectiveWidth() const
-    {
-        return abs(cos(lookAngX)) * width + abs(sin(lookAngX)) * depth;
-    }
-
-    //Returns the depth of this entity with rotation
-    float Entity::effectiveDepth() const
-    {
-        return abs(cos(lookAngX)) * depth + abs(sin(lookAngX)) * width;
-    }
-
-    //Applies movement
     void Entity::doMove()
     {
         this->y += coordVector[1];
@@ -221,7 +293,6 @@ namespace logic
         this->updateChildren();
     }
 
-    //updates the entity's x,y, and z co-ordinates by x,y, and z
     void Entity::doMove(int x, int y, int z)
     {
         std::tuple<int, int, int> oldVector = getCoordVector();
@@ -232,7 +303,6 @@ namespace logic
         this->setMove(oldX, oldY, oldZ);
     }
 
-    //updates the entity's x,y, and z co-ordinates by x,y, and z without angle.
     void Entity::doMoveAbsolute(int x, int y, int z)
     {
         this->x += x;
@@ -241,14 +311,13 @@ namespace logic
         this->updateChildren();
     }
 
-    //sets the look vector angles
+
     void Entity::setLookVector(float x, float y)
     {
         this->lookVector[0] = x;
         this->lookVector[1] = y;
     }
 
-    //sets where the entity is looking
     void Entity::setLook(float x, float y)
     {
         this->lookAngX = x;
@@ -256,32 +325,28 @@ namespace logic
         this->updateChildren();
     }
 
-    //Applies look
     void Entity::doLook()
     {
         this->lookAngX += lookVector[0];
         this->lookAngY += lookVector[1];
-        if(this->lookAngY > degreesToRadians(90)){
+        if (this->lookAngY > degreesToRadians(90))
+        {
             this->lookAngY = degreesToRadians(90);
-        } else if(this->lookAngY < degreesToRadians(-90)){
+        }
+        else if (this->lookAngY < degreesToRadians(-90))
+        {
             this->lookAngY = degreesToRadians(-90);
         }
         this->updateChildren();
     }
 
-    void Entity::doTick(){
-        this->doLook();
-        this->doMove();
-    }
-
-    //updates the entity's look angles by x and y
     void Entity::doLook(float x, float y)
     {
         this->setLookVector(x, y);
         doLook();
     }
 
-    //Sets this entity's position to x,y, and z
+
     void Entity::setPos(int x, int y, int z)
     {
         this->x = x;
@@ -290,7 +355,6 @@ namespace logic
         this->updateChildren();
     }
 
-    //sets position of entity relative to other entity + x,y, and z
     void Entity::setPosRelativeTo(const Entity *other, int x, int y, int z)
     {
         this->x = x + other->getX();
@@ -299,109 +363,19 @@ namespace logic
         updateChildren();
     }
 
-    //sets position of other entity relative to this + x, y, and z
     void Entity::setOtherPosRelativeTo(Entity *other, int x, int y, int z)
     {
         other->setPosRelativeTo(this, xHelper(x, z), y, zHelper(x, z));
     }
 
-    //Whether or not another entity is in the ghosts of this entity
-    bool Entity::inGhosts(const Entity *other)
+
+    void Entity::doTick()
     {
-        try
-        {
-            return this->ghosts.find(other) != ghosts.end();
-        }
-        catch (std::exception e)
-        {
-            return false;
-        }
+        this->doLook();
+        this->doMove();
     }
 
-    //Adds a ghost to ghosts
-    void Entity::addGhost(Entity *other)
-    {
-        this->ghosts.insert(other);
-        other->addDependent(this);
-        this->addDependent(other);
-    }
 
-    //Removes a ghost from ghosts
-    void Entity::removeGhost(Entity *other)
-    {
-        if (inGhosts(other))
-        {
-            this->ghosts.erase(other);
-        }
-        other->removeDependent(this);
-        this->removeDependent(other);
-    }
-
-    //Whether or not another entity is in the children of this entity
-    bool Entity::inChildren(Entity *other)
-    {
-        try
-        {
-            return children.count(other) || inChildrenDeep(other);
-        }
-        catch (std::exception e)
-        {
-            return false;
-        }
-    }
-
-    //Whether or not the entity is in this entity's children's children
-    bool Entity::inChildrenDeep(Entity *other)
-    {
-        for (ChildMap::iterator iter = children.begin(); iter != children.end(); iter++)
-        {
-            if (iter->first->inChildren(other))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    //Adds a child to children
-    void Entity::addChild(Entity *other, int offX, int offY, int offZ)
-    {
-        if (!inChildren(other) && !other->inChildren(this))
-        {
-            std::tuple<int, int, int> offsets = std::make_tuple(offX, offY, offZ);
-            this->children.insert(ChildPair(other, offsets));
-            other->addDependent(this);
-            this->addDependent(other);
-            updateChildren();
-        }
-    }
-
-    //Removes a child from children
-    void Entity::removeChild(Entity *other)
-    {
-        if (inChildren(other))
-        {
-            this->children.erase(other);
-        }
-        other->removeDependent(this);
-        this->removeDependent(other);
-    }
-
-    //Updates children
-    void Entity::updateChildren()
-    {
-        for (ChildMap::iterator iter = children.begin(); iter != children.end(); iter++)
-        {
-            std::tuple<int, int, int> offset = iter->second;
-            Entity *child = iter->first;
-            int xOff, yOff, zOff;
-            std::tie(xOff, yOff, zOff) = offset;
-            setOtherPosRelativeTo(child, xOff, yOff, zOff);
-            child->setLook(lookAngX, lookAngY);
-        }
-    }
-
-    //Returns the distance to another entity on X
     int Entity::distToOtherX(const Entity *other) const
     {
         if (getMaxX() >= other->getMinX() && getMinX() <= other->getMaxX())
@@ -418,7 +392,6 @@ namespace logic
         }
     }
 
-    //Returns the distance to another entity on Y
     int Entity::distToOtherY(const Entity *other) const
     {
         if (getMaxY() >= other->getMinY() && getMinY() <= other->getMaxY())
@@ -435,7 +408,6 @@ namespace logic
         }
     }
 
-    //Returns the distance to another entity on Z
     int Entity::distToOtherZ(const Entity *other) const
     {
         if (getMaxZ() >= other->getMinZ() && getMinZ() <= other->getMaxZ())
@@ -452,11 +424,12 @@ namespace logic
         }
     }
 
-    int Entity::euclideanDistToOther(const Entity* other) const{
-        return round(sqrt(pow(distToOtherX(other),2.0) + pow(distToOtherY(other),2.0) + pow(distToOtherZ(other), 2.0)));
+    int Entity::euclideanDistToOther(const Entity *other) const
+    {
+        return round(sqrt(pow(distToOtherX(other), 2.0) + pow(distToOtherY(other), 2.0) + pow(distToOtherZ(other), 2.0)));
     }
 
-    //whether or not this entity is colliding with the other (atm uses bounding box)
+
     bool Entity::isColliding(const Entity *other)
     {
         if (this->solid && other->isSolid() && !this->inGhosts(other) && *this != *other)
@@ -473,7 +446,6 @@ namespace logic
         return false;
     }
 
-    //whether or not this entity would collide with the other if it moved by x,y, and z
     bool Entity::wouldCollide(const Entity *other, int x, int y, int z)
     {
         if (!this->inGhosts(other) && *this != *other)
@@ -487,7 +459,6 @@ namespace logic
         return false;
     }
 
-    //whether or not this entity would completely pass through the other if it moved by x,y, and z
     bool Entity::passesThrough(const Entity *other, int x, int y, int z)
     {
         //If it would collide (on either side of the entity) then it must not have passed through
@@ -506,6 +477,7 @@ namespace logic
         //Hasn't returned yet, must not be passing through
         return false;
     }
+
 
     void Entity::setSolid(const bool toSet)
     {
@@ -553,36 +525,6 @@ namespace logic
                 this->friction = 1.0;
             }
         }
-    }
-
-    int Entity::getMinX() const
-    {
-        return x - (effectiveWidth() / 2);
-    }
-
-    int Entity::getMaxX() const
-    {
-        return x + (effectiveWidth() / 2);
-    }
-
-    int Entity::getMinY() const
-    {
-        return y - (height / 2);
-    }
-
-    int Entity::getMaxY() const
-    {
-        return y + (height / 2);
-    }
-
-    int Entity::getMinZ() const
-    {
-        return z - (effectiveDepth() / 2);
-    }
-
-    int Entity::getMaxZ() const
-    {
-        return z + (effectiveDepth() / 2);
     }
 
 } // namespace logic

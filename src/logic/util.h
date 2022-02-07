@@ -1,9 +1,13 @@
 #ifndef GAME_ENGINE_LOGIC_UTIL_H
 #define GAME_ENGINE_LOGIC_UTIL_H
-namespace logic{
+namespace logic
+{
+    //converts from degrees into radians
     float degreesToRadians(int degrees);
+
+    //converts from radians to degrees
     int radiansToDegrees(float radians);
-    
+
     //simplifies a given angle to between -180 and 180 degrees
     const int simplifyAngle(const int degrees);
 

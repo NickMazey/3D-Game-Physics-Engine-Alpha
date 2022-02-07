@@ -1,6 +1,9 @@
+#include <math.h>
+
 #include <map>
 #include <set>
 #include <tuple>
+
 #ifndef GAME_ENGINE_LOGIC_ENTIY_H
 #define GAME_ENGINE_LOGIC_ENTIY_H
 namespace logic
@@ -8,21 +11,30 @@ namespace logic
     class Entity
     {
     public:
-        //How many entites have been initialised
-        static int entityCount;
-
-        //Defining the map
+        //map from Entities to a tuple of ints, representing offsets
         typedef std::map<Entity *, std::tuple<int, int, int>> ChildMap;
 
+        //pairing between Entities and a tuple of ints, representing offsets. To be used for the map
         typedef std::pair<Entity *, std::tuple<int, int, int>> ChildPair;
+
+
+        //How many entites have been initialised
+        static int entityCount;
+        
+
+        //Creates an Entity with specified x,y, and z coordinates and specified width, height and depth
+        Entity(int x, int y, int z, int width, int height, int depth);
+
+        //Default Constructor, makes an empty Entity (AVOID USING)
+        Entity();
+
 
         bool operator==(const Entity &other) const;
         bool operator!=(const Entity &other) const;
-        //currently unfinished
-        bool operator<(const Entity &other) const;
 
-        //Whether or not another entity is in the dependents of this entity
-        bool inDependents(Entity *other);
+        //Destroys the entity and removes it from other entities' lists
+        ~Entity();
+
 
         //Adds to dependents
         void addDependent(Entity *other);
@@ -30,29 +42,45 @@ namespace logic
         //Removes from dependents
         void removeDependent(Entity *other);
 
-        //Constructor
-        Entity(int x, int y, int z, int width, int height, int depth);
+        //Whether or not another entity is in the dependents of this entity
+        bool inDependents(Entity *other);
 
-        //Default Constructor (fixes an inheritance issue)
-        Entity();
 
-        //Destructor
-        ~Entity();
+        //Adds to ghosts
+        void addGhost(Entity *other);
 
-        //removes the given amount of hp from this entity
-        void removeHP(const int toRemove);
+        //Removes from ghosts
+        void removeGhost(Entity *other);
+        
+        //Whether or not another entity is in the ghosts of this entity
+        bool inGhosts(const Entity *other);
+
+
+        //Adds to children
+        void addChild(Entity *other, int offX, int offY, int offZ);
+
+        //Removes from children
+        void removeChild(Entity *other);
+
+        //Whether or not another entity is in the children of this entity
+        bool inChildren(Entity *other);
+
+        //Whether or not the entity is in this entity's children's children
+        bool inChildrenDeep(Entity *other);
+
+        //Updates children
+        void updateChildren();
+
 
         //adds the given amount of hp to this entity
         void addHP(const int toAdd);
 
+        //removes the given amount of hp from this entity
+        void removeHP(const int toRemove);
+
+
         //sets the x y and z move vectors
         void setMove(int x, int y, int z);
-
-        //Applies movement
-        void doMove();
-
-        //Does doMove and doLook methods for a game tick
-        void doTick();
 
         //Applies x rotation for movement
         int xHelper(const int x, const int z) const;
@@ -60,17 +88,15 @@ namespace logic
         //Applies z rotation for movement
         int zHelper(const int x, const int z) const;
 
-        //Returns the width of this entity with rotation
-        float effectiveWidth() const;
-
-        //Returns the depth of this entity with rotation
-        float effectiveDepth() const;
+        //Applies movement
+        void doMove();
 
         //updates the entity's x,y, and z co-ordinates by x,y, and z
         void doMove(int x, int y, int z);
 
         //updates the entity's x,y, and z co-ordinates by x,y, and z without angle.
         void doMoveAbsolute(int x, int y, int z);
+
 
         //sets the look vector angles
         void setLookVector(float x, float y);
@@ -84,6 +110,7 @@ namespace logic
         //updates the entity's look angles by x and y
         void doLook(float x, float y);
 
+
         //Sets this entity's position to x,y, and z
         void setPos(int x, int y, int z);
 
@@ -93,29 +120,21 @@ namespace logic
         //sets position of other entity relative to this + x, y, and z
         void setOtherPosRelativeTo(Entity *other, int x, int y, int z);
 
-        //Whether or not another entity is in the ghosts of this entity
-        bool inGhosts(const Entity *other);
 
-        //Adds to ghosts
-        void addGhost(Entity *other);
+        //Does doMove and doLook methods for a game tick
+        void doTick();
 
-        //Removes from ghosts
-        void removeGhost(Entity *other);
 
-        //Whether or not another entity is in the children of this entity
-        bool inChildren(Entity *other);
+        //Returns the width of this entity with rotation
+        float effectiveWidth() const{
+            return abs(cos(lookAngX)) * width + abs(sin(lookAngX)) * depth;
+        }
 
-        //Whether or not the entity is in this entity's children's children
-        bool inChildrenDeep(Entity *other);
+        //Returns the depth of this entity with rotation
+        float effectiveDepth() const{
+            return abs(cos(lookAngX)) * depth + abs(sin(lookAngX)) * width;
+        }
 
-        //Adds to children
-        void addChild(Entity *other, int offX, int offY, int offZ);
-
-        //Removes from children
-        void removeChild(Entity *other);
-
-        //Updates children
-        void updateChildren();
 
         //Returns the distance to another entity on X
         int distToOtherX(const Entity *other) const;
@@ -129,6 +148,7 @@ namespace logic
         //Returns the euclidean distance to another entity
         int euclideanDistToOther(const Entity *other) const;
 
+
         //whether or not this entity is colliding with the other (atm uses bounding box)
         bool isColliding(const Entity *other);
 
@@ -138,83 +158,119 @@ namespace logic
         //whether or not this entity would completely pass through the other if it moved by x,y, and z
         bool passesThrough(const Entity *other, int x, int y, int z);
 
-        //Getters
+
         int getId() const
         {
             return id;
         }
+
         int getX() const
         {
             return x;
         }
+
         int getY() const
         {
             return y;
         }
+
         int getZ() const
         {
             return z;
         }
-        int getMinX() const;
-        int getMaxX() const;
-        int getMinY() const;
-        int getMaxY() const;
-        int getMinZ() const;
-        int getMaxZ() const;
+
+        int getMinX() const{
+            return x - (effectiveWidth() / 2);
+        }
+
+        int getMaxX() const{
+            return x + (effectiveWidth() / 2);
+        }
+
+        int getMinY() const{
+            return y - (height / 2);
+        }
+
+        int getMaxY() const{
+            return y + (height / 2);
+        }
+
+        int getMinZ() const{
+            return z - (effectiveDepth() / 2);
+        }
+
+        int getMaxZ() const{
+            return z + (effectiveDepth() / 2);
+        }
+
         std::tuple<int, int, int> getCoordVector() const
         {
             return std::make_tuple(coordVector[0], coordVector[1], coordVector[2]);
         }
+
         std::tuple<float, float> getLookVector() const
         {
             return std::make_tuple(lookVector[0], lookVector[1]);
         }
+
         int getWidth() const
         {
             return width;
         }
+
         int getHeight() const
         {
             return height;
         }
+
         int getDepth() const
         {
             return depth;
         }
+
         int getHP() const
         {
             return hp;
         }
+
         int getGravity() const
         {
             return gravity;
         }
+
         float getFriction() const
         {
             return friction;
         }
+
         float getLookAngX() const
         {
             return lookAngX;
         }
+
         float getLookAngY() const
         {
             return lookAngY;
         }
+
         bool isSolid() const
         {
             return solid;
         }
+        
         bool hasPhysics() const
         {
             return physics;
         }
 
-        //Setters
         void setSolid(const bool toSet);
+
         void setHP(const int toSet);
+
         void setPhysics(const bool toSet);
+
         void setGravity(const int toSet);
+
         void setFriction(const float toSet);
 
     private:
@@ -222,26 +278,22 @@ namespace logic
         int hp;
         std::set<Entity *> dependents;
 
-        //Movement
         int x;
         int y;
         int z;
         int coordVector[3] = {0};
         ChildMap children;
 
-        //Collision
         bool solid;
         int width;
         int height;
         int depth;
         std::set<const Entity *> ghosts;
 
-        //Physics
         bool physics;
         int gravity;
         float friction;
 
-        //Rendering
         float lookAngX;
         float lookAngY;
         int fov;

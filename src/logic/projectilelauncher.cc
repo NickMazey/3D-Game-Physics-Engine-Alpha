@@ -1,7 +1,12 @@
 #include "projectilelauncher.h"
-#include "util.h"
+
 #include <math.h>
+
 #include <algorithm>
+
+#include "entity.h"
+#include "util.h"
+
 namespace logic
 {
     ProjectileLauncher::ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazineSize, int damage) : Entity(x, y, z, width, height, depth)
@@ -91,6 +96,11 @@ namespace logic
         return canFire;
     }
 
+    bool ProjectileLauncher::hasHit()
+    {
+        return lastHit != this;
+    }
+
     void ProjectileLauncher::doTick()
     {
         Entity::doTick();
@@ -123,11 +133,6 @@ namespace logic
         }
     }
 
-    bool ProjectileLauncher::hasHit()
-    {
-        return lastHit != this;
-    }
-
     Entity *ProjectileLauncher::findFirstCollision(std::set<Entity *> entities)
     {
         Entity *closestHittableEntity = this;
@@ -142,8 +147,8 @@ namespace logic
                 //How much the line should move in each dimension per step with the given angles
                 int yCoeff = round(approxSin(getLookAngY()) * 1000.0f);
                 int xzCoeff = round(approxCos(getLookAngY()) * 1000.0f);
-                int xCoeff = (round(approxCos(getLookAngX())  * 1000.0f) * xzCoeff) / 1000;
-                int zCoeff = (round(approxSin(getLookAngX())  * 1000.0f) * xzCoeff) /1000;
+                int xCoeff = (round(approxCos(getLookAngX()) * 1000.0f) * xzCoeff) / 1000;
+                int zCoeff = (round(approxSin(getLookAngX()) * 1000.0f) * xzCoeff) / 1000;
 
                 int xMove, yMove, zMove = 0;
                 int distance = euclideanDistToOther(activeEntity);
@@ -271,16 +276,18 @@ namespace logic
         this->hitScan = toSet;
     }
 
-    void ProjectileLauncher::setProjectile(const Entity toSet)
+    void ProjectileLauncher::setProjectile(Entity toSet)
     {
         this->projectile = toSet;
     }
 
-    void ProjectileLauncher::setLastHit(Entity* toSet){
+    void ProjectileLauncher::setLastHit(Entity *toSet)
+    {
         this->lastHit = toSet;
     }
 
-    void ProjectileLauncher::setActiveProjectile(Entity* toSet){
+    void ProjectileLauncher::setActiveProjectile(Entity *toSet)
+    {
         this->activeProjectile = toSet;
     }
 }
