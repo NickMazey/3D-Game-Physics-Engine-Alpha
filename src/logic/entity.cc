@@ -81,7 +81,7 @@ namespace logic
         {
             return this->dependents.find(other) != dependents.end();
         }
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             return false;
         }
@@ -111,7 +111,7 @@ namespace logic
         {
             return this->ghosts.find(other) != ghosts.end();
         }
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             return false;
         }
@@ -146,7 +146,7 @@ namespace logic
         {
             return children.count(other) || inChildrenDeep(other);
         }
-        catch (std::exception e)
+        catch (std::exception& e)
         {
             return false;
         }
