@@ -14,7 +14,7 @@ namespace logic
         //map from Entities to a tuple of ints, representing offsets
         typedef std::map<Entity *, std::tuple<int, int, int>> ChildMap;
 
-        //pairing between Entities and a tuple of ints, representing offsets for the map
+        //pairing between Entities and a tuple of ints, representing offsets. To be used for the map
         typedef std::pair<Entity *, std::tuple<int, int, int>> ChildPair;
 
 
@@ -31,7 +31,7 @@ namespace logic
 
         bool operator==(const Entity &other) const;
         bool operator!=(const Entity &other) const;
-        
+
         //Destroys the entity and removes it from other entities' lists
         ~Entity();
 
