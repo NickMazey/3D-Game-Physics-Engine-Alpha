@@ -124,10 +124,14 @@ namespace logic
 
 
         //Returns the width of this entity with rotation
-        float effectiveWidth() const;
+        float effectiveWidth() const{
+            return abs(cos(lookAngX)) * width + abs(sin(lookAngX)) * depth;
+        }
 
         //Returns the depth of this entity with rotation
-        float effectiveDepth() const;
+        float effectiveDepth() const{
+            return abs(cos(lookAngX)) * depth + abs(sin(lookAngX)) * width;
+        }
 
 
         //Returns the distance to another entity on X
@@ -258,9 +262,13 @@ namespace logic
         }
 
         void setSolid(const bool toSet);
+
         void setHP(const int toSet);
+
         void setPhysics(const bool toSet);
+
         void setGravity(const int toSet);
+        
         void setFriction(const float toSet);
 
     private:
