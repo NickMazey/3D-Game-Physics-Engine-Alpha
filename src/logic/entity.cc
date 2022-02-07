@@ -35,6 +35,7 @@ namespace logic
     {
     }
 
+
     bool Entity::operator==(const Entity &other) const
     {
         return id == other.getId();
@@ -44,10 +45,6 @@ namespace logic
         return !operator==(other);
     }
 
-    bool Entity::operator<(const Entity &other) const
-    {
-        return id < other.getId();
-    }
 
     Entity::~Entity()
     {

@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include <map>
 #include <set>
 #include <tuple>
@@ -26,10 +28,10 @@ namespace logic
         //Default Constructor, makes an empty Entity (AVOID USING)
         Entity();
 
+
         bool operator==(const Entity &other) const;
         bool operator!=(const Entity &other) const;
-        bool operator<(const Entity &other) const;
-
+        
         //Destroys the entity and removes it from other entities' lists
         ~Entity();
 
@@ -268,7 +270,7 @@ namespace logic
         void setPhysics(const bool toSet);
 
         void setGravity(const int toSet);
-        
+
         void setFriction(const float toSet);
 
     private:
