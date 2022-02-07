@@ -1,6 +1,6 @@
-#include <math.h>
-
 #include "util.h"
+
+#include <math.h>
 
 namespace logic
 {
