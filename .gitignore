@@ -36,6 +36,9 @@
 *.code-workspace
 .vscode/*
 
+#Mac Stuff
+.DS_Store
+
 #My Test Script
 build-and-test.bat
 

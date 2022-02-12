@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.10)
 
 project(game_engine)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "-std=c++11 -fprofile-arcs -ftest-coverage")
+set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
+
 add_subdirectory(src/logic)
 
 list(APPEND LIB "${PROJECT_BINARY_DIR}")
@@ -16,9 +20,6 @@ target_include_directories(game_engine PUBLIC
     ${LIB}   
 )
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage")
-set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
 
 enable_testing()
 add_subdirectory(test)
