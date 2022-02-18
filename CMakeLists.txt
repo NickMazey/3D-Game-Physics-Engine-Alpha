@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(game_engine)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "-std=c++11 -fprofile-arcs -ftest-coverage")
+set(CMAKE_CXX_FLAGS "-std=c++11 -fprofile-arcs -ftest-coverage -static-libgcc -static-libstdc++ -static")
 set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
 
 add_subdirectory(src/logic)
