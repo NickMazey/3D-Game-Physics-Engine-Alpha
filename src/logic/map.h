@@ -14,13 +14,13 @@ namespace logic
         std::string name;
 
         //The terrain of the map
-        std::vector<logic::Entity> level;
+        std::vector<Entity> level;
 
         //The players of the map
-        std::vector<ogic::Entity> players;
+        std::vector<Entity> players;
 
         //The weapons the players can use on this map
-        std::vectorlogic::ProjectileLauncher> availableWeapons;
+        std::vector<ProjectileLauncher> availableWeapons;
 
         //The starting loadout for each player. Each index in loadouts should have a corresponding player in players
         std::vector<std::vector<int> > loadouts;
