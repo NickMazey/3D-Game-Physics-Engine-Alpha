@@ -14,16 +14,16 @@ namespace logic
         std::string name;
 
         //The terrain of the map
-        std::vector<const logic::Entity> level;
+        std::vector<logic::Entity> level;
 
         //The players of the map
-        std::vector<const logic::Entity> players;
+        std::vector<ogic::Entity> players;
 
         //The weapons the players can use on this map
-        std::vector<const logic::ProjectileLauncher> availableWeapons;
+        std::vectorlogic::ProjectileLauncher> availableWeapons;
 
         //The starting loadout for each player. Each index in loadouts should have a corresponding player in players
-        std::vector<const std::vector<int> > loadouts;
+        std::vector<std::vector<int> > loadouts;
 
         //The dividing line for teams, whether that be X or Z.
         char divLine;
