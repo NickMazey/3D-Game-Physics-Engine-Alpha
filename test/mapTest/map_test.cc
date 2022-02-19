@@ -1,9 +1,10 @@
 #include "gtest/gtest.h"
-#include <string>
-#include <vector>
 #include "entity.h"
 #include "projectilelauncher.h"
 #include "map.h"
+#include <string>
+#include <vector>
+
 
 TEST(MapTest, Has_Fields){
     struct logic::Map map;
