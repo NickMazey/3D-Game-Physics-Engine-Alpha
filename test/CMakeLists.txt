@@ -12,3 +12,4 @@ FetchContent_MakeAvailable(googletest)
 
 add_subdirectory(entityTest)
 add_subdirectory(projectileLauncherTest)
+add_subdirectory(mapTest)
