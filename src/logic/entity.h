@@ -4,8 +4,8 @@
 #include <set>
 #include <tuple>
 
-#ifndef GAME_ENGINE_LOGIC_ENTIY_H
-#define GAME_ENGINE_LOGIC_ENTIY_H
+#ifndef GAME_ENGINE_LOGIC_ENTITY_H
+#define GAME_ENGINE_LOGIC_ENTITY_H
 namespace logic
 {
     class Entity
@@ -300,4 +300,4 @@ namespace logic
         float lookVector[2] = {0.0}; // Radians
     };
 } // namespace logic
-#endif //GAME_ENGINE_LOGIC_ENTIY_H
+#endif //GAME_ENGINE_LOGIC_ENTITY_H
