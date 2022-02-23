@@ -29,7 +29,12 @@ namespace logic
         {
             Action action;
             float scale;
+            friend bool operator<(const ScaledAction& l, const ScaledAction& r){
+            return l.scale < r.scale;
+        }
         };
+
+
 
         // returns unread actions and clears actions set
         const std::set<ScaledAction> getActions()
