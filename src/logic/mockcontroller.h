@@ -1,0 +1,7 @@
+#ifndef GAME_ENGINE_LOGIC_MOCKCONTROLLER_H
+#define GAME_ENGINE_LOGIC_MOCKCONTROLLER_H
+namespace logic
+{
+
+} //namespace logic
+#endif //GAME_ENGINE_LOGIC_MOCKCONTROLLER_H
