@@ -13,10 +13,10 @@ list(APPEND LIB "${PROJECT_SOURCE_DIR}/src/logic")
 if(testing)
     if(WIN32)
         #To have all of the required libraries included in the exes, allows them to be run on another win32 PC
-        set(CMAKE_CXX_FLAGS "-std=c++11 -fprofile-arcs -ftest-coverage -static-libgcc -static-libstdc++ -static")
+        set(CMAKE_CXX_FLAGS "-std=c++11 -fprofile-arcs -ftest-coverage -static-libgcc -static-libstdc++ -static -Wall")
     else()
         #Don't need to be statically linked outside of windows at the moment
-        set(CMAKE_CXX_FLAGS "-std=c++11 -fprofile-arcs -ftest-coverage")
+        set(CMAKE_CXX_FLAGS "-std=c++11 -fprofile-arcs -ftest-coverage -Wall")
     endif()
     
     enable_testing()

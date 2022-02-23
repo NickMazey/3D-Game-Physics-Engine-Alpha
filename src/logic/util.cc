@@ -4,14 +4,15 @@
 
 namespace logic
 {
-#define PITENDP 3.1415926535f
+const float PITenDP = 3.1415926535f;
+
     float degreesToRadians(const int degrees)
     {
-        return (degrees * PITENDP) / 180.0f;
+        return (degrees * PITenDP) / 180.0f;
     }
     int radiansToDegrees(const float radians)
     {
-        return (180.0f * radians) / PITENDP;
+        return (180.0f * radians) / PITenDP;
     }
 
     const int simplifyAngle(const int degrees)
@@ -33,16 +34,16 @@ namespace logic
 
     const float simplifyRadians(const float radians)
     {
-        if (-1.0f * PITENDP <= radians && radians <= PITENDP)
+        if (-1.0f * PITenDP <= radians && radians <= PITenDP)
         {
             return radians;
         }
         else
         {
-            float newRad = fmod(radians, (2.0f * PITENDP));
-            if (newRad > PITENDP)
+            float newRad = fmod(radians, (2.0f * PITenDP));
+            if (newRad > PITenDP)
             {
-                newRad = PITENDP - newRad;
+                newRad = PITenDP - newRad;
             }
             return newRad;
         }
@@ -57,6 +58,5 @@ namespace logic
     {
         return cosf(radians);
     }
-#undef PITENDP
 
 }

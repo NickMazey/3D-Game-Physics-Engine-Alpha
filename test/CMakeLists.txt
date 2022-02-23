@@ -11,5 +11,6 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_subdirectory(entityTest)
-add_subdirectory(projectileLauncherTest)
 add_subdirectory(mapTest)
+add_subdirectory(mockControllerTest)
+add_subdirectory(projectileLauncherTest)
