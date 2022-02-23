@@ -1,4 +1,3 @@
-
 #include <set>
 
 #ifndef GAME_ENGINE_LOGIC_CONTROLLER_H
