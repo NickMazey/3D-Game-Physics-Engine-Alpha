@@ -6,6 +6,7 @@ add_executable(
 target_link_libraries(
     mockcontroller_test
     PUBLIC
+    mockcontroller
     gtest_main
 )
 
