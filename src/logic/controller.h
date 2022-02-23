@@ -30,7 +30,7 @@ namespace logic
             Action action;
             float scale;
             friend bool operator<(const ScaledAction& l, const ScaledAction& r){
-            return l.scale < r.scale;
+            return l.action < r.action;
         }
         };
 
