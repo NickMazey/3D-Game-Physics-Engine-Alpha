@@ -1,3 +1,4 @@
+//Copyright 2022 Nicholas Mazey. All rights reserved
 #include <set>
 
 #ifndef GAME_ENGINE_LOGIC_CONTROLLER_H

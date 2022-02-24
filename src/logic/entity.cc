@@ -1,3 +1,4 @@
+//Copyright 2022 Nicholas Mazey. All rights reserved
 #include "entity.h"
 
 #include <math.h>

@@ -1,3 +1,4 @@
+//Copyright 2022 Nicholas Mazey. All rights reserved
 #include "gtest/gtest.h"
 #include "projectilelauncher.h"
 #include "util.h"

@@ -1,3 +1,4 @@
+//Copyright 2022 Nicholas Mazey. All rights reserved
 #include "projectilelauncher.h"
 
 #include <math.h>
