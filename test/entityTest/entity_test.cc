@@ -288,7 +288,7 @@ TEST(EntityTest,Movement_Multi_Tick_Variable){
     for(int i = 0; i < 5; i++){
         a.doMove();
     }
-    EXPECT_TRUE(a.getX() == 5 && a.getY() == 5 && a.getZ() == 5) << "Entity failed to change coordVector. \n Entity:" << printInfo(a);
+    EXPECT_TRUE(a.getX() == 5 && a.getY() == 5 && a.getZ() == 5) << "Entity failed to change movement_vector_. \n Entity:" << printInfo(a);
 }
 
 TEST(EntityTest, Multi_Entity_Movement){
