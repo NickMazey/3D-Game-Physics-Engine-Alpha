@@ -1,5 +1,5 @@
 // Copyright 2022 Nicholas Mazey. All rights reserved
-#include "util.h"
+#include "logicutil.h"
 
 #include <math.h>
 namespace game_engine

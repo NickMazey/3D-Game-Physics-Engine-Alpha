@@ -1,6 +1,6 @@
 // Copyright 2022 Nicholas Mazey. All rights reserved
-#ifndef GAME_ENGINE_LOGIC_UTIL_H
-#define GAME_ENGINE_LOGIC_UTIL_H
+#ifndef GAME_ENGINE_LOGIC_LOGICUTIL_H
+#define GAME_ENGINE_LOGIC_LOGICUTIL_H
 
 namespace game_engine
 {
@@ -25,4 +25,4 @@ namespace game_engine
         const float approxcos(const float degrees);
     } // namespace logic
 } // namespace game_engine
-#endif // GAME_ENGINE_LOGIC_UTIL_H
+#endif // GAME_ENGINE_LOGIC_LOGICUTIL_H
