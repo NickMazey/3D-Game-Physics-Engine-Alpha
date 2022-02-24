@@ -21,13 +21,13 @@ namespace logic
         std::vector<Entity> players;
 
         //The weapons the players can use on this map
-        std::vector<ProjectileLauncher> availableWeapons;
+        std::vector<ProjectileLauncher> available_weapons;
 
         //The starting loadout for each player. Each index in loadouts should have a corresponding player in players
         std::vector<std::vector<int> > loadouts;
 
         //The dividing line for teams, whether that be X or Z.
-        char divLine;
+        char dividing_line;
     };
 } //namespace logic
 #endif //GAME_ENGINE_LOGIC_MAP_H
