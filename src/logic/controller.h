@@ -37,10 +37,10 @@ namespace logic
 
 
         // returns unread actions and clears actions set
-        const std::set<ScaledAction> getActions()
+        const std::set<ScaledAction> get_actions()
         {
-            std::set<ScaledAction> const_actions = actions;
-            reset();
+            std::set<ScaledAction> const_actions = actions_;
+            Reset();
             return const_actions;
         }
 
@@ -50,20 +50,20 @@ namespace logic
             ScaledAction taken;
             taken.action = to_take;
             taken.scale = scale;
-            actions.insert(taken);
+            actions_.insert(taken);
         }
 
         // resets the action set
-        void reset()
+        void Reset()
         {
-            actions = std::set<ScaledAction>();
+            actions_ = std::set<ScaledAction>();
         }
 
         // updates this controller by checking for input
-        void update();
+        void Update();
 
     protected:
-        std::set<ScaledAction> actions;
+        std::set<ScaledAction> actions_;
     };
 } // namespace logic
 #endif // GAME_ENGINE_LOGIC_CONTROLLER_H

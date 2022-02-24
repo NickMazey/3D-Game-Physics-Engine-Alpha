@@ -7,7 +7,7 @@ namespace logic
 {
     class MockController : public Controller{
         public:
-            void update();
+            void Update();
     };
 } //namespace logic
 #endif //GAME_ENGINE_LOGIC_MOCKCONTROLLER_H
