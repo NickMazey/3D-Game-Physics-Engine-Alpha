@@ -17,18 +17,18 @@ namespace logic
         this->x_pos_ = x;
         this->y_pos_ = y;
         this->z_pos_ = z;
-        this->fov = 0.0f;
-        this->width = width;
-        this->height = height;
-        this->depth = depth;
+        this->fov_ = 0.0f;
+        this->width_ = width;
+        this->height_ = height;
+        this->depth_ = depth;
         this->id_ = entityCount;
-        this->lookAngX = 0.0;
-        this->lookAngY = 0.0;
+        this->horizontal_look_angle_ = 0.0;
+        this->vertical_look_angle_ = 0.0;
         this->hp_ = -1;
-        this->friction = 0.0;
-        this->gravity = 0;
-        this->solid = true;
-        this->physics = false;
+        this->friction_ = 0.0;
+        this->gravity_ = 0;
+        this->solid_ = true;
+        this->physics_ = false;
         entityCount++;
     }
 
@@ -91,7 +91,7 @@ namespace logic
 
     void Entity::addGhost(Entity *other)
     {
-        this->ghosts.insert(other);
+        this->ghosts_.insert(other);
         other->addDependent(this);
         this->addDependent(other);
     }
@@ -100,7 +100,7 @@ namespace logic
     {
         if (inGhosts(other))
         {
-            this->ghosts.erase(other);
+            this->ghosts_.erase(other);
         }
         other->removeDependent(this);
         this->removeDependent(other);
@@ -110,7 +110,7 @@ namespace logic
     {
         try
         {
-            return this->ghosts.find(other) != ghosts.end();
+            return this->ghosts_.find(other) != ghosts_.end();
         }
         catch (std::exception& e)
         {
@@ -124,7 +124,7 @@ namespace logic
         if (!inChildren(other) && !other->inChildren(this))
         {
             std::tuple<int, int, int> offsets = std::make_tuple(offX, offY, offZ);
-            this->children.insert(ChildPair(other, offsets));
+            this->children_.insert(ChildPair(other, offsets));
             other->addDependent(this);
             this->addDependent(other);
             updateChildren();
@@ -135,7 +135,7 @@ namespace logic
     {
         if (inChildren(other))
         {
-            this->children.erase(other);
+            this->children_.erase(other);
         }
         other->removeDependent(this);
         this->removeDependent(other);
@@ -145,7 +145,7 @@ namespace logic
     {
         try
         {
-            return children.count(other) || inChildrenDeep(other);
+            return children_.count(other) || inChildrenDeep(other);
         }
         catch (std::exception& e)
         {
@@ -155,7 +155,7 @@ namespace logic
 
     bool Entity::inChildrenDeep(Entity *other)
     {
-        for (ChildMap::iterator iter = children.begin(); iter != children.end(); iter++)
+        for (ChildMap::iterator iter = children_.begin(); iter != children_.end(); iter++)
         {
             if (iter->first->inChildren(other))
             {
@@ -167,14 +167,14 @@ namespace logic
 
     void Entity::updateChildren()
     {
-        for (ChildMap::iterator iter = children.begin(); iter != children.end(); iter++)
+        for (ChildMap::iterator iter = children_.begin(); iter != children_.end(); iter++)
         {
             std::tuple<int, int, int> offset = iter->second;
             Entity *child = iter->first;
             int xOff, yOff, zOff;
             std::tie(xOff, yOff, zOff) = offset;
             setOtherPosRelativeTo(child, xOff, yOff, zOff);
-            child->setLook(lookAngX, lookAngY);
+            child->setLook(horizontal_look_angle_, vertical_look_angle_);
         }
     }
 
@@ -212,33 +212,33 @@ namespace logic
 
     int Entity::xHelper(const int x, const int z) const
     {
-        float xComponent = approxCos(lookAngX) * (x);
+        float xComponent = approxCos(horizontal_look_angle_) * (x);
         float zComponent = 0;
-        if (approxSin(lookAngX) != 0)
+        if (approxSin(horizontal_look_angle_) != 0)
         {
-            int angX = simplifyAngle(radiansToDegrees(lookAngX));
+            int angX = simplifyAngle(radiansToDegrees(horizontal_look_angle_));
             //Positive
             if (angX > 0 && angX < 90)
             { //First Quad
-                zComponent = z * approxSin(lookAngX + degreesToRadians(180));
+                zComponent = z * approxSin(horizontal_look_angle_ + degreesToRadians(180));
             }
             else if (angX == 90 || angX == -90)
             { //90 Degrees
-                zComponent = -z * approxSin(lookAngX);
+                zComponent = -z * approxSin(horizontal_look_angle_);
             }
             else if (angX > 90 && angX < 180)
             { //Second Quad
-                zComponent = -z * approxSin(lookAngX);
+                zComponent = -z * approxSin(horizontal_look_angle_);
             }
             //Negative
             else if (angX < 0 && angX > -90)
             { //First Quad
-                zComponent = -z * approxSin(lookAngX);
+                zComponent = -z * approxSin(horizontal_look_angle_);
             }
             else if (angX < -90 && angX > -180)
             { //Second Quad
-                xComponent = x * approxSin(lookAngX);
-                zComponent = z * approxSin(lookAngX - degreesToRadians(90));
+                xComponent = x * approxSin(horizontal_look_angle_);
+                zComponent = z * approxSin(horizontal_look_angle_ - degreesToRadians(90));
             }
         }
         return round(xComponent + zComponent);
@@ -246,33 +246,33 @@ namespace logic
 
     int Entity::zHelper(const int x, const int z) const
     {
-        float zComponent = approxCos(lookAngX) * (z);
+        float zComponent = approxCos(horizontal_look_angle_) * (z);
         float xComponent = 0;
-        if (approxSin(lookAngX) != 0)
+        if (approxSin(horizontal_look_angle_) != 0)
         {
-            int angX = simplifyAngle(radiansToDegrees(lookAngX));
+            int angX = simplifyAngle(radiansToDegrees(horizontal_look_angle_));
             //Positive
             if (angX > 0 && angX < 90)
             { //First Quad
-                xComponent = x * approxSin(lookAngX);
+                xComponent = x * approxSin(horizontal_look_angle_);
             }
             else if (angX == 90 || angX == -90)
             { //90 Degrees
-                xComponent = x * approxSin(lookAngX);
+                xComponent = x * approxSin(horizontal_look_angle_);
             }
             else if (angX > 90 && angX < 180)
             { //Second Quad
-                xComponent = x * approxSin(lookAngX);
+                xComponent = x * approxSin(horizontal_look_angle_);
             }
             //Negative
             else if (angX < 0 && angX > -90)
             { //First Quad
-                xComponent = x * approxSin(lookAngX);
+                xComponent = x * approxSin(horizontal_look_angle_);
             }
             else if (angX < -90 && angX > -180)
             { //Second Quad
-                zComponent = z * approxSin(lookAngX);
-                xComponent = x * approxCos(lookAngX);
+                zComponent = z * approxSin(horizontal_look_angle_);
+                xComponent = x * approxCos(horizontal_look_angle_);
             }
         }
         return round(zComponent + xComponent);
@@ -281,10 +281,10 @@ namespace logic
     void Entity::doMove()
     {
         this->y_pos_ += movement_vector_[1];
-        if (physics)
+        if (physics_)
         {
-            this->x_pos_ += xHelper(movement_vector_[0], movement_vector_[2]) * friction;
-            this->z_pos_ += zHelper(movement_vector_[0], movement_vector_[2]) * friction;
+            this->x_pos_ += xHelper(movement_vector_[0], movement_vector_[2]) * friction_;
+            this->z_pos_ += zHelper(movement_vector_[0], movement_vector_[2]) * friction_;
         }
         else
         {
@@ -315,28 +315,28 @@ namespace logic
 
     void Entity::setLookVector(float x, float y)
     {
-        this->lookVector[0] = x;
-        this->lookVector[1] = y;
+        this->look_angle_change_vector_[0] = x;
+        this->look_angle_change_vector_[1] = y;
     }
 
     void Entity::setLook(float x, float y)
     {
-        this->lookAngX = x;
-        this->lookAngY = y;
+        this->horizontal_look_angle_ = x;
+        this->vertical_look_angle_ = y;
         this->updateChildren();
     }
 
     void Entity::doLook()
     {
-        this->lookAngX += lookVector[0];
-        this->lookAngY += lookVector[1];
-        if (this->lookAngY > degreesToRadians(90))
+        this->horizontal_look_angle_ += look_angle_change_vector_[0];
+        this->vertical_look_angle_ += look_angle_change_vector_[1];
+        if (this->vertical_look_angle_ > degreesToRadians(90))
         {
-            this->lookAngY = degreesToRadians(90);
+            this->vertical_look_angle_ = degreesToRadians(90);
         }
-        else if (this->lookAngY < degreesToRadians(-90))
+        else if (this->vertical_look_angle_ < degreesToRadians(-90))
         {
-            this->lookAngY = degreesToRadians(-90);
+            this->vertical_look_angle_ = degreesToRadians(-90);
         }
         this->updateChildren();
     }
@@ -433,7 +433,7 @@ namespace logic
 
     bool Entity::isColliding(const Entity *other)
     {
-        if (this->solid && other->isSolid() && !this->inGhosts(other) && *this != *other)
+        if (this->solid_ && other->isSolid() && !this->inGhosts(other) && *this != *other)
         {
             //Assumes that x,y, and z are located at the center of the entity
 
@@ -451,8 +451,8 @@ namespace logic
     {
         if (!this->inGhosts(other) && *this != *other)
         {
-            Entity *created = new Entity(this->x_pos_, this->y_pos_, this->z_pos_, this->width, this->height, this->depth);
-            created->doLook(lookAngX, lookAngY);
+            Entity *created = new Entity(this->x_pos_, this->y_pos_, this->z_pos_, this->width_, this->height_, this->depth_);
+            created->doLook(horizontal_look_angle_, vertical_look_angle_);
             created->doMove(x, y, z);
             return created->isColliding(other);
         }
@@ -482,7 +482,7 @@ namespace logic
 
     void Entity::setSolid(const bool toSet)
     {
-        this->solid = toSet;
+        this->solid_ = toSet;
     }
 
     void Entity::setHP(const int toSet)
@@ -495,35 +495,35 @@ namespace logic
 
     void Entity::setPhysics(const bool toSet)
     {
-        this->physics = toSet;
+        this->physics_ = toSet;
     }
 
     void Entity::setGravity(const int toSet)
     {
-        if (physics)
+        if (physics_)
         {
-            this->gravity = toSet;
+            this->gravity_ = toSet;
         }
     }
 
     void Entity::setFriction(const float toSet)
     {
-        if (physics)
+        if (physics_)
         {
             if (toSet <= 1.0)
             {
                 if (toSet >= 0)
                 {
-                    this->friction = toSet;
+                    this->friction_ = toSet;
                 }
                 else
                 {
-                    this->friction = 0.0;
+                    this->friction_ = 0.0;
                 }
             }
             else
             {
-                this->friction = 1.0;
+                this->friction_ = 1.0;
             }
         }
     }

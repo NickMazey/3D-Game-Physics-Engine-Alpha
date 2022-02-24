@@ -128,12 +128,12 @@ namespace logic
 
         //Returns the width of this entity with rotation
         float effectiveWidth() const{
-            return abs(cos(lookAngX)) * width + abs(sin(lookAngX)) * depth;
+            return abs(cos(horizontal_look_angle_)) * width_ + abs(sin(horizontal_look_angle_)) * depth_;
         }
 
         //Returns the depth of this entity with rotation
         float effectiveDepth() const{
-            return abs(cos(lookAngX)) * depth + abs(sin(lookAngX)) * width;
+            return abs(cos(horizontal_look_angle_)) * depth_ + abs(sin(horizontal_look_angle_)) * width_;
         }
 
 
@@ -189,11 +189,11 @@ namespace logic
         }
 
         int getMinY() const{
-            return y_pos_ - (height / 2);
+            return y_pos_ - (height_ / 2);
         }
 
         int getMaxY() const{
-            return y_pos_ + (height / 2);
+            return y_pos_ + (height_ / 2);
         }
 
         int getMinZ() const{
@@ -211,22 +211,22 @@ namespace logic
 
         std::tuple<float, float> getLookVector() const
         {
-            return std::make_tuple(lookVector[0], lookVector[1]);
+            return std::make_tuple(look_angle_change_vector_[0], look_angle_change_vector_[1]);
         }
 
         int getWidth() const
         {
-            return width;
+            return width_;
         }
 
         int getHeight() const
         {
-            return height;
+            return height_;
         }
 
         int getDepth() const
         {
-            return depth;
+            return depth_;
         }
 
         int getHP() const
@@ -236,32 +236,32 @@ namespace logic
 
         int getGravity() const
         {
-            return gravity;
+            return gravity_;
         }
 
         float getFriction() const
         {
-            return friction;
+            return friction_;
         }
 
         float getLookAngX() const
         {
-            return lookAngX;
+            return horizontal_look_angle_;
         }
 
         float getLookAngY() const
         {
-            return lookAngY;
+            return vertical_look_angle_;
         }
 
         bool isSolid() const
         {
-            return solid;
+            return solid_;
         }
         
         bool hasPhysics() const
         {
-            return physics;
+            return physics_;
         }
 
         void setSolid(const bool toSet);
@@ -283,22 +283,22 @@ namespace logic
         int y_pos_;
         int z_pos_;
         int movement_vector_[3] = {0};
-        ChildMap children;
+        ChildMap children_;
 
-        bool solid;
-        int width;
-        int height;
-        int depth;
-        std::set<const Entity *> ghosts;
+        bool solid_;
+        int width_;
+        int height_;
+        int depth_;
+        std::set<const Entity *> ghosts_;
 
-        bool physics;
-        int gravity;
-        float friction;
+        bool physics_;
+        int gravity_;
+        float friction_;
 
-        float lookAngX;
-        float lookAngY;
-        int fov;
-        float lookVector[2] = {0.0}; // Radians
+        float horizontal_look_angle_;
+        float vertical_look_angle_;
+        int fov_;
+        float look_angle_change_vector_[2] = {0.0}; // Radians
     };
 } // namespace logic
 #endif //GAME_ENGINE_LOGIC_ENTITY_H
