@@ -9,7 +9,7 @@
 
 namespace logic
 {
-    int Entity::entityCount = 0;
+    int Entity::entity_count_ = 0;
 
 
     Entity::Entity(int x, int y, int z, int width, int height, int depth)
@@ -21,7 +21,7 @@ namespace logic
         this->width_ = width;
         this->height_ = height;
         this->depth_ = depth;
-        this->id_ = entityCount;
+        this->id_ = entity_count_;
         this->horizontal_look_angle_ = 0.0;
         this->vertical_look_angle_ = 0.0;
         this->hp_ = -1;
@@ -29,7 +29,7 @@ namespace logic
         this->gravity_ = 0;
         this->solid_ = true;
         this->physics_ = false;
-        entityCount++;
+        entity_count_++;
     }
 
     Entity::Entity()

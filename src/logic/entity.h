@@ -20,7 +20,7 @@ namespace logic
 
 
         //How many entites have been initialised
-        static int entityCount;
+        static int entity_count_;
         
 
         //Creates an Entity with specified x,y, and z coordinates and specified width, height and depth
