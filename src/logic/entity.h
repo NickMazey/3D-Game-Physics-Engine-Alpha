@@ -38,241 +38,241 @@ namespace logic
 
 
         //Adds to dependents
-        void addDependent(Entity *other);
+        void AddDependent(Entity *other);
 
         //Removes from dependents
-        void removeDependent(Entity *other);
+        void RemoveDependent(Entity *other);
 
         //Whether or not another entity is in the dependents of this entity
-        bool inDependents(Entity *other);
+        bool InDependents(Entity *other);
 
 
         //Adds to ghosts
-        void addGhost(Entity *other);
+        void AddGhost(Entity *other);
 
         //Removes from ghosts
-        void removeGhost(Entity *other);
+        void RemoveGhost(Entity *other);
         
         //Whether or not another entity is in the ghosts of this entity
-        bool inGhosts(const Entity *other);
+        bool InGhosts(const Entity *other);
 
 
         //Adds to children
-        void addChild(Entity *other, int offX, int offY, int offZ);
+        void AddChild(Entity *other, int x_offset, int y_offset, int z_offset);
 
         //Removes from children
-        void removeChild(Entity *other);
+        void RemoveChild(Entity *other);
 
         //Whether or not another entity is in the children of this entity
-        bool inChildren(Entity *other);
+        bool InChildren(Entity *other);
 
         //Whether or not the entity is in this entity's children's children
-        bool inChildrenDeep(Entity *other);
+        bool InChildrenDeep(Entity *other);
 
         //Updates children
-        void updateChildren();
+        void UpdateChildren();
 
 
         //adds the given amount of hp to this entity
-        void addHP(const int toAdd);
+        void add_hp(const int to_add);
 
         //removes the given amount of hp from this entity
-        void removeHP(const int toRemove);
+        void remove_hp(const int to_remove);
 
 
         //sets the x y and z move vectors
-        void setMove(int x, int y, int z);
+        void set_move(int x, int y, int z);
 
         //Applies x rotation for movement
-        int xHelper(const int x, const int z) const;
+        int RotatedXMovementHelper(const int x, const int z) const;
 
         //Applies z rotation for movement
-        int zHelper(const int x, const int z) const;
+        int RotatedZMovementHelper(const int x, const int z) const;
 
         //Applies movement
-        void doMove();
+        void DoMove();
 
         //updates the entity's x,y, and z co-ordinates by x,y, and z
-        void doMove(int x, int y, int z);
+        void DoMove(int x, int y, int z);
 
         //updates the entity's x,y, and z co-ordinates by x,y, and z without angle.
-        void doMoveAbsolute(int x, int y, int z);
+        void DoMoveAbsolute(int x, int y, int z);
 
 
         //sets the look vector angles
-        void setLookVector(float x, float y);
+        void set_look_change_vector(float x, float y);
 
         //sets where the entity is looking
-        void setLook(float x, float y);
+        void set_look(float x, float y);
 
         //Applies look
-        void doLook();
+        void DoLook();
 
         //updates the entity's look angles by x and y
-        void doLook(float x, float y);
+        void DoLook(float x, float y);
 
 
         //Sets this entity's position to x,y, and z
-        void setPos(int x, int y, int z);
+        void set_pos(int x, int y, int z);
 
         //sets position of entity relative to other entity + x,y, and z
-        void setPosRelativeTo(const Entity *other, int x, int y, int z);
+        void set_pos_relative_to(const Entity *other, int x, int y, int z);
 
         //sets position of other entity relative to this + x, y, and z
-        void setOtherPosRelativeTo(Entity *other, int x, int y, int z);
+        void set_other_pos_relative_to(Entity *other, int x, int y, int z);
 
 
-        //Does doMove and doLook methods for a game tick
-        void doTick();
+        //Does DoMove and DoLook methods for a game tick
+        void DoTick();
 
 
         //Returns the width of this entity with rotation
-        float effectiveWidth() const{
+        float effective_width() const{
             return abs(cos(horizontal_look_angle_)) * width_ + abs(sin(horizontal_look_angle_)) * depth_;
         }
 
         //Returns the depth of this entity with rotation
-        float effectiveDepth() const{
+        float effective_depth() const{
             return abs(cos(horizontal_look_angle_)) * depth_ + abs(sin(horizontal_look_angle_)) * width_;
         }
 
 
         //Returns the distance to another entity on X
-        int distToOtherX(const Entity *other) const;
+        int XDistanceToOther(const Entity *other) const;
 
         //Returns the distance to another entity on Y
-        int distToOtherY(const Entity *other) const;
+        int YDistanceToOther(const Entity *other) const;
 
         //Returns the distance to another entity on Z
-        int distToOtherZ(const Entity *other) const;
+        int ZDistanceToOther(const Entity *other) const;
 
         //Returns the euclidean distance to another entity
-        int euclideanDistToOther(const Entity *other) const;
+        int EuclideanDistanceToOther(const Entity *other) const;
 
 
         //whether or not this entity is colliding with the other (atm uses bounding box)
-        bool isColliding(const Entity *other);
+        bool IsColliding(const Entity *other);
 
         //whether or not this entity would collide with the other if it moved by x,y, and z
-        bool wouldCollide(const Entity *other, int x, int y, int z);
+        bool WouldCollide(const Entity *other, int x, int y, int z);
 
         //whether or not this entity would completely pass through the other if it moved by x,y, and z
-        bool passesThrough(const Entity *other, int x, int y, int z);
+        bool PassesThrough(const Entity *other, int x, int y, int z);
 
 
-        int getId() const
+        int get_id() const
         {
             return id_;
         }
 
-        int getX() const
+        int get_x_pos() const
         {
             return x_pos_;
         }
 
-        int getY() const
+        int get_y_pos() const
         {
             return y_pos_;
         }
 
-        int getZ() const
+        int get_z_pos() const
         {
             return z_pos_;
         }
 
-        int getMinX() const{
-            return x_pos_ - (effectiveWidth() / 2);
+        int get_min_x_pos() const{
+            return x_pos_ - (effective_width() / 2);
         }
 
-        int getMaxX() const{
-            return x_pos_ + (effectiveWidth() / 2);
+        int get_max_x_pos() const{
+            return x_pos_ + (effective_width() / 2);
         }
 
-        int getMinY() const{
+        int get_min_y_pos() const{
             return y_pos_ - (height_ / 2);
         }
 
-        int getMaxY() const{
+        int get_max_y_pos() const{
             return y_pos_ + (height_ / 2);
         }
 
-        int getMinZ() const{
-            return z_pos_ - (effectiveDepth() / 2);
+        int get_min_z_pos() const{
+            return z_pos_ - (effective_depth() / 2);
         }
 
-        int getMaxZ() const{
-            return z_pos_ + (effectiveDepth() / 2);
+        int get_max_z_pos() const{
+            return z_pos_ + (effective_depth() / 2);
         }
 
-        std::tuple<int, int, int> getCoordVector() const
+        std::tuple<int, int, int> get_movement_vector() const
         {
             return std::make_tuple(movement_vector_[0], movement_vector_[1], movement_vector_[2]);
         }
 
-        std::tuple<float, float> getLookVector() const
+        std::tuple<float, float> get_look_change_vector() const
         {
-            return std::make_tuple(look_angle_change_vector_[0], look_angle_change_vector_[1]);
+            return std::make_tuple(look_change_vector_[0], look_change_vector_[1]);
         }
 
-        int getWidth() const
+        int get_width() const
         {
             return width_;
         }
 
-        int getHeight() const
+        int get_height() const
         {
             return height_;
         }
 
-        int getDepth() const
+        int get_depth() const
         {
             return depth_;
         }
 
-        int getHP() const
+        int get_hp() const
         {
             return hp_;
         }
 
-        int getGravity() const
+        int get_gravity() const
         {
             return gravity_;
         }
 
-        float getFriction() const
+        float get_friction() const
         {
             return friction_;
         }
 
-        float getLookAngX() const
+        float get_horizontal_look_angle() const
         {
             return horizontal_look_angle_;
         }
 
-        float getLookAngY() const
+        float get_vertical_look_angle() const
         {
             return vertical_look_angle_;
         }
 
-        bool isSolid() const
+        bool is_solid() const
         {
             return solid_;
         }
         
-        bool hasPhysics() const
+        bool has_physics() const
         {
             return physics_;
         }
 
-        void setSolid(const bool toSet);
+        void set_solid(const bool to_set);
 
-        void setHP(const int toSet);
+        void set_hp(const int to_set);
 
-        void setPhysics(const bool toSet);
+        void set_physics(const bool to_set);
 
-        void setGravity(const int toSet);
+        void set_gravity(const int to_set);
 
-        void setFriction(const float toSet);
+        void set_friction(const float to_set);
 
     private:
         int id_;
@@ -298,7 +298,7 @@ namespace logic
         float horizontal_look_angle_;
         float vertical_look_angle_;
         int fov_;
-        float look_angle_change_vector_[2] = {0.0}; // Radians
+        float look_change_vector_[2] = {0.0}; // Radians
     };
 } // namespace logic
 #endif //GAME_ENGINE_LOGIC_ENTITY_H

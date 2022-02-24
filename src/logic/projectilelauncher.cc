@@ -29,10 +29,10 @@ namespace logic
     ProjectileLauncher::ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazineSize, int damage, Entity projectile) : ProjectileLauncher(x, y, z, width, height, depth, ammo, magazineSize, damage)
     {
         setHitscan(false);
-        velocity[0] = projectile.getX();
-        velocity[1] = projectile.getY();
-        velocity[2] = projectile.getZ();
-        projectile.setPos(0, 0, 0);
+        velocity[0] = projectile.get_x_pos();
+        velocity[1] = projectile.get_y_pos();
+        velocity[2] = projectile.get_z_pos();
+        projectile.set_pos(0, 0, 0);
         setProjectile(projectile);
     }
 
@@ -88,10 +88,10 @@ namespace logic
             }
             else
             { //Non-hitscan
-                activeProjectile = new Entity(getX() + shootOffX, getY() + shootOffY, getZ() + shootOffZ, projectile.getWidth(), projectile.getHeight(), projectile.getDepth());
-                activeProjectile->setLook(getLookAngX(), getLookAngY());
-                activeProjectile->setMove(velocity[0], velocity[1], velocity[2]);
-                activeProjectile->addGhost(this);
+                activeProjectile = new Entity(get_x_pos() + shootOffX, get_y_pos() + shootOffY, get_z_pos() + shootOffZ, projectile.get_width(), projectile.get_height(), projectile.get_depth());
+                activeProjectile->set_look(get_horizontal_look_angle(), get_vertical_look_angle());
+                activeProjectile->set_move(velocity[0], velocity[1], velocity[2]);
+                activeProjectile->AddGhost(this);
             }
         }
         return canFire;
@@ -102,15 +102,15 @@ namespace logic
         return lastHit != this;
     }
 
-    void ProjectileLauncher::doTick()
+    void ProjectileLauncher::DoTick()
     {
-        Entity::doTick();
+        Entity::DoTick();
         if (!hitScan && activeProjectile != this)
         {
             for (std::set<Entity *>::iterator iter = entList.begin(); iter != entList.end(); iter++)
             {
                 Entity *activeEntity = *iter;
-                if (activeProjectile->passesThrough(activeEntity, velocity[0], velocity[1], velocity[2]))
+                if (activeProjectile->PassesThrough(activeEntity, velocity[0], velocity[1], velocity[2]))
                 {
                     lastHit = activeEntity;
                     delete activeProjectile;
@@ -119,11 +119,11 @@ namespace logic
             }
             if (activeProjectile != this)
             {
-                activeProjectile->doMove();
+                activeProjectile->DoMove();
                 for (std::set<Entity *>::iterator iter = entList.begin(); iter != entList.end(); iter++)
                 {
                     Entity *activeEntity = *iter;
-                    if (activeProjectile->isColliding(activeEntity))
+                    if (activeProjectile->IsColliding(activeEntity))
                     {
                         lastHit = activeEntity;
                         delete activeProjectile;
@@ -140,26 +140,26 @@ namespace logic
         for (std::set<Entity *>::iterator iter = entities.begin(); iter != entities.end(); iter++)
         {
             Entity *activeEntity = *iter;
-            if (activeEntity->isSolid() && !inGhosts(activeEntity))
+            if (activeEntity->is_solid() && !InGhosts(activeEntity))
             {
                 //Creating a point to check if this line passes through the other entity
-                Entity *testPoint = new Entity(getX() + shootOffX, getY() + shootOffY, getZ() + shootOffZ, 0, 0, 0);
+                Entity *testPoint = new Entity(get_x_pos() + shootOffX, get_y_pos() + shootOffY, get_z_pos() + shootOffZ, 0, 0, 0);
 
                 //How much the line should move in each dimension per step with the given angles
-                int yCoeff = round(approxsin(getLookAngY()) * 1000.0f);
-                int xzCoeff = round(approxcos(getLookAngY()) * 1000.0f);
-                int xCoeff = (round(approxcos(getLookAngX()) * 1000.0f) * xzCoeff) / 1000;
-                int zCoeff = (round(approxsin(getLookAngX()) * 1000.0f) * xzCoeff) / 1000;
+                int yCoeff = round(approxsin(get_vertical_look_angle()) * 1000.0f);
+                int xzCoeff = round(approxcos(get_vertical_look_angle()) * 1000.0f);
+                int xCoeff = (round(approxcos(get_horizontal_look_angle()) * 1000.0f) * xzCoeff) / 1000;
+                int zCoeff = (round(approxsin(get_horizontal_look_angle()) * 1000.0f) * xzCoeff) / 1000;
 
                 int xMove, yMove, zMove = 0;
-                int distance = euclideanDistToOther(activeEntity);
+                int distance = EuclideanDistanceToOther(activeEntity);
 
                 //For x, y, and z
                 xMove = (distance * xCoeff) / 1000;
                 yMove = (distance * yCoeff) / 1000;
                 zMove = (distance * zCoeff) / 1000;
-                testPoint->doMove(xMove, yMove, zMove);
-                if (testPoint->isColliding(activeEntity))
+                testPoint->DoMove(xMove, yMove, zMove);
+                if (testPoint->IsColliding(activeEntity))
                 {
                     if (closestHittableEntity == this)
                     {
@@ -167,7 +167,7 @@ namespace logic
                     }
                     else
                     {
-                        if (euclideanDistToOther(activeEntity) < euclideanDistToOther(closestHittableEntity))
+                        if (EuclideanDistanceToOther(activeEntity) < EuclideanDistanceToOther(closestHittableEntity))
                         {
                             closestHittableEntity = activeEntity;
                         }
@@ -204,7 +204,7 @@ namespace logic
             for (std::set<Entity *>::iterator iter = hittableEntities.begin(); iter != hittableEntities.end(); iter++)
             {
                 Entity *activeEntity = *iter;
-                std::tuple<int, Entity *> distTup = std::make_tuple(this->euclideanDistToOther(activeEntity), activeEntity);
+                std::tuple<int, Entity *> distTup = std::make_tuple(this->EuclideanDistanceToOther(activeEntity), activeEntity);
                 hitWithDist.push_back(distTup);
             }
             std::sort(hitWithDist.begin(), hitWithDist.end());

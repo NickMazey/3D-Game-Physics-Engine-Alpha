@@ -30,7 +30,7 @@ namespace logic
         bool hasHit();
 
         //Performs a tick for a projectilelauncher
-        void doTick();
+        void DoTick();
 
         //Returns the first entity this projectilelauncher would collide with (hitscan only)
         Entity *findFirstCollision(std::set<Entity *> entities);
