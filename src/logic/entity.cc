@@ -14,17 +14,17 @@ namespace logic
 
     Entity::Entity(int x, int y, int z, int width, int height, int depth)
     {
-        this->x = x;
-        this->y = y;
-        this->z = z;
+        this->x_pos_ = x;
+        this->y_pos_ = y;
+        this->z_pos_ = z;
         this->fov = 0.0f;
         this->width = width;
         this->height = height;
         this->depth = depth;
-        this->id = entityCount;
+        this->id_ = entityCount;
         this->lookAngX = 0.0;
         this->lookAngY = 0.0;
-        this->hp = -1;
+        this->hp_ = -1;
         this->friction = 0.0;
         this->gravity = 0;
         this->solid = true;
@@ -39,7 +39,7 @@ namespace logic
 
     bool Entity::operator==(const Entity &other) const
     {
-        return id == other.getId();
+        return id_ == other.getId();
     }
     bool Entity::operator!=(const Entity &other) const
     {
@@ -50,7 +50,7 @@ namespace logic
     Entity::~Entity()
     {
         std::set<Entity *> tempDependents;
-        for (Entity *dependent : this->dependents)
+        for (Entity *dependent : this->dependents_)
         {
             tempDependents.insert(dependent);
         }
@@ -65,14 +65,14 @@ namespace logic
 
     void Entity::addDependent(Entity *other)
     {
-        this->dependents.insert(other);
+        this->dependents_.insert(other);
     }
 
     void Entity::removeDependent(Entity *other)
     {
         if (inDependents(other))
         {
-            this->dependents.erase(other);
+            this->dependents_.erase(other);
         }
     }
 
@@ -80,7 +80,7 @@ namespace logic
     {
         try
         {
-            return this->dependents.find(other) != dependents.end();
+            return this->dependents_.find(other) != dependents_.end();
         }
         catch (std::exception& e)
         {
@@ -186,18 +186,18 @@ namespace logic
     void Entity::removeHP(const int toRemove)
     {
         //This entity doesn't have HP
-        if (this->hp == -1)
+        if (this->hp_ == -1)
         {
         }
         else
         {
-            if (this->hp - toRemove > 0)
+            if (this->hp_ - toRemove > 0)
             {
-                this->hp -= toRemove;
+                this->hp_ -= toRemove;
             }
             else
             {
-                this->hp = 0;
+                this->hp_ = 0;
             }
         }
     }
@@ -205,9 +205,9 @@ namespace logic
 
     void Entity::setMove(int x, int y, int z)
     {
-        this->coordVector[0] = x;
-        this->coordVector[1] = y;
-        this->coordVector[2] = z;
+        this->movement_vector_[0] = x;
+        this->movement_vector_[1] = y;
+        this->movement_vector_[2] = z;
     }
 
     int Entity::xHelper(const int x, const int z) const
@@ -280,16 +280,16 @@ namespace logic
 
     void Entity::doMove()
     {
-        this->y += coordVector[1];
+        this->y_pos_ += movement_vector_[1];
         if (physics)
         {
-            this->x += xHelper(coordVector[0], coordVector[2]) * friction;
-            this->z += zHelper(coordVector[0], coordVector[2]) * friction;
+            this->x_pos_ += xHelper(movement_vector_[0], movement_vector_[2]) * friction;
+            this->z_pos_ += zHelper(movement_vector_[0], movement_vector_[2]) * friction;
         }
         else
         {
-            this->x += xHelper(coordVector[0], coordVector[2]);
-            this->z += zHelper(coordVector[0], coordVector[2]);
+            this->x_pos_ += xHelper(movement_vector_[0], movement_vector_[2]);
+            this->z_pos_ += zHelper(movement_vector_[0], movement_vector_[2]);
         }
         this->updateChildren();
     }
@@ -306,9 +306,9 @@ namespace logic
 
     void Entity::doMoveAbsolute(int x, int y, int z)
     {
-        this->x += x;
-        this->y += y;
-        this->z += z;
+        this->x_pos_ += x;
+        this->y_pos_ += y;
+        this->z_pos_ += z;
         this->updateChildren();
     }
 
@@ -350,17 +350,17 @@ namespace logic
 
     void Entity::setPos(int x, int y, int z)
     {
-        this->x = x;
-        this->y = y;
-        this->z = z;
+        this->x_pos_ = x;
+        this->y_pos_ = y;
+        this->z_pos_ = z;
         this->updateChildren();
     }
 
     void Entity::setPosRelativeTo(const Entity *other, int x, int y, int z)
     {
-        this->x = x + other->getX();
-        this->y = y + other->getY();
-        this->z = z + other->getZ();
+        this->x_pos_ = x + other->getX();
+        this->y_pos_ = y + other->getY();
+        this->z_pos_ = z + other->getZ();
         updateChildren();
     }
 
@@ -451,7 +451,7 @@ namespace logic
     {
         if (!this->inGhosts(other) && *this != *other)
         {
-            Entity *created = new Entity(this->x, this->y, this->z, this->width, this->height, this->depth);
+            Entity *created = new Entity(this->x_pos_, this->y_pos_, this->z_pos_, this->width, this->height, this->depth);
             created->doLook(lookAngX, lookAngY);
             created->doMove(x, y, z);
             return created->isColliding(other);
@@ -489,7 +489,7 @@ namespace logic
     {
         if (toSet >= -1)
         {
-            this->hp = toSet;
+            this->hp_ = toSet;
         }
     }
 

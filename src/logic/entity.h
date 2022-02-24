@@ -162,51 +162,51 @@ namespace logic
 
         int getId() const
         {
-            return id;
+            return id_;
         }
 
         int getX() const
         {
-            return x;
+            return x_pos_;
         }
 
         int getY() const
         {
-            return y;
+            return y_pos_;
         }
 
         int getZ() const
         {
-            return z;
+            return z_pos_;
         }
 
         int getMinX() const{
-            return x - (effectiveWidth() / 2);
+            return x_pos_ - (effectiveWidth() / 2);
         }
 
         int getMaxX() const{
-            return x + (effectiveWidth() / 2);
+            return x_pos_ + (effectiveWidth() / 2);
         }
 
         int getMinY() const{
-            return y - (height / 2);
+            return y_pos_ - (height / 2);
         }
 
         int getMaxY() const{
-            return y + (height / 2);
+            return y_pos_ + (height / 2);
         }
 
         int getMinZ() const{
-            return z - (effectiveDepth() / 2);
+            return z_pos_ - (effectiveDepth() / 2);
         }
 
         int getMaxZ() const{
-            return z + (effectiveDepth() / 2);
+            return z_pos_ + (effectiveDepth() / 2);
         }
 
         std::tuple<int, int, int> getCoordVector() const
         {
-            return std::make_tuple(coordVector[0], coordVector[1], coordVector[2]);
+            return std::make_tuple(movement_vector_[0], movement_vector_[1], movement_vector_[2]);
         }
 
         std::tuple<float, float> getLookVector() const
@@ -231,7 +231,7 @@ namespace logic
 
         int getHP() const
         {
-            return hp;
+            return hp_;
         }
 
         int getGravity() const
@@ -275,14 +275,14 @@ namespace logic
         void setFriction(const float toSet);
 
     private:
-        int id;
-        int hp;
-        std::set<Entity *> dependents;
+        int id_;
+        int hp_;
+        std::set<Entity *> dependents_;
 
-        int x;
-        int y;
-        int z;
-        int coordVector[3] = {0};
+        int x_pos_;
+        int y_pos_;
+        int z_pos_;
+        int movement_vector_[3] = {0};
         ChildMap children;
 
         bool solid;
