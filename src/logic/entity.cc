@@ -468,9 +468,9 @@ namespace logic
             int rotX = xHelper(x, z);
             int rotZ = zHelper(x, z);
             //If it's moving enough to reach the entity and it doesn't collide, it must've passed through it
-            if ((distToOtherX(other) == 0 || distToOtherX(other) > 0 && distToOtherX(other) < rotX || distToOtherX(other) < 0 && distToOtherX(other) > rotX) && //X
-                (distToOtherY(other) == 0 || distToOtherY(other) > 0 && distToOtherY(other) < y || distToOtherY(other) < 0 && distToOtherY(other) > y) &&       //Y
-                (distToOtherZ(other) == 0 || distToOtherZ(other) > 0 && distToOtherZ(other) < rotZ || distToOtherZ(other) < 0 && distToOtherZ(other) > rotZ))
+            if (((distToOtherX(other) == 0)|| (distToOtherX(other) > 0 && distToOtherX(other) < rotX) || (distToOtherX(other) < 0 && distToOtherX(other) > rotX)) && //X
+                ((distToOtherY(other) == 0) || (distToOtherY(other) > 0 && distToOtherY(other) < y) || (distToOtherY(other) < 0 && distToOtherY(other) > y)) &&       //Y
+                ((distToOtherZ(other) == 0) || (distToOtherZ(other) > 0 && distToOtherZ(other) < rotZ) || (distToOtherZ(other) < 0 && distToOtherZ(other) > rotZ)))
             { //Z
                 return true;
             }

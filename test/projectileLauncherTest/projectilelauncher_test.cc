@@ -161,7 +161,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_No_Ammo_Entity)
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 0, 0, 0);
     std::set<logic::Entity *> entities = std::set<logic::Entity *>();
     entities.insert(target);
-    bool fired = proj->fire(entities);
+    proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(), proj) << "hitscan projectilelaunchers hit entities without firing";
     delete target;
     delete proj;
@@ -377,9 +377,9 @@ TEST(ProjectileLauncherTest, GitHub_Consistency)
     proj->setLook(0, logic::degreesToRadians(45));
     std::set<logic::Entity *> entities = std::set<logic::Entity *>();
     entities.insert(target);
-    bool didFire = proj->fire(entities);
+    proj->fire(entities);
     logic::Entity *hitLast = proj->getLastHit();
-    EXPECT_EQ(proj->getLastHit(), target) << "this should work according to above"; 
+    EXPECT_EQ(hitLast, target) << "this should work according to above"; 
     delete target;
     delete proj;
 }
@@ -391,9 +391,9 @@ TEST(ProjectileLauncherTest, Hitscan_Y_45_Pos)
     proj->setLook(0, logic::degreesToRadians(45));
     std::set<logic::Entity *> entities = std::set<logic::Entity *>();
     entities.insert(target);
-    bool didFire = proj->fire(entities);
+    proj->fire(entities);
     logic::Entity *hitLast = proj->getLastHit();
-    EXPECT_EQ(proj->getLastHit(), target) << "hitscan projectilelaunchers don't hit entities in front of them when looking 45 degrees up";
+    EXPECT_EQ(hitLast, target) << "hitscan projectilelaunchers don't hit entities in front of them when looking 45 degrees up";
     delete target;
     delete proj;
 }
@@ -463,7 +463,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_No_Ammo_Entity)
     logic::ProjectileLauncher *proj = new logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 0, 0, 0, logic::Entity(0, 0, 0, 0, 0, 0));
     std::set<logic::Entity *> entities = std::set<logic::Entity *>();
     entities.insert(target);
-    bool fired = proj->fire(entities);
+    proj->fire(entities);
     EXPECT_EQ(proj->getLastHit(), proj) << "non-hitscan projectilelaunchers hit entities without firing";
     delete target;
     delete proj;
