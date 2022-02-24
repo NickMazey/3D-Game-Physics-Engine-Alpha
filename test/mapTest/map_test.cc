@@ -15,9 +15,9 @@ TEST(MapTest, Has_Fields){
         std::string name = map.name;
         std::vector<logic::Entity> level = map.level;
         std::vector<logic::Entity> players = map.players;
-        std::vector<logic::ProjectileLauncher> availableWeapons = map.availableWeapons;
+        std::vector<logic::ProjectileLauncher> available_weapons = map.available_weapons;
         std::vector<std::vector<int> > loadouts = map.loadouts; 
-        char divLine = map.divLine;
+        char dividing_line = map.dividing_line;
 }
 
 #pragma GCC diagnostic pop

@@ -16,7 +16,7 @@ namespace logic
         setMagazineSize(magazineSize);
         setDamage(damage);
         setHitscan(true);
-        this->loadedAmmo = 0;
+        this->loaded_ammo_ = 0;
         setShootOffX(0);
         setShootOffY(0);
         setShootOffZ(0);
@@ -29,69 +29,69 @@ namespace logic
     ProjectileLauncher::ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazineSize, int damage, Entity projectile) : ProjectileLauncher(x, y, z, width, height, depth, ammo, magazineSize, damage)
     {
         setHitscan(false);
-        velocity[0] = projectile.get_x_pos();
-        velocity[1] = projectile.get_y_pos();
-        velocity[2] = projectile.get_z_pos();
+        projectile_starting_velocity_[0] = projectile.get_x_pos();
+        projectile_starting_velocity_[1] = projectile.get_y_pos();
+        projectile_starting_velocity_[2] = projectile.get_z_pos();
         projectile.set_pos(0, 0, 0);
         setProjectile(projectile);
     }
 
     void ProjectileLauncher::reload()
     {
-        if (loadedAmmo < magazineSize)
+        if (loaded_ammo_ < magazine_size_)
         {
-            if (ammo > (magazineSize - loadedAmmo))
+            if (ammo_ > (magazine_size_ - loaded_ammo_))
             {
-                ammo -= (magazineSize - loadedAmmo);
-                loadedAmmo = magazineSize;
+                ammo_ -= (magazine_size_ - loaded_ammo_);
+                loaded_ammo_ = magazine_size_;
             }
-            else if (ammo >= 0)
+            else if (ammo_ >= 0)
             {
-                loadedAmmo += ammo;
-                ammo = 0;
+                loaded_ammo_ += ammo_;
+                ammo_ = 0;
             }
             else
             {
-                loadedAmmo = magazineSize;
+                loaded_ammo_ = magazine_size_;
             }
         }
     }
 
     bool ProjectileLauncher::fire(std::set<Entity *> entities)
     {
-        this->entList = entities;
+        this->entity_list_ = entities;
         setLastHit(this);
         bool canFire;
         canFire = false;
-        if (loadedAmmo > 0)
+        if (loaded_ammo_ > 0)
         {
-            loadedAmmo -= 1;
+            loaded_ammo_ -= 1;
             canFire = true;
         }
-        else if (magazineSize == 0)
+        else if (magazine_size_ == 0)
         {
-            if (ammo > 0)
+            if (ammo_ > 0)
             {
-                ammo -= 1;
+                ammo_ -= 1;
                 canFire = true;
             }
-            else if (ammo == -1)
+            else if (ammo_ == -1)
             {
                 canFire = true;
             }
         }
         if (canFire)
         {
-            if (hitScan)
+            if (hitscan_)
             {
-                lastHit = findFirstCollision(entities);
+                last_hit_ = findFirstCollision(entities);
             }
             else
             { //Non-hitscan
-                activeProjectile = new Entity(get_x_pos() + shootOffX, get_y_pos() + shootOffY, get_z_pos() + shootOffZ, projectile.get_width(), projectile.get_height(), projectile.get_depth());
-                activeProjectile->set_look(get_horizontal_look_angle(), get_vertical_look_angle());
-                activeProjectile->set_move(velocity[0], velocity[1], velocity[2]);
-                activeProjectile->AddGhost(this);
+                active_projectile_ = new Entity(get_x_pos() + shoot_offset_x_, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_off_z_, projectile_.get_width(), projectile_.get_height(), projectile_.get_depth());
+                active_projectile_->set_look(get_horizontal_look_angle(), get_vertical_look_angle());
+                active_projectile_->set_move(projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]);
+                active_projectile_->AddGhost(this);
             }
         }
         return canFire;
@@ -99,35 +99,35 @@ namespace logic
 
     bool ProjectileLauncher::hasHit()
     {
-        return lastHit != this;
+        return last_hit_ != this;
     }
 
     void ProjectileLauncher::DoTick()
     {
         Entity::DoTick();
-        if (!hitScan && activeProjectile != this)
+        if (!hitscan_ && active_projectile_ != this)
         {
-            for (std::set<Entity *>::iterator iter = entList.begin(); iter != entList.end(); iter++)
+            for (std::set<Entity *>::iterator iter = entity_list_.begin(); iter != entity_list_.end(); iter++)
             {
                 Entity *activeEntity = *iter;
-                if (activeProjectile->PassesThrough(activeEntity, velocity[0], velocity[1], velocity[2]))
+                if (active_projectile_->PassesThrough(activeEntity, projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]))
                 {
-                    lastHit = activeEntity;
-                    delete activeProjectile;
-                    activeProjectile = this;
+                    last_hit_ = activeEntity;
+                    delete active_projectile_;
+                    active_projectile_ = this;
                 }
             }
-            if (activeProjectile != this)
+            if (active_projectile_ != this)
             {
-                activeProjectile->DoMove();
-                for (std::set<Entity *>::iterator iter = entList.begin(); iter != entList.end(); iter++)
+                active_projectile_->DoMove();
+                for (std::set<Entity *>::iterator iter = entity_list_.begin(); iter != entity_list_.end(); iter++)
                 {
                     Entity *activeEntity = *iter;
-                    if (activeProjectile->IsColliding(activeEntity))
+                    if (active_projectile_->IsColliding(activeEntity))
                     {
-                        lastHit = activeEntity;
-                        delete activeProjectile;
-                        activeProjectile = this;
+                        last_hit_ = activeEntity;
+                        delete active_projectile_;
+                        active_projectile_ = this;
                     }
                 }
             }
@@ -143,7 +143,7 @@ namespace logic
             if (activeEntity->is_solid() && !InGhosts(activeEntity))
             {
                 //Creating a point to check if this line passes through the other entity
-                Entity *testPoint = new Entity(get_x_pos() + shootOffX, get_y_pos() + shootOffY, get_z_pos() + shootOffZ, 0, 0, 0);
+                Entity *testPoint = new Entity(get_x_pos() + shoot_offset_x_, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_off_z_, 0, 0, 0);
 
                 //How much the line should move in each dimension per step with the given angles
                 int yCoeff = round(approxsin(get_vertical_look_angle()) * 1000.0f);
@@ -225,11 +225,11 @@ namespace logic
     {
         if (toSet >= -1)
         {
-            ammo = toSet;
+            ammo_ = toSet;
         }
         else
         {
-            ammo = -1;
+            ammo_ = -1;
         }
     }
 
@@ -237,11 +237,11 @@ namespace logic
     {
         if (toSet >= 0)
         {
-            magazineSize = toSet;
+            magazine_size_ = toSet;
         }
         else
         {
-            magazineSize = 0;
+            magazine_size_ = 0;
         }
     }
 
@@ -249,46 +249,46 @@ namespace logic
     {
         if (toSet >= 0)
         {
-            damage = toSet;
+            damage_ = toSet;
         }
         else
         {
-            damage = 0;
+            damage_ = 0;
         }
     }
 
     void ProjectileLauncher::setShootOffX(const int toSet)
     {
-        this->shootOffX = toSet;
+        this->shoot_offset_x_ = toSet;
     }
 
     void ProjectileLauncher::setShootOffY(const int toSet)
     {
-        this->shootOffY = toSet;
+        this->shoot_offset_y_ = toSet;
     }
 
     void ProjectileLauncher::setShootOffZ(const int toSet)
     {
-        this->shootOffZ = toSet;
+        this->shoot_off_z_ = toSet;
     }
 
     void ProjectileLauncher::setHitscan(const bool toSet)
     {
-        this->hitScan = toSet;
+        this->hitscan_ = toSet;
     }
 
     void ProjectileLauncher::setProjectile(Entity toSet)
     {
-        this->projectile = toSet;
+        this->projectile_ = toSet;
     }
 
     void ProjectileLauncher::setLastHit(Entity *toSet)
     {
-        this->lastHit = toSet;
+        this->last_hit_ = toSet;
     }
 
     void ProjectileLauncher::setActiveProjectile(Entity *toSet)
     {
-        this->activeProjectile = toSet;
+        this->active_projectile_ = toSet;
     }
 }

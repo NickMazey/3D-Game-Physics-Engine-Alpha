@@ -40,62 +40,62 @@ namespace logic
 
         int getAmmo() const
         {
-            return ammo;
+            return ammo_;
         }
 
         int getMagazineSize() const
         {
-            return magazineSize;
+            return magazine_size_;
         }
 
         int getLoadedAmmo() const
         {
-            return loadedAmmo;
+            return loaded_ammo_;
         }
 
         int getDamage() const
         {
-            return damage;
+            return damage_;
         }
 
         int getShootOffX() const
         {
-            return shootOffX;
+            return shoot_offset_x_;
         }
 
         int getShootOffY() const
         {
-            return shootOffY;
+            return shoot_offset_y_;
         }
 
         int getShootOffZ() const
         {
-            return shootOffZ;
+            return shoot_off_z_;
         }
 
         bool isHitScan() const
         {
-            return hitScan;
+            return hitscan_;
         }
 
         std::tuple<int, int, int> getVelocity() const
         {
-            return std::make_tuple(velocity[0], velocity[1], velocity[2]);
+            return std::make_tuple(projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]);
         }
 
         Entity getProjectile()
         {
-            return projectile;
+            return projectile_;
         }
 
         Entity *getLastHit()
         {
-            return lastHit;
+            return last_hit_;
         }
 
         Entity *getActiveProjectile()
         {
-            return activeProjectile;
+            return active_projectile_;
         }
 
         void setAmmo(const int toSet);
@@ -119,29 +119,29 @@ namespace logic
         void setActiveProjectile(Entity *toSet);
 
     private:
-        int ammo;
-        int magazineSize;
-        int loadedAmmo;
+        int ammo_;
+        int magazine_size_;
+        int loaded_ammo_;
 
-        int velocity[3] = {0};
+        int projectile_starting_velocity_[3] = {0};
 
-        int damage;
+        int damage_;
 
-        int shootOffX;
-        int shootOffY;
-        int shootOffZ;
+        int shoot_offset_x_;
+        int shoot_offset_y_;
+        int shoot_off_z_;
 
-        bool hitScan;
+        bool hitscan_;
 
-        Entity projectile;
+        Entity projectile_;
 
         //TODO: For testing without a world, should be replaced to point to a list of entities in the future
-        std::set<Entity *> entList;
+        std::set<Entity *> entity_list_;
 
         //TODO: Should be changed into a list in the future, will probably also need last hit to be a list that is removed from when used
-        Entity *activeProjectile;
+        Entity *active_projectile_;
         
-        Entity *lastHit;
+        Entity *last_hit_;
     };
 } // namespace logic
 #endif //GAME_ENGINE_LOGIC_PROJECTILELAUNCHER_H
