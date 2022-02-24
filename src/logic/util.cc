@@ -5,18 +5,18 @@
 
 namespace logic
 {
-const float PITenDP = 3.1415926535f;
+const float kPITenDP = 3.1415926535f;
 
-    float degreesToRadians(const int degrees)
+    float DegreesToRadians(const int degrees)
     {
-        return (degrees * PITenDP) / 180.0f;
+        return (degrees * kPITenDP) / 180.0f;
     }
-    int radiansToDegrees(const float radians)
+    int RadiansToDegrees(const float radians)
     {
-        return (180.0f * radians) / PITenDP;
+        return (180.0f * radians) / kPITenDP;
     }
 
-    const int simplifyAngle(const int degrees)
+    const int SimplifyAngle(const int degrees)
     {
         if (-180 <= degrees && degrees <= 180)
         {
@@ -24,38 +24,38 @@ const float PITenDP = 3.1415926535f;
         }
         else
         {
-            int newDegrees = degrees % 360;
-            if (newDegrees > 180)
+            int new_degrees = degrees % 360;
+            if (new_degrees > 180)
             {
-                newDegrees = 180 - newDegrees;
+                new_degrees = 180 - new_degrees;
             }
-            return newDegrees;
+            return new_degrees;
         }
     }
 
-    const float simplifyRadians(const float radians)
+    const float SimplifyRadians(const float radians)
     {
-        if (-1.0f * PITenDP <= radians && radians <= PITenDP)
+        if (-1.0f * kPITenDP <= radians && radians <= kPITenDP)
         {
             return radians;
         }
         else
         {
-            float newRad = fmod(radians, (2.0f * PITenDP));
-            if (newRad > PITenDP)
+            float new_rad = fmod(radians, (2.0f * kPITenDP));
+            if (new_rad > kPITenDP)
             {
-                newRad = PITenDP - newRad;
+                new_rad = kPITenDP - new_rad;
             }
-            return newRad;
+            return new_rad;
         }
     }
 
-    const float approxSin(const float radians)
+    const float approxsin(const float radians)
     {
         return sinf(radians);
     }
 
-    const float approxCos(const float radians)
+    const float approxcos(const float radians)
     {
         return cosf(radians);
     }

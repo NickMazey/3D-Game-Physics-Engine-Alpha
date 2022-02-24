@@ -212,33 +212,33 @@ namespace logic
 
     int Entity::xHelper(const int x, const int z) const
     {
-        float xComponent = approxCos(horizontal_look_angle_) * (x);
+        float xComponent = approxcos(horizontal_look_angle_) * (x);
         float zComponent = 0;
-        if (approxSin(horizontal_look_angle_) != 0)
+        if (approxsin(horizontal_look_angle_) != 0)
         {
-            int angX = simplifyAngle(radiansToDegrees(horizontal_look_angle_));
+            int angX = SimplifyAngle(RadiansToDegrees(horizontal_look_angle_));
             //Positive
             if (angX > 0 && angX < 90)
             { //First Quad
-                zComponent = z * approxSin(horizontal_look_angle_ + degreesToRadians(180));
+                zComponent = z * approxsin(horizontal_look_angle_ + DegreesToRadians(180));
             }
             else if (angX == 90 || angX == -90)
             { //90 Degrees
-                zComponent = -z * approxSin(horizontal_look_angle_);
+                zComponent = -z * approxsin(horizontal_look_angle_);
             }
             else if (angX > 90 && angX < 180)
             { //Second Quad
-                zComponent = -z * approxSin(horizontal_look_angle_);
+                zComponent = -z * approxsin(horizontal_look_angle_);
             }
             //Negative
             else if (angX < 0 && angX > -90)
             { //First Quad
-                zComponent = -z * approxSin(horizontal_look_angle_);
+                zComponent = -z * approxsin(horizontal_look_angle_);
             }
             else if (angX < -90 && angX > -180)
             { //Second Quad
-                xComponent = x * approxSin(horizontal_look_angle_);
-                zComponent = z * approxSin(horizontal_look_angle_ - degreesToRadians(90));
+                xComponent = x * approxsin(horizontal_look_angle_);
+                zComponent = z * approxsin(horizontal_look_angle_ - DegreesToRadians(90));
             }
         }
         return round(xComponent + zComponent);
@@ -246,33 +246,33 @@ namespace logic
 
     int Entity::zHelper(const int x, const int z) const
     {
-        float zComponent = approxCos(horizontal_look_angle_) * (z);
+        float zComponent = approxcos(horizontal_look_angle_) * (z);
         float xComponent = 0;
-        if (approxSin(horizontal_look_angle_) != 0)
+        if (approxsin(horizontal_look_angle_) != 0)
         {
-            int angX = simplifyAngle(radiansToDegrees(horizontal_look_angle_));
+            int angX = SimplifyAngle(RadiansToDegrees(horizontal_look_angle_));
             //Positive
             if (angX > 0 && angX < 90)
             { //First Quad
-                xComponent = x * approxSin(horizontal_look_angle_);
+                xComponent = x * approxsin(horizontal_look_angle_);
             }
             else if (angX == 90 || angX == -90)
             { //90 Degrees
-                xComponent = x * approxSin(horizontal_look_angle_);
+                xComponent = x * approxsin(horizontal_look_angle_);
             }
             else if (angX > 90 && angX < 180)
             { //Second Quad
-                xComponent = x * approxSin(horizontal_look_angle_);
+                xComponent = x * approxsin(horizontal_look_angle_);
             }
             //Negative
             else if (angX < 0 && angX > -90)
             { //First Quad
-                xComponent = x * approxSin(horizontal_look_angle_);
+                xComponent = x * approxsin(horizontal_look_angle_);
             }
             else if (angX < -90 && angX > -180)
             { //Second Quad
-                zComponent = z * approxSin(horizontal_look_angle_);
-                xComponent = x * approxCos(horizontal_look_angle_);
+                zComponent = z * approxsin(horizontal_look_angle_);
+                xComponent = x * approxcos(horizontal_look_angle_);
             }
         }
         return round(zComponent + xComponent);
@@ -330,13 +330,13 @@ namespace logic
     {
         this->horizontal_look_angle_ += look_angle_change_vector_[0];
         this->vertical_look_angle_ += look_angle_change_vector_[1];
-        if (this->vertical_look_angle_ > degreesToRadians(90))
+        if (this->vertical_look_angle_ > DegreesToRadians(90))
         {
-            this->vertical_look_angle_ = degreesToRadians(90);
+            this->vertical_look_angle_ = DegreesToRadians(90);
         }
-        else if (this->vertical_look_angle_ < degreesToRadians(-90))
+        else if (this->vertical_look_angle_ < DegreesToRadians(-90))
         {
-            this->vertical_look_angle_ = degreesToRadians(-90);
+            this->vertical_look_angle_ = DegreesToRadians(-90);
         }
         this->updateChildren();
     }

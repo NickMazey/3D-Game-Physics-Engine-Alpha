@@ -4,21 +4,21 @@
 namespace logic
 {
     //converts from degrees into radians
-    float degreesToRadians(int degrees);
+    float DegreesToRadians(int degrees);
 
     //converts from radians to degrees
-    int radiansToDegrees(float radians);
+    int RadiansToDegrees(float radians);
 
     //simplifies a given angle to between -180 and 180 degrees
-    const int simplifyAngle(const int degrees);
+    const int SimplifyAngle(const int degrees);
 
     //simplifies a given angle in radians to between -PI and PI
-    const float simplifyRadians(const float radians);
+    const float SimplifyRadians(const float radians);
 
     //Gives an approximation of sine
-    const float approxSin(const float degrees);
+    const float approxsin(const float degrees);
 
     //Gives an approximation of cos
-    const float approxCos(const float degrees);
+    const float approxcos(const float degrees);
 }
 #endif //GAME_ENGINE_LOGIC_UTIL_H

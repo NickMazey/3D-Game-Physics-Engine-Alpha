@@ -146,10 +146,10 @@ namespace logic
                 Entity *testPoint = new Entity(getX() + shootOffX, getY() + shootOffY, getZ() + shootOffZ, 0, 0, 0);
 
                 //How much the line should move in each dimension per step with the given angles
-                int yCoeff = round(approxSin(getLookAngY()) * 1000.0f);
-                int xzCoeff = round(approxCos(getLookAngY()) * 1000.0f);
-                int xCoeff = (round(approxCos(getLookAngX()) * 1000.0f) * xzCoeff) / 1000;
-                int zCoeff = (round(approxSin(getLookAngX()) * 1000.0f) * xzCoeff) / 1000;
+                int yCoeff = round(approxsin(getLookAngY()) * 1000.0f);
+                int xzCoeff = round(approxcos(getLookAngY()) * 1000.0f);
+                int xCoeff = (round(approxcos(getLookAngX()) * 1000.0f) * xzCoeff) / 1000;
+                int zCoeff = (round(approxsin(getLookAngX()) * 1000.0f) * xzCoeff) / 1000;
 
                 int xMove, yMove, zMove = 0;
                 int distance = euclideanDistToOther(activeEntity);
