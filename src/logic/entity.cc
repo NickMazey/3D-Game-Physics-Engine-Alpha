@@ -14,21 +14,21 @@ namespace game_engine
 
         Entity::Entity(int x, int y, int z, int width, int height, int depth)
         {
-            this->x_pos_ = x;
-            this->y_pos_ = y;
-            this->z_pos_ = z;
-            this->fov_ = 0.0f;
-            this->width_ = width;
-            this->height_ = height;
-            this->depth_ = depth;
-            this->id_ = entity_count_;
-            this->horizontal_look_angle_ = 0.0f;
-            this->vertical_look_angle_ = 0.0f;
-            this->hp_ = -1;
-            this->friction_ = 0.0f;
-            this->gravity_ = 0;
-            this->solid_ = true;
-            this->physics_ = false;
+            x_pos_ = x;
+            y_pos_ = y;
+            z_pos_ = z;
+            fov_ = 0.0f;
+            width_ = width;
+            height_ = height;
+            depth_ = depth;
+            id_ = entity_count_;
+            horizontal_look_angle_ = 0.0f;
+            vertical_look_angle_ = 0.0f;
+            hp_ = -1;
+            friction_ = 0.0f;
+            gravity_ = 0;
+            solid_ = true;
+            physics_ = false;
             entity_count_++;
         }
 
@@ -48,7 +48,7 @@ namespace game_engine
         Entity::~Entity()
         {
             std::set<Entity *> temp_dependents;
-            for (Entity *dependent : this->dependents_)
+            for (Entity *dependent : dependents_)
             {
                 temp_dependents.insert(dependent);
             }
@@ -62,14 +62,14 @@ namespace game_engine
 
         void Entity::AddDependent(Entity *other)
         {
-            this->dependents_.insert(other);
+            dependents_.insert(other);
         }
 
         void Entity::RemoveDependent(Entity *other)
         {
             if (InDependents(other))
             {
-                this->dependents_.erase(other);
+                dependents_.erase(other);
             }
         }
 
@@ -77,7 +77,7 @@ namespace game_engine
         {
             try
             {
-                return this->dependents_.find(other) != dependents_.end();
+                return dependents_.find(other) != dependents_.end();
             }
             catch (std::exception &e)
             {
@@ -87,26 +87,26 @@ namespace game_engine
 
         void Entity::AddGhost(Entity *other)
         {
-            this->ghosts_.insert(other);
+            ghosts_.insert(other);
             other->AddDependent(this);
-            this->AddDependent(other);
+            AddDependent(other);
         }
 
         void Entity::RemoveGhost(Entity *other)
         {
             if (InGhosts(other))
             {
-                this->ghosts_.erase(other);
+                ghosts_.erase(other);
             }
             other->RemoveDependent(this);
-            this->RemoveDependent(other);
+            RemoveDependent(other);
         }
 
         bool Entity::InGhosts(const Entity *other)
         {
             try
             {
-                return this->ghosts_.find(other) != ghosts_.end();
+                return ghosts_.find(other) != ghosts_.end();
             }
             catch (std::exception &e)
             {
@@ -119,9 +119,9 @@ namespace game_engine
             if (!InChildren(other) && !other->InChildren(this))
             {
                 std::tuple<int, int, int> offsets = std::make_tuple(x_offset, y_offset, z_offset);
-                this->children_.insert(ChildPair(other, offsets));
+                children_.insert(ChildPair(other, offsets));
                 other->AddDependent(this);
-                this->AddDependent(other);
+                AddDependent(other);
                 UpdateChildren();
             }
         }
@@ -130,10 +130,10 @@ namespace game_engine
         {
             if (InChildren(other))
             {
-                this->children_.erase(other);
+                children_.erase(other);
             }
             other->RemoveDependent(this);
-            this->RemoveDependent(other);
+            RemoveDependent(other);
         }
 
         bool Entity::InChildren(Entity *other)
@@ -181,27 +181,27 @@ namespace game_engine
         void Entity::remove_hp(const int to_remove)
         {
             // This entity doesn't have HP
-            if (this->hp_ == -1)
+            if (hp_ == -1)
             {
             }
             else
             {
-                if (this->hp_ - to_remove > 0)
+                if (hp_ - to_remove > 0)
                 {
-                    this->hp_ -= to_remove;
+                    hp_ -= to_remove;
                 }
                 else
                 {
-                    this->hp_ = 0;
+                    hp_ = 0;
                 }
             }
         }
 
         void Entity::set_move(int x, int y, int z)
         {
-            this->movement_vector_[0] = x;
-            this->movement_vector_[1] = y;
-            this->movement_vector_[2] = z;
+            movement_vector_[0] = x;
+            movement_vector_[1] = y;
+            movement_vector_[2] = z;
         }
 
         int Entity::RotatedXMovementHelper(const int x, const int z) const
@@ -274,85 +274,85 @@ namespace game_engine
 
         void Entity::DoMove()
         {
-            this->y_pos_ += movement_vector_[1];
+            y_pos_ += movement_vector_[1];
             if (physics_)
             {
-                this->x_pos_ += RotatedXMovementHelper(movement_vector_[0], movement_vector_[2]) * friction_;
-                this->z_pos_ += RotatedZMovementHelper(movement_vector_[0], movement_vector_[2]) * friction_;
+                x_pos_ += RotatedXMovementHelper(movement_vector_[0], movement_vector_[2]) * friction_;
+                z_pos_ += RotatedZMovementHelper(movement_vector_[0], movement_vector_[2]) * friction_;
             }
             else
             {
-                this->x_pos_ += RotatedXMovementHelper(movement_vector_[0], movement_vector_[2]);
-                this->z_pos_ += RotatedZMovementHelper(movement_vector_[0], movement_vector_[2]);
+                x_pos_ += RotatedXMovementHelper(movement_vector_[0], movement_vector_[2]);
+                z_pos_ += RotatedZMovementHelper(movement_vector_[0], movement_vector_[2]);
             }
-            this->UpdateChildren();
+            UpdateChildren();
         }
 
         void Entity::DoMove(int x, int y, int z)
         {
             std::tuple<int, int, int> movement_vector_old = get_movement_vector();
-            this->set_move(x, y, z);
-            this->DoMove();
+            set_move(x, y, z);
+            DoMove();
             int x_pos_old, y_pos_old, z_pos_old;
             std::tie(x_pos_old, y_pos_old, z_pos_old) = movement_vector_old;
-            this->set_move(x_pos_old, y_pos_old, z_pos_old);
+            set_move(x_pos_old, y_pos_old, z_pos_old);
         }
 
         void Entity::DoMoveAbsolute(int x, int y, int z)
         {
-            this->x_pos_ += x;
-            this->y_pos_ += y;
-            this->z_pos_ += z;
-            this->UpdateChildren();
+            x_pos_ += x;
+            y_pos_ += y;
+            z_pos_ += z;
+            UpdateChildren();
         }
 
         void Entity::set_look_change_vector(float x, float y)
         {
-            this->look_change_vector_[0] = x;
-            this->look_change_vector_[1] = y;
+            look_change_vector_[0] = x;
+            look_change_vector_[1] = y;
         }
 
         void Entity::set_look(float x, float y)
         {
-            this->horizontal_look_angle_ = x;
-            this->vertical_look_angle_ = y;
-            this->UpdateChildren();
+            horizontal_look_angle_ = x;
+            vertical_look_angle_ = y;
+            UpdateChildren();
         }
 
         void Entity::DoLook()
         {
-            this->horizontal_look_angle_ += look_change_vector_[0];
-            this->vertical_look_angle_ += look_change_vector_[1];
-            if (this->vertical_look_angle_ > DegreesToRadians(90))
+            horizontal_look_angle_ += look_change_vector_[0];
+            vertical_look_angle_ += look_change_vector_[1];
+            if (vertical_look_angle_ > DegreesToRadians(90))
             {
-                this->vertical_look_angle_ = DegreesToRadians(90);
+                vertical_look_angle_ = DegreesToRadians(90);
             }
-            else if (this->vertical_look_angle_ < DegreesToRadians(-90))
+            else if (vertical_look_angle_ < DegreesToRadians(-90))
             {
-                this->vertical_look_angle_ = DegreesToRadians(-90);
+                vertical_look_angle_ = DegreesToRadians(-90);
             }
-            this->UpdateChildren();
+            UpdateChildren();
         }
 
         void Entity::DoLook(float x, float y)
         {
-            this->set_look_change_vector(x, y);
+            set_look_change_vector(x, y);
             DoLook();
         }
 
         void Entity::set_pos(int x, int y, int z)
         {
-            this->x_pos_ = x;
-            this->y_pos_ = y;
-            this->z_pos_ = z;
-            this->UpdateChildren();
+            x_pos_ = x;
+            y_pos_ = y;
+            z_pos_ = z;
+            UpdateChildren();
         }
 
         void Entity::set_pos_relative_to(const Entity *other, int x, int y, int z)
         {
-            this->x_pos_ = x + other->get_x_pos();
-            this->y_pos_ = y + other->get_y_pos();
-            this->z_pos_ = z + other->get_z_pos();
+            x_pos_ = x + other->get_x_pos();
+            y_pos_ = y + other->get_y_pos();
+            z_pos_ = z + other->get_z_pos();
             UpdateChildren();
         }
 
@@ -363,8 +363,8 @@ namespace game_engine
 
         void Entity::DoTick()
         {
-            this->DoLook();
-            this->DoMove();
+            DoLook();
+            DoMove();
         }
 
         int Entity::XDistanceToOther(const Entity *other) const
@@ -422,7 +422,7 @@ namespace game_engine
 
         bool Entity::IsColliding(const Entity *other)
         {
-            if (this->solid_ && other->is_solid() && !this->InGhosts(other) && *this != *other)
+            if (solid_ && other->is_solid() && !InGhosts(other) && *this != *other)
             {
                 // Assumes that x,y, and z are located at the center of the entity
 
@@ -438,9 +438,9 @@ namespace game_engine
 
         bool Entity::WouldCollide(const Entity *other, int x, int y, int z)
         {
-            if (!this->InGhosts(other) && *this != *other)
+            if (!InGhosts(other) && *this != *other)
             {
-                Entity *created = new Entity(this->x_pos_, this->y_pos_, this->z_pos_, this->width_, this->height_, this->depth_);
+                Entity *created = new Entity(x_pos_, y_pos_, z_pos_, width_, height_, depth_);
                 created->DoLook(horizontal_look_angle_, vertical_look_angle_);
                 created->DoMove(x, y, z);
                 return created->IsColliding(other);
@@ -470,27 +470,27 @@ namespace game_engine
 
         void Entity::set_solid(const bool to_set)
         {
-            this->solid_ = to_set;
+            solid_ = to_set;
         }
 
         void Entity::set_hp(const int to_set)
         {
             if (to_set >= -1)
             {
-                this->hp_ = to_set;
+                hp_ = to_set;
             }
         }
 
         void Entity::set_physics(const bool to_set)
         {
-            this->physics_ = to_set;
+            physics_ = to_set;
         }
 
         void Entity::set_gravity(const int to_set)
         {
             if (physics_)
             {
-                this->gravity_ = to_set;
+                gravity_ = to_set;
             }
         }
 
@@ -502,16 +502,16 @@ namespace game_engine
                 {
                     if (to_set >= 0)
                     {
-                        this->friction_ = to_set;
+                        friction_ = to_set;
                     }
                     else
                     {
-                        this->friction_ = 0.0;
+                        friction_ = 0.0;
                     }
                 }
                 else
                 {
-                    this->friction_ = 1.0;
+                    friction_ = 1.0;
                 }
             }
         }

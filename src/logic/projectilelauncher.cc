@@ -18,7 +18,7 @@ namespace game_engine
             set_magazine_size(magazine_size);
             set_damage(damage);
             set_hitscan(true);
-            this->loaded_ammo_ = 0;
+            loaded_ammo_ = 0;
             set_shoot_offset_x(0);
             set_shoot_offset_y(0);
             set_shoot_off_z(0);
@@ -61,7 +61,7 @@ namespace game_engine
 
         bool ProjectileLauncher::Fire(std::set<Entity *> entities)
         {
-            this->entity_list_ = entities;
+            entity_list_ = entities;
             set_last_hit(this);
             bool can_fire;
             can_fire = false;
@@ -206,7 +206,7 @@ namespace game_engine
                 for (std::set<Entity *>::iterator iter = hittable_entities.begin(); iter != hittable_entities.end(); iter++)
                 {
                     Entity *active_entity = *iter;
-                    std::tuple<int, Entity *> distance_tuple = std::make_tuple(this->EuclideanDistanceToOther(active_entity), active_entity);
+                    std::tuple<int, Entity *> distance_tuple = std::make_tuple(EuclideanDistanceToOther(active_entity), active_entity);
                     hit_entities_with_distance.push_back(distance_tuple);
                 }
                 std::sort(hit_entities_with_distance.begin(), hit_entities_with_distance.end());
@@ -261,37 +261,37 @@ namespace game_engine
 
         void ProjectileLauncher::set_shoot_offset_x(const int to_set)
         {
-            this->shoot_offset_x_ = to_set;
+            shoot_offset_x_ = to_set;
         }
 
         void ProjectileLauncher::set_shoot_offset_y(const int to_set)
         {
-            this->shoot_offset_y_ = to_set;
+            shoot_offset_y_ = to_set;
         }
 
         void ProjectileLauncher::set_shoot_off_z(const int to_set)
         {
-            this->shoot_offset_z_ = to_set;
+            shoot_offset_z_ = to_set;
         }
 
         void ProjectileLauncher::set_hitscan(const bool to_set)
         {
-            this->hitscan_ = to_set;
+            hitscan_ = to_set;
         }
 
         void ProjectileLauncher::set_projectile(Entity to_set)
         {
-            this->projectile_ = to_set;
+            projectile_ = to_set;
         }
 
         void ProjectileLauncher::set_last_hit(Entity *to_set)
         {
-            this->last_hit_ = to_set;
+            last_hit_ = to_set;
         }
 
         void ProjectileLauncher::set_active_projectile(Entity *to_set)
         {
-            this->active_projectile_ = to_set;
+            active_projectile_ = to_set;
         }
     } // namespace logic
 } // namespace game_engine
