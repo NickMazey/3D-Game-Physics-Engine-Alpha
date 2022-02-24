@@ -11,11 +11,11 @@
 #pragma GCC diagnostic ignored "-Wunused-variable"
 
 TEST(MapTest, Has_Fields){
-        struct logic::Map map;
+        struct game_engine::logic::Map map;
         std::string name = map.name;
-        std::vector<logic::Entity> level = map.level;
-        std::vector<logic::Entity> players = map.players;
-        std::vector<logic::ProjectileLauncher> available_weapons = map.available_weapons;
+        std::vector<game_engine::logic::Entity> level = map.level;
+        std::vector<game_engine::logic::Entity> players = map.players;
+        std::vector<game_engine::logic::ProjectileLauncher> available_weapons = map.available_weapons;
         std::vector<std::vector<int> > loadouts = map.loadouts; 
         char dividing_line = map.dividing_line;
 }

@@ -1,4 +1,4 @@
-//Copyright 2022 Nicholas Mazey. All rights reserved
+// Copyright 2022 Nicholas Mazey. All rights reserved
 #include "projectilelauncher.h"
 
 #include <math.h>
@@ -6,289 +6,292 @@
 #include <algorithm>
 
 #include "entity.h"
-#include "util.h"
+#include "logicutil.h"
 
-namespace logic
+namespace game_engine
 {
-    ProjectileLauncher::ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazine_size, int damage) : Entity(x, y, z, width, height, depth)
+    namespace logic
     {
-        set_ammo(ammo);
-        set_magazine_size(magazine_size);
-        set_damage(damage);
-        set_hitscan(true);
-        this->loaded_ammo_ = 0;
-        set_shoot_offset_x(0);
-        set_shoot_offset_y(0);
-        set_shoot_off_z(0);
-        set_projectile(*this);
-        set_active_projectile(this);
-        set_last_hit(this);
-        Reload();
-    }
-
-    ProjectileLauncher::ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazine_size, int damage, Entity projectile) : ProjectileLauncher(x, y, z, width, height, depth, ammo, magazine_size, damage)
-    {
-        set_hitscan(false);
-        projectile_starting_velocity_[0] = projectile.get_x_pos();
-        projectile_starting_velocity_[1] = projectile.get_y_pos();
-        projectile_starting_velocity_[2] = projectile.get_z_pos();
-        projectile.set_pos(0, 0, 0);
-        set_projectile(projectile);
-    }
-
-    void ProjectileLauncher::Reload()
-    {
-        if (loaded_ammo_ < magazine_size_)
+        ProjectileLauncher::ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazine_size, int damage) : Entity(x, y, z, width, height, depth)
         {
-            if (ammo_ > (magazine_size_ - loaded_ammo_))
-            {
-                ammo_ -= (magazine_size_ - loaded_ammo_);
-                loaded_ammo_ = magazine_size_;
-            }
-            else if (ammo_ >= 0)
-            {
-                loaded_ammo_ += ammo_;
-                ammo_ = 0;
-            }
-            else
-            {
-                loaded_ammo_ = magazine_size_;
-            }
+            set_ammo(ammo);
+            set_magazine_size(magazine_size);
+            set_damage(damage);
+            set_hitscan(true);
+            this->loaded_ammo_ = 0;
+            set_shoot_offset_x(0);
+            set_shoot_offset_y(0);
+            set_shoot_off_z(0);
+            set_projectile(*this);
+            set_active_projectile(this);
+            set_last_hit(this);
+            Reload();
         }
-    }
 
-    bool ProjectileLauncher::Fire(std::set<Entity *> entities)
-    {
-        this->entity_list_ = entities;
-        set_last_hit(this);
-        bool can_fire;
-        can_fire = false;
-        if (loaded_ammo_ > 0)
+        ProjectileLauncher::ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazine_size, int damage, Entity projectile) : ProjectileLauncher(x, y, z, width, height, depth, ammo, magazine_size, damage)
         {
-            loaded_ammo_ -= 1;
-            can_fire = true;
+            set_hitscan(false);
+            projectile_starting_velocity_[0] = projectile.get_x_pos();
+            projectile_starting_velocity_[1] = projectile.get_y_pos();
+            projectile_starting_velocity_[2] = projectile.get_z_pos();
+            projectile.set_pos(0, 0, 0);
+            set_projectile(projectile);
         }
-        else if (magazine_size_ == 0)
-        {
-            if (ammo_ > 0)
-            {
-                ammo_ -= 1;
-                can_fire = true;
-            }
-            else if (ammo_ == -1)
-            {
-                can_fire = true;
-            }
-        }
-        if (can_fire)
-        {
-            if (hitscan_)
-            {
-                last_hit_ = FindFirstCollision(entities);
-            }
-            else
-            { //Non-hitscan
-                active_projectile_ = new Entity(get_x_pos() + shoot_offset_x_, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_offset_z_, projectile_.get_width(), projectile_.get_height(), projectile_.get_depth());
-                active_projectile_->set_look(get_horizontal_look_angle(), get_vertical_look_angle());
-                active_projectile_->set_move(projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]);
-                active_projectile_->AddGhost(this);
-            }
-        }
-        return can_fire;
-    }
 
-    bool ProjectileLauncher::has_hit()
-    {
-        return last_hit_ != this;
-    }
-
-    void ProjectileLauncher::DoTick()
-    {
-        Entity::DoTick();
-        if (!hitscan_ && active_projectile_ != this)
+        void ProjectileLauncher::Reload()
         {
-            for (std::set<Entity *>::iterator iter = entity_list_.begin(); iter != entity_list_.end(); iter++)
+            if (loaded_ammo_ < magazine_size_)
             {
-                Entity *active_entity = *iter;
-                if (active_projectile_->PassesThrough(active_entity, projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]))
+                if (ammo_ > (magazine_size_ - loaded_ammo_))
                 {
-                    last_hit_ = active_entity;
-                    delete active_projectile_;
-                    active_projectile_ = this;
+                    ammo_ -= (magazine_size_ - loaded_ammo_);
+                    loaded_ammo_ = magazine_size_;
+                }
+                else if (ammo_ >= 0)
+                {
+                    loaded_ammo_ += ammo_;
+                    ammo_ = 0;
+                }
+                else
+                {
+                    loaded_ammo_ = magazine_size_;
                 }
             }
-            if (active_projectile_ != this)
+        }
+
+        bool ProjectileLauncher::Fire(std::set<Entity *> entities)
+        {
+            this->entity_list_ = entities;
+            set_last_hit(this);
+            bool can_fire;
+            can_fire = false;
+            if (loaded_ammo_ > 0)
             {
-                active_projectile_->DoMove();
+                loaded_ammo_ -= 1;
+                can_fire = true;
+            }
+            else if (magazine_size_ == 0)
+            {
+                if (ammo_ > 0)
+                {
+                    ammo_ -= 1;
+                    can_fire = true;
+                }
+                else if (ammo_ == -1)
+                {
+                    can_fire = true;
+                }
+            }
+            if (can_fire)
+            {
+                if (hitscan_)
+                {
+                    last_hit_ = FindFirstCollision(entities);
+                }
+                else
+                { // Non-hitscan
+                    active_projectile_ = new Entity(get_x_pos() + shoot_offset_x_, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_offset_z_, projectile_.get_width(), projectile_.get_height(), projectile_.get_depth());
+                    active_projectile_->set_look(get_horizontal_look_angle(), get_vertical_look_angle());
+                    active_projectile_->set_move(projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]);
+                    active_projectile_->AddGhost(this);
+                }
+            }
+            return can_fire;
+        }
+
+        bool ProjectileLauncher::has_hit()
+        {
+            return last_hit_ != this;
+        }
+
+        void ProjectileLauncher::DoTick()
+        {
+            Entity::DoTick();
+            if (!hitscan_ && active_projectile_ != this)
+            {
                 for (std::set<Entity *>::iterator iter = entity_list_.begin(); iter != entity_list_.end(); iter++)
                 {
                     Entity *active_entity = *iter;
-                    if (active_projectile_->IsColliding(active_entity))
+                    if (active_projectile_->PassesThrough(active_entity, projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]))
                     {
                         last_hit_ = active_entity;
                         delete active_projectile_;
                         active_projectile_ = this;
                     }
                 }
-            }
-        }
-    }
-
-    Entity *ProjectileLauncher::FindFirstCollision(std::set<Entity *> entities)
-    {
-        Entity *closest_hittable_entity = this;
-        for (std::set<Entity *>::iterator iter = entities.begin(); iter != entities.end(); iter++)
-        {
-            Entity *active_entity = *iter;
-            if (active_entity->is_solid() && !InGhosts(active_entity))
-            {
-                //Creating a point to check if this line passes through the other entity
-                Entity *test_point = new Entity(get_x_pos() + shoot_offset_x_, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_offset_z_, 0, 0, 0);
-
-                //How much the line should move in each dimension per step with the given angles
-                int y_coefficient = round(approxsin(get_vertical_look_angle()) * 1000.0f);
-                int xz_coefficient = round(approxcos(get_vertical_look_angle()) * 1000.0f);
-                int x_coefficient = (round(approxcos(get_horizontal_look_angle()) * 1000.0f) * xz_coefficient) / 1000;
-                int z_coefficient = (round(approxsin(get_horizontal_look_angle()) * 1000.0f) * xz_coefficient) / 1000;
-
-                int x_movement, y_movement, z_movement = 0;
-                int distance = EuclideanDistanceToOther(active_entity);
-
-                //For x, y, and z
-                x_movement = (distance * x_coefficient) / 1000;
-                y_movement = (distance * y_coefficient) / 1000;
-                z_movement = (distance * z_coefficient) / 1000;
-                test_point->DoMove(x_movement, y_movement, z_movement);
-                if (test_point->IsColliding(active_entity))
+                if (active_projectile_ != this)
                 {
-                    if (closest_hittable_entity == this)
+                    active_projectile_->DoMove();
+                    for (std::set<Entity *>::iterator iter = entity_list_.begin(); iter != entity_list_.end(); iter++)
                     {
-                        closest_hittable_entity = active_entity;
-                    }
-                    else
-                    {
-                        if (EuclideanDistanceToOther(active_entity) < EuclideanDistanceToOther(closest_hittable_entity))
+                        Entity *active_entity = *iter;
+                        if (active_projectile_->IsColliding(active_entity))
                         {
-                            closest_hittable_entity = active_entity;
+                            last_hit_ = active_entity;
+                            delete active_projectile_;
+                            active_projectile_ = this;
                         }
                     }
                 }
-                delete test_point;
-            }
-        }
-        return closest_hittable_entity;
-    }
-
-    std::vector<Entity *> ProjectileLauncher::FindCollisions(std::set<Entity *> entities)
-    {
-        std::set<Entity *> hittable_entities = std::set<Entity *>();
-
-        //Find Entites that can be hit
-        for (std::set<Entity *>::iterator iter = entities.begin(); iter != entities.end(); iter++)
-        {
-            std::set<Entity *> new_entities = std::set<Entity *>();
-            new_entities.insert(*iter);
-            Entity *firstCollision = FindFirstCollision(new_entities);
-            if (firstCollision != this)
-            {
-                hittable_entities.insert(*iter);
             }
         }
 
-        //Ok, there are entities to hit, now we need to order them
-        if (hittable_entities.size() != 0)
+        Entity *ProjectileLauncher::FindFirstCollision(std::set<Entity *> entities)
         {
-            //So that I can sort the vector by the distance between the entities and the projectilelauncher
-            std::vector<std::tuple<int, Entity *>> hit_entities_with_distance = std::vector<std::tuple<int, Entity *>>();
-            std::vector<Entity *> hit_list = std::vector<Entity *>();
-            for (std::set<Entity *>::iterator iter = hittable_entities.begin(); iter != hittable_entities.end(); iter++)
+            Entity *closest_hittable_entity = this;
+            for (std::set<Entity *>::iterator iter = entities.begin(); iter != entities.end(); iter++)
             {
                 Entity *active_entity = *iter;
-                std::tuple<int, Entity *> distance_tuple = std::make_tuple(this->EuclideanDistanceToOther(active_entity), active_entity);
-                hit_entities_with_distance.push_back(distance_tuple);
+                if (active_entity->is_solid() && !InGhosts(active_entity))
+                {
+                    // Creating a point to check if this line passes through the other entity
+                    Entity *test_point = new Entity(get_x_pos() + shoot_offset_x_, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_offset_z_, 0, 0, 0);
+
+                    // How much the line should move in each dimension per step with the given angles
+                    int y_coefficient = round(approxsin(get_vertical_look_angle()) * 1000.0f);
+                    int xz_coefficient = round(approxcos(get_vertical_look_angle()) * 1000.0f);
+                    int x_coefficient = (round(approxcos(get_horizontal_look_angle()) * 1000.0f) * xz_coefficient) / 1000;
+                    int z_coefficient = (round(approxsin(get_horizontal_look_angle()) * 1000.0f) * xz_coefficient) / 1000;
+
+                    int x_movement, y_movement, z_movement = 0;
+                    int distance = EuclideanDistanceToOther(active_entity);
+
+                    // For x, y, and z
+                    x_movement = (distance * x_coefficient) / 1000;
+                    y_movement = (distance * y_coefficient) / 1000;
+                    z_movement = (distance * z_coefficient) / 1000;
+                    test_point->DoMove(x_movement, y_movement, z_movement);
+                    if (test_point->IsColliding(active_entity))
+                    {
+                        if (closest_hittable_entity == this)
+                        {
+                            closest_hittable_entity = active_entity;
+                        }
+                        else
+                        {
+                            if (EuclideanDistanceToOther(active_entity) < EuclideanDistanceToOther(closest_hittable_entity))
+                            {
+                                closest_hittable_entity = active_entity;
+                            }
+                        }
+                    }
+                    delete test_point;
+                }
             }
-            std::sort(hit_entities_with_distance.begin(), hit_entities_with_distance.end());
-            //Turning the vector of tuples into a vector of Entity pointers
-            for (std::tuple<int, Entity *> tup : hit_entities_with_distance)
+            return closest_hittable_entity;
+        }
+
+        std::vector<Entity *> ProjectileLauncher::FindCollisions(std::set<Entity *> entities)
+        {
+            std::set<Entity *> hittable_entities = std::set<Entity *>();
+
+            // Find Entites that can be hit
+            for (std::set<Entity *>::iterator iter = entities.begin(); iter != entities.end(); iter++)
             {
-                int dist;
-                Entity *to_add;
-                std::tie(dist, to_add) = tup;
-                hit_list.push_back(to_add);
+                std::set<Entity *> new_entities = std::set<Entity *>();
+                new_entities.insert(*iter);
+                Entity *firstCollision = FindFirstCollision(new_entities);
+                if (firstCollision != this)
+                {
+                    hittable_entities.insert(*iter);
+                }
             }
-            return hit_list;
-        }
-        return std::vector<Entity *>();
-    }
 
-    void ProjectileLauncher::set_ammo(const int to_set)
-    {
-        if (to_set >= -1)
+            // Ok, there are entities to hit, now we need to order them
+            if (hittable_entities.size() != 0)
+            {
+                // So that I can sort the vector by the distance between the entities and the projectilelauncher
+                std::vector<std::tuple<int, Entity *>> hit_entities_with_distance = std::vector<std::tuple<int, Entity *>>();
+                std::vector<Entity *> hit_list = std::vector<Entity *>();
+                for (std::set<Entity *>::iterator iter = hittable_entities.begin(); iter != hittable_entities.end(); iter++)
+                {
+                    Entity *active_entity = *iter;
+                    std::tuple<int, Entity *> distance_tuple = std::make_tuple(this->EuclideanDistanceToOther(active_entity), active_entity);
+                    hit_entities_with_distance.push_back(distance_tuple);
+                }
+                std::sort(hit_entities_with_distance.begin(), hit_entities_with_distance.end());
+                // Turning the vector of tuples into a vector of Entity pointers
+                for (std::tuple<int, Entity *> tup : hit_entities_with_distance)
+                {
+                    int dist;
+                    Entity *to_add;
+                    std::tie(dist, to_add) = tup;
+                    hit_list.push_back(to_add);
+                }
+                return hit_list;
+            }
+            return std::vector<Entity *>();
+        }
+
+        void ProjectileLauncher::set_ammo(const int to_set)
         {
-            ammo_ = to_set;
+            if (to_set >= -1)
+            {
+                ammo_ = to_set;
+            }
+            else
+            {
+                ammo_ = -1;
+            }
         }
-        else
+
+        void ProjectileLauncher::set_magazine_size(const int to_set)
         {
-            ammo_ = -1;
+            if (to_set >= 0)
+            {
+                magazine_size_ = to_set;
+            }
+            else
+            {
+                magazine_size_ = 0;
+            }
         }
-    }
 
-    void ProjectileLauncher::set_magazine_size(const int to_set)
-    {
-        if (to_set >= 0)
+        void ProjectileLauncher::set_damage(const int to_set)
         {
-            magazine_size_ = to_set;
+            if (to_set >= 0)
+            {
+                damage_ = to_set;
+            }
+            else
+            {
+                damage_ = 0;
+            }
         }
-        else
+
+        void ProjectileLauncher::set_shoot_offset_x(const int to_set)
         {
-            magazine_size_ = 0;
+            this->shoot_offset_x_ = to_set;
         }
-    }
 
-    void ProjectileLauncher::set_damage(const int to_set)
-    {
-        if (to_set >= 0)
+        void ProjectileLauncher::set_shoot_offset_y(const int to_set)
         {
-            damage_ = to_set;
+            this->shoot_offset_y_ = to_set;
         }
-        else
+
+        void ProjectileLauncher::set_shoot_off_z(const int to_set)
         {
-            damage_ = 0;
+            this->shoot_offset_z_ = to_set;
         }
-    }
 
-    void ProjectileLauncher::set_shoot_offset_x(const int to_set)
-    {
-        this->shoot_offset_x_ = to_set;
-    }
+        void ProjectileLauncher::set_hitscan(const bool to_set)
+        {
+            this->hitscan_ = to_set;
+        }
 
-    void ProjectileLauncher::set_shoot_offset_y(const int to_set)
-    {
-        this->shoot_offset_y_ = to_set;
-    }
+        void ProjectileLauncher::set_projectile(Entity to_set)
+        {
+            this->projectile_ = to_set;
+        }
 
-    void ProjectileLauncher::set_shoot_off_z(const int to_set)
-    {
-        this->shoot_offset_z_ = to_set;
-    }
+        void ProjectileLauncher::set_last_hit(Entity *to_set)
+        {
+            this->last_hit_ = to_set;
+        }
 
-    void ProjectileLauncher::set_hitscan(const bool to_set)
-    {
-        this->hitscan_ = to_set;
-    }
-    
-    void ProjectileLauncher::set_projectile(Entity to_set)
-    {
-        this->projectile_ = to_set;
-    }
-
-    void ProjectileLauncher::set_last_hit(Entity *to_set)
-    {
-        this->last_hit_ = to_set;
-    }
-
-    void ProjectileLauncher::set_active_projectile(Entity *to_set)
-    {
-        this->active_projectile_ = to_set;
-    }
-}
+        void ProjectileLauncher::set_active_projectile(Entity *to_set)
+        {
+            this->active_projectile_ = to_set;
+        }
+    } // namespace logic
+} // namespace game_engine

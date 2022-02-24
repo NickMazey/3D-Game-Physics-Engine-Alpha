@@ -8,7 +8,7 @@ target_link_libraries(
     PUBLIC
     projectilelauncher
     entity
-    util
+    logicutil
     gtest_main
 )
 

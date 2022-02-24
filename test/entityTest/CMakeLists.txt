@@ -8,7 +8,7 @@ target_link_libraries(
     entity_test
     PUBLIC
     entity
-    util
+    logicutil
     gtest_main
 )
 
