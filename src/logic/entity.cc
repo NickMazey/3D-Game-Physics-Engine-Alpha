@@ -22,10 +22,10 @@ namespace logic
         this->height_ = height;
         this->depth_ = depth;
         this->id_ = entity_count_;
-        this->horizontal_look_angle_ = 0.0;
-        this->vertical_look_angle_ = 0.0;
+        this->horizontal_look_angle_ = 0.0f;
+        this->vertical_look_angle_ = 0.0f;
         this->hp_ = -1;
-        this->friction_ = 0.0;
+        this->friction_ = 0.0f;
         this->gravity_ = 0;
         this->solid_ = true;
         this->physics_ = false;
@@ -49,12 +49,12 @@ namespace logic
 
     Entity::~Entity()
     {
-        std::set<Entity *> tempDependents;
+        std::set<Entity *> temp_dependents;
         for (Entity *dependent : this->dependents_)
         {
-            tempDependents.insert(dependent);
+            temp_dependents.insert(dependent);
         }
-        for (Entity *dependent : tempDependents)
+        for (Entity *dependent : temp_dependents)
         {
             dependent->RemoveDependent(this);
             dependent->RemoveGhost(this);
@@ -119,11 +119,11 @@ namespace logic
     }
 
 
-    void Entity::AddChild(Entity *other, int offX, int offY, int offZ)
+    void Entity::AddChild(Entity *other, int x_offset, int y_offset, int z_offset)
     {
         if (!InChildren(other) && !other->InChildren(this))
         {
-            std::tuple<int, int, int> offsets = std::make_tuple(offX, offY, offZ);
+            std::tuple<int, int, int> offsets = std::make_tuple(x_offset, y_offset, z_offset);
             this->children_.insert(ChildPair(other, offsets));
             other->AddDependent(this);
             this->AddDependent(other);
@@ -171,19 +171,19 @@ namespace logic
         {
             std::tuple<int, int, int> offset = iter->second;
             Entity *child = iter->first;
-            int xOff, yOff, zOff;
-            std::tie(xOff, yOff, zOff) = offset;
-            set_other_pos_relative_to(child, xOff, yOff, zOff);
+            int x_offset, y_offset, z_offset;
+            std::tie(x_offset, y_offset, z_offset) = offset;
+            set_other_pos_relative_to(child, x_offset, y_offset, z_offset);
             child->set_look(horizontal_look_angle_, vertical_look_angle_);
         }
     }
 
-    void Entity::add_hp(const int toAdd)
+    void Entity::add_hp(const int to_add)
     {
-        remove_hp(toAdd * -1);
+        remove_hp(to_add * -1);
     }
 
-    void Entity::remove_hp(const int toRemove)
+    void Entity::remove_hp(const int to_remove)
     {
         //This entity doesn't have HP
         if (this->hp_ == -1)
@@ -191,9 +191,9 @@ namespace logic
         }
         else
         {
-            if (this->hp_ - toRemove > 0)
+            if (this->hp_ - to_remove > 0)
             {
-                this->hp_ -= toRemove;
+                this->hp_ -= to_remove;
             }
             else
             {
@@ -212,70 +212,70 @@ namespace logic
 
     int Entity::RotatedXMovementHelper(const int x, const int z) const
     {
-        float xComponent = approxcos(horizontal_look_angle_) * (x);
-        float zComponent = 0;
+        float x_component = approxcos(horizontal_look_angle_) * (x);
+        float z_component = 0;
         if (approxsin(horizontal_look_angle_) != 0)
         {
-            int angX = SimplifyAngle(RadiansToDegrees(horizontal_look_angle_));
+            int horizontal_angle = SimplifyAngle(RadiansToDegrees(horizontal_look_angle_));
             //Positive
-            if (angX > 0 && angX < 90)
+            if (horizontal_angle > 0 && horizontal_angle < 90)
             { //First Quad
-                zComponent = z * approxsin(horizontal_look_angle_ + DegreesToRadians(180));
+                z_component = z * approxsin(horizontal_look_angle_ + DegreesToRadians(180));
             }
-            else if (angX == 90 || angX == -90)
+            else if (horizontal_angle == 90 || horizontal_angle == -90)
             { //90 Degrees
-                zComponent = -z * approxsin(horizontal_look_angle_);
+                z_component = -z * approxsin(horizontal_look_angle_);
             }
-            else if (angX > 90 && angX < 180)
+            else if (horizontal_angle > 90 && horizontal_angle < 180)
             { //Second Quad
-                zComponent = -z * approxsin(horizontal_look_angle_);
+                z_component = -z * approxsin(horizontal_look_angle_);
             }
             //Negative
-            else if (angX < 0 && angX > -90)
+            else if (horizontal_angle < 0 && horizontal_angle > -90)
             { //First Quad
-                zComponent = -z * approxsin(horizontal_look_angle_);
+                z_component = -z * approxsin(horizontal_look_angle_);
             }
-            else if (angX < -90 && angX > -180)
+            else if (horizontal_angle < -90 && horizontal_angle > -180)
             { //Second Quad
-                xComponent = x * approxsin(horizontal_look_angle_);
-                zComponent = z * approxsin(horizontal_look_angle_ - DegreesToRadians(90));
+                x_component = x * approxsin(horizontal_look_angle_);
+                z_component = z * approxsin(horizontal_look_angle_ - DegreesToRadians(90));
             }
         }
-        return round(xComponent + zComponent);
+        return round(x_component + z_component);
     }
 
     int Entity::RotatedZMovementHelper(const int x, const int z) const
     {
-        float zComponent = approxcos(horizontal_look_angle_) * (z);
-        float xComponent = 0;
+        float z_component = approxcos(horizontal_look_angle_) * (z);
+        float x_component = 0;
         if (approxsin(horizontal_look_angle_) != 0)
         {
-            int angX = SimplifyAngle(RadiansToDegrees(horizontal_look_angle_));
+            int horizontal_angle = SimplifyAngle(RadiansToDegrees(horizontal_look_angle_));
             //Positive
-            if (angX > 0 && angX < 90)
+            if (horizontal_angle > 0 && horizontal_angle < 90)
             { //First Quad
-                xComponent = x * approxsin(horizontal_look_angle_);
+                x_component = x * approxsin(horizontal_look_angle_);
             }
-            else if (angX == 90 || angX == -90)
+            else if (horizontal_angle == 90 || horizontal_angle == -90)
             { //90 Degrees
-                xComponent = x * approxsin(horizontal_look_angle_);
+                x_component = x * approxsin(horizontal_look_angle_);
             }
-            else if (angX > 90 && angX < 180)
+            else if (horizontal_angle > 90 && horizontal_angle < 180)
             { //Second Quad
-                xComponent = x * approxsin(horizontal_look_angle_);
+                x_component = x * approxsin(horizontal_look_angle_);
             }
             //Negative
-            else if (angX < 0 && angX > -90)
+            else if (horizontal_angle < 0 && horizontal_angle > -90)
             { //First Quad
-                xComponent = x * approxsin(horizontal_look_angle_);
+                x_component = x * approxsin(horizontal_look_angle_);
             }
-            else if (angX < -90 && angX > -180)
+            else if (horizontal_angle < -90 && horizontal_angle > -180)
             { //Second Quad
-                zComponent = z * approxsin(horizontal_look_angle_);
-                xComponent = x * approxcos(horizontal_look_angle_);
+                z_component = z * approxsin(horizontal_look_angle_);
+                x_component = x * approxcos(horizontal_look_angle_);
             }
         }
-        return round(zComponent + xComponent);
+        return round(z_component + x_component);
     }
 
     void Entity::DoMove()
@@ -296,12 +296,12 @@ namespace logic
 
     void Entity::DoMove(int x, int y, int z)
     {
-        std::tuple<int, int, int> oldVector = get_movement_vector();
+        std::tuple<int, int, int> movement_vector_old = get_movement_vector();
         this->set_move(x, y, z);
         this->DoMove();
-        int oldX, oldY, oldZ;
-        std::tie(oldX, oldY, oldZ) = oldVector;
-        this->set_move(oldX, oldY, oldZ);
+        int x_pos_old, y_pos_old, z_pos_old;
+        std::tie(x_pos_old, y_pos_old, z_pos_old) = movement_vector_old;
+        this->set_move(x_pos_old, y_pos_old, z_pos_old);
     }
 
     void Entity::DoMoveAbsolute(int x, int y, int z)
@@ -465,12 +465,12 @@ namespace logic
         //If it would collide (on either side of the entity) then it must not have passed through
         if (!WouldCollide(other, x, y, z))
         {
-            int rotX = RotatedXMovementHelper(x, z);
-            int rotZ = RotatedZMovementHelper(x, z);
+            int rotated_x_movement = RotatedXMovementHelper(x, z);
+            int rotated_z_movement = RotatedZMovementHelper(x, z);
             //If it's moving enough to reach the entity and it doesn't collide, it must've passed through it
-            if (((XDistanceToOther(other) == 0)|| (XDistanceToOther(other) > 0 && XDistanceToOther(other) < rotX) || (XDistanceToOther(other) < 0 && XDistanceToOther(other) > rotX)) && //X
+            if (((XDistanceToOther(other) == 0)|| (XDistanceToOther(other) > 0 && XDistanceToOther(other) < rotated_x_movement) || (XDistanceToOther(other) < 0 && XDistanceToOther(other) > rotated_x_movement)) && //X
                 ((YDistanceToOther(other) == 0) || (YDistanceToOther(other) > 0 && YDistanceToOther(other) < y) || (YDistanceToOther(other) < 0 && YDistanceToOther(other) > y)) &&       //Y
-                ((ZDistanceToOther(other) == 0) || (ZDistanceToOther(other) > 0 && ZDistanceToOther(other) < rotZ) || (ZDistanceToOther(other) < 0 && ZDistanceToOther(other) > rotZ)))
+                ((ZDistanceToOther(other) == 0) || (ZDistanceToOther(other) > 0 && ZDistanceToOther(other) < rotated_z_movement) || (ZDistanceToOther(other) < 0 && ZDistanceToOther(other) > rotated_z_movement)))
             { //Z
                 return true;
             }
@@ -480,41 +480,41 @@ namespace logic
     }
 
 
-    void Entity::set_solid(const bool toSet)
+    void Entity::set_solid(const bool to_set)
     {
-        this->solid_ = toSet;
+        this->solid_ = to_set;
     }
 
-    void Entity::set_hp(const int toSet)
+    void Entity::set_hp(const int to_set)
     {
-        if (toSet >= -1)
+        if (to_set >= -1)
         {
-            this->hp_ = toSet;
+            this->hp_ = to_set;
         }
     }
 
-    void Entity::set_physics(const bool toSet)
+    void Entity::set_physics(const bool to_set)
     {
-        this->physics_ = toSet;
+        this->physics_ = to_set;
     }
 
-    void Entity::set_gravity(const int toSet)
+    void Entity::set_gravity(const int to_set)
     {
         if (physics_)
         {
-            this->gravity_ = toSet;
+            this->gravity_ = to_set;
         }
     }
 
-    void Entity::set_friction(const float toSet)
+    void Entity::set_friction(const float to_set)
     {
         if (physics_)
         {
-            if (toSet <= 1.0)
+            if (to_set <= 1.0)
             {
-                if (toSet >= 0)
+                if (to_set >= 0)
                 {
-                    this->friction_ = toSet;
+                    this->friction_ = to_set;
                 }
                 else
                 {
