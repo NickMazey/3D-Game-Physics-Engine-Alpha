@@ -144,22 +144,21 @@ namespace game_engine
                 Entity *active_entity = *iter;
                 if (active_entity->is_solid() && !InGhosts(active_entity))
                 {
-                    // Creating a point to check if this line passes through the other entity
-                    Entity *test_point = new Entity(get_x_pos() + shoot_offset_x_, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_offset_z_, 0, 0, 0);
-
                     // How much the line should move in each dimension per step with the given angles
-                    int y_coefficient = round(approxsin(get_vertical_look_angle()) * 1000.0f);
-                    int xz_coefficient = round(approxcos(get_vertical_look_angle()) * 1000.0f);
-                    int x_coefficient = (round(approxcos(get_horizontal_look_angle()) * 1000.0f) * xz_coefficient) / 1000;
-                    int z_coefficient = (round(approxsin(get_horizontal_look_angle()) * 1000.0f) * xz_coefficient) / 1000;
+                    int y_coefficient = static_cast<int>(round(approxsin(get_vertical_look_angle()) * 1000.0f));
+                    int xz_coefficient = static_cast<int>(round(approxcos(get_vertical_look_angle()) * 1000.0f));
+                    int x_coefficient = static_cast<int>((round(approxcos(get_horizontal_look_angle()) * 1000.0f) * xz_coefficient) / 1000);
+                    int z_coefficient = static_cast<int>((round(approxsin(get_horizontal_look_angle()) * 1000.0f) * xz_coefficient) / 1000);
 
-                    int x_movement, y_movement, z_movement = 0;
                     int distance = EuclideanDistanceToOther(active_entity);
 
                     // For x, y, and z
-                    x_movement = (distance * x_coefficient) / 1000;
-                    y_movement = (distance * y_coefficient) / 1000;
-                    z_movement = (distance * z_coefficient) / 1000;
+                    int x_movement = (distance * x_coefficient) / 1000;
+                    int y_movement = (distance * y_coefficient) / 1000;
+                    int z_movement = (distance * z_coefficient) / 1000;
+                    
+                    // Creating a point to check if this line passes through the other entity
+                    Entity *test_point = new Entity(get_x_pos() + shoot_offset_x_, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_offset_z_, 0, 0, 0);
                     test_point->DoMove(x_movement, y_movement, z_movement);
                     if (test_point->IsColliding(active_entity))
                     {

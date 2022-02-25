@@ -184,17 +184,19 @@ namespace game_engine
 
         int Entity::RotatedXMovementHelper(const int x, const int z) const
         {
-            float x_component = approxcos(horizontal_look_angle_) * (x);
-            float z_component = 0;
-            if (approxsin(horizontal_look_angle_) != 0)
+            float x_float = static_cast<float>(x);
+            float z_float = static_cast<float> (z);
+            float x_component = approxcos(horizontal_look_angle_) * x_float;
+            float z_component = 0.0;
+            if (approxsin(horizontal_look_angle_) != 0.0)
             {
                 int horizontal_angle = SimplifyAngle(RadiansToDegrees(horizontal_look_angle_));
                 // Positive
-                if (horizontal_angle > 0 && horizontal_angle < 90)
+                if (horizontal_angle > 0.0 && horizontal_angle < 90.0)
                 { // First Quad
-                    z_component = z * approxsin(horizontal_look_angle_ + DegreesToRadians(180));
+                    z_component = z_float * approxsin(horizontal_look_angle_ + DegreesToRadians(180));
                 }
-                else if (horizontal_angle == 90 || horizontal_angle == -90)
+                else if (horizontal_angle == 90.0 || horizontal_angle == -90.0)
                 { // 90 Degrees
                     z_component = -z * approxsin(horizontal_look_angle_);
                 }
