@@ -3,7 +3,6 @@
 
 #include <math.h>
 
-#include <exception>
 #include <map>
 #include <set>
 #include <tuple>
@@ -78,14 +77,7 @@ namespace game_engine
 
         bool Entity::InDependents(Entity *other)
         {
-            try
-            {
-                return dependents_.find(other) != dependents_.end();
-            }
-            catch (std::exception &e)
-            {
-                return false;
-            }
+            return dependents_.find(other) != dependents_.end();
         }
 
         void Entity::AddGhost(Entity *other)
@@ -107,14 +99,7 @@ namespace game_engine
 
         bool Entity::InGhosts(const Entity *other)
         {
-            try
-            {
                 return ghosts_.find(other) != ghosts_.end();
-            }
-            catch (std::exception &e)
-            {
-                return false;
-            }
         }
 
         void Entity::AddChild(Entity *other, int x_offset, int y_offset, int z_offset)
@@ -141,14 +126,7 @@ namespace game_engine
 
         bool Entity::InChildren(Entity *other)
         {
-            try
-            {
                 return children_.count(other) || InChildrenDeep(other);
-            }
-            catch (std::exception &e)
-            {
-                return false;
-            }
         }
 
         bool Entity::InChildrenDeep(Entity *other)
@@ -184,10 +162,7 @@ namespace game_engine
         void Entity::remove_hp(const int to_remove)
         {
             // This entity doesn't have HP
-            if (hp_ == -1)
-            {
-            }
-            else
+            if (hp_ != -1)
             {
                 if (hp_ - to_remove > 0)
                 {
