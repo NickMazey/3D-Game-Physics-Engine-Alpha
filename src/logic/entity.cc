@@ -126,7 +126,7 @@ namespace game_engine
 
         bool Entity::InChildren(Entity *other)
         {
-                return children_.count(other) || InChildrenDeep(other);
+            return children_.count(other) || InChildrenDeep(other);
         }
 
         bool Entity::InChildrenDeep(Entity *other)

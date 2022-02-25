@@ -109,9 +109,8 @@ namespace game_engine
             Entity::DoTick();
             if (!hitscan_ && active_projectile_ != this)
             {
-                for (std::set<Entity *>::iterator iter = entity_list_.begin(); iter != entity_list_.end(); iter++)
+                for (Entity* active_entity : entity_list_)
                 {
-                    Entity *active_entity = *iter;
                     if (active_projectile_->PassesThrough(active_entity, projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]))
                     {
                         last_hit_ = active_entity;
@@ -122,9 +121,8 @@ namespace game_engine
                 if (active_projectile_ != this)
                 {
                     active_projectile_->DoMove();
-                    for (std::set<Entity *>::iterator iter = entity_list_.begin(); iter != entity_list_.end(); iter++)
+                    for (Entity* active_entity : entity_list_)
                     {
-                        Entity *active_entity = *iter;
                         if (active_projectile_->IsColliding(active_entity))
                         {
                             last_hit_ = active_entity;
@@ -139,9 +137,8 @@ namespace game_engine
         Entity *ProjectileLauncher::FindFirstCollision(std::set<Entity *> entities)
         {
             Entity *closest_hittable_entity = this;
-            for (std::set<Entity *>::iterator iter = entities.begin(); iter != entities.end(); iter++)
+            for (Entity* active_entity : entities)
             {
-                Entity *active_entity = *iter;
                 if (active_entity->is_solid() && !InGhosts(active_entity))
                 {
                     // How much the line should move in each dimension per step with the given angles
@@ -185,14 +182,14 @@ namespace game_engine
             std::set<Entity *> hittable_entities = std::set<Entity *>();
 
             // Find Entites that can be hit
-            for (std::set<Entity *>::iterator iter = entities.begin(); iter != entities.end(); iter++)
+            for (Entity* active_entity : entities)
             {
                 std::set<Entity *> new_entities = std::set<Entity *>();
-                new_entities.insert(*iter);
+                new_entities.insert(active_entity);
                 Entity *firstCollision = FindFirstCollision(new_entities);
                 if (firstCollision != this)
                 {
-                    hittable_entities.insert(*iter);
+                    hittable_entities.insert(active_entity);
                 }
             }
 
@@ -202,9 +199,8 @@ namespace game_engine
                 // So that I can sort the vector by the distance between the entities and the projectilelauncher
                 std::vector<std::tuple<int, Entity *>> hit_entities_with_distance = std::vector<std::tuple<int, Entity *>>();
                 std::vector<Entity *> hit_list = std::vector<Entity *>();
-                for (std::set<Entity *>::iterator iter = hittable_entities.begin(); iter != hittable_entities.end(); iter++)
+                for (Entity* active_entity : hittable_entities)
                 {
-                    Entity *active_entity = *iter;
                     std::tuple<int, Entity *> distance_tuple = std::make_tuple(EuclideanDistanceToOther(active_entity), active_entity);
                     hit_entities_with_distance.push_back(distance_tuple);
                 }
