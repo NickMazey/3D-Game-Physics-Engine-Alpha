@@ -1,5 +1,6 @@
 // Copyright 2022 Nicholas Mazey. All rights reserved
 #include "mockcontroller.h"
+
 namespace game_engine
 {
     namespace logic

@@ -4,6 +4,9 @@
 #include <math.h>
 
 #include <exception>
+#include <map>
+#include <set>
+#include <tuple>
 
 #include "logicutil.h"
 namespace game_engine

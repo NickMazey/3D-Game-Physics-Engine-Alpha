@@ -4,6 +4,9 @@
 #include <math.h>
 
 #include <algorithm>
+#include <set>
+#include <tuple>
+#include <vector>
 
 #include "entity.h"
 #include "logicutil.h"
