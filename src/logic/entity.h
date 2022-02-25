@@ -1,7 +1,11 @@
 // Copyright 2022 Nicholas Mazey. All rights reserved
+#include <math.h>
+
 #include <map>
 #include <set>
 #include <tuple>
+
+#include "logicutil.h"
 
 #ifndef GAME_ENGINE_LOGIC_ENTITY_H
 #define GAME_ENGINE_LOGIC_ENTITY_H
@@ -115,15 +119,15 @@ namespace game_engine
             void DoTick();
 
             // Returns the width of this entity with rotation
-            float effective_width() const
+            int effective_width() const
             {
-                return abs(cos(horizontal_look_angle_)) * width_ + abs(sin(horizontal_look_angle_)) * depth_;
+                return static_cast<int>(abs(approxcos(horizontal_look_angle_)) * static_cast<float>(width_) + abs(sin(horizontal_look_angle_)) * static_cast<float>(depth_));
             }
 
             // Returns the depth of this entity with rotation
-            float effective_depth() const
+            int effective_depth() const
             {
-                return abs(cos(horizontal_look_angle_)) * depth_ + abs(sin(horizontal_look_angle_)) * width_;
+                return static_cast<int>(abs(approxcos(horizontal_look_angle_)) * static_cast<float>(depth_) + abs(approxsin(horizontal_look_angle_)) * static_cast<float>(width_));
             }
 
             // Returns the distance to another entity on X
