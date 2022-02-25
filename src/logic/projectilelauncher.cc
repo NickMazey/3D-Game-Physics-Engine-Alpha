@@ -1,6 +1,7 @@
 // Copyright 2022 Nicholas Mazey. All rights reserved
 #include "projectilelauncher.h"
 
+#include <algorithm>
 #include <set>
 #include <tuple>
 #include <vector>
