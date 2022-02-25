@@ -2,7 +2,7 @@ add_library(entity entity.cc)
 add_library(mockcontroller mockcontroller.cc)
 add_library(projectilelauncher projectilelauncher.cc)
 add_library(server server.cc)
-add_library(util util.cc)
+add_library(logicutil logicutil.cc)
 add_library(world world.cc)
 
 list(APPEND LOGIC_LIBRARIES [
@@ -10,6 +10,6 @@ list(APPEND LOGIC_LIBRARIES [
     mockcontroller
     projectilelauncher
     server
-    util
+    logicutil
     world
 ])

@@ -1,530 +1,502 @@
+// Copyright 2022 Nicholas Mazey. All rights reserved
 #include "entity.h"
 
 #include <math.h>
 
-#include <exception>
+#include <map>
+#include <set>
+#include <tuple>
 
-#include "util.h"
-
-namespace logic
+#include "logicutil.h"
+namespace game_engine
 {
-    int Entity::entityCount = 0;
-
-
-    Entity::Entity(int x, int y, int z, int width, int height, int depth)
+    namespace logic
     {
-        this->x = x;
-        this->y = y;
-        this->z = z;
-        this->fov = 0.0f;
-        this->width = width;
-        this->height = height;
-        this->depth = depth;
-        this->id = entityCount;
-        this->lookAngX = 0.0;
-        this->lookAngY = 0.0;
-        this->hp = -1;
-        this->friction = 0.0;
-        this->gravity = 0;
-        this->solid = true;
-        this->physics = false;
-        entityCount++;
-    }
+        int Entity::entity_count_ = 0;
 
-    Entity::Entity()
-    {
-    }
-
-
-    bool Entity::operator==(const Entity &other) const
-    {
-        return id == other.getId();
-    }
-    bool Entity::operator!=(const Entity &other) const
-    {
-        return !operator==(other);
-    }
-
-
-    Entity::~Entity()
-    {
-        std::set<Entity *> tempDependents;
-        for (Entity *dependent : this->dependents)
+        Entity::Entity(int x, int y, int z, int width, int height, int depth)
         {
-            tempDependents.insert(dependent);
+            x_pos_ = x;
+            y_pos_ = y;
+            z_pos_ = z;
+            fov_ = 0.0f;
+            width_ = width;
+            height_ = height;
+            depth_ = depth;
+            id_ = entity_count_;
+            horizontal_look_angle_ = 0.0f;
+            vertical_look_angle_ = 0.0f;
+            hp_ = -1;
+            friction_ = 0.0f;
+            gravity_ = 0;
+            solid_ = true;
+            physics_ = false;
+            entity_count_++;
         }
-        for (Entity *dependent : tempDependents)
+
+        Entity::Entity()
         {
-            dependent->removeDependent(this);
-            dependent->removeGhost(this);
-            dependent->removeChild(this);
         }
-    }
 
-
-    void Entity::addDependent(Entity *other)
-    {
-        this->dependents.insert(other);
-    }
-
-    void Entity::removeDependent(Entity *other)
-    {
-        if (inDependents(other))
+        bool Entity::operator==(const Entity &other) const
         {
-            this->dependents.erase(other);
+            return id_ == other.get_id();
         }
-    }
-
-    bool Entity::inDependents(Entity *other)
-    {
-        try
+        bool Entity::operator!=(const Entity &other) const
         {
-            return this->dependents.find(other) != dependents.end();
+            return !operator==(other);
         }
-        catch (std::exception& e)
-        {
-            return false;
-        }
-    }
 
-
-    void Entity::addGhost(Entity *other)
-    {
-        this->ghosts.insert(other);
-        other->addDependent(this);
-        this->addDependent(other);
-    }
-
-    void Entity::removeGhost(Entity *other)
-    {
-        if (inGhosts(other))
+        Entity::~Entity()
         {
-            this->ghosts.erase(other);
-        }
-        other->removeDependent(this);
-        this->removeDependent(other);
-    }
-
-    bool Entity::inGhosts(const Entity *other)
-    {
-        try
-        {
-            return this->ghosts.find(other) != ghosts.end();
-        }
-        catch (std::exception& e)
-        {
-            return false;
-        }
-    }
-
-
-    void Entity::addChild(Entity *other, int offX, int offY, int offZ)
-    {
-        if (!inChildren(other) && !other->inChildren(this))
-        {
-            std::tuple<int, int, int> offsets = std::make_tuple(offX, offY, offZ);
-            this->children.insert(ChildPair(other, offsets));
-            other->addDependent(this);
-            this->addDependent(other);
-            updateChildren();
-        }
-    }
-
-    void Entity::removeChild(Entity *other)
-    {
-        if (inChildren(other))
-        {
-            this->children.erase(other);
-        }
-        other->removeDependent(this);
-        this->removeDependent(other);
-    }
-    
-    bool Entity::inChildren(Entity *other)
-    {
-        try
-        {
-            return children.count(other) || inChildrenDeep(other);
-        }
-        catch (std::exception& e)
-        {
-            return false;
-        }
-    }
-
-    bool Entity::inChildrenDeep(Entity *other)
-    {
-        for (ChildMap::iterator iter = children.begin(); iter != children.end(); iter++)
-        {
-            if (iter->first->inChildren(other))
+            std::set<Entity *> temp_dependents;
+            for (Entity *dependent : dependents_)
             {
-                return true;
+                temp_dependents.insert(dependent);
             }
-        }
-        return false;
-    }
-
-    void Entity::updateChildren()
-    {
-        for (ChildMap::iterator iter = children.begin(); iter != children.end(); iter++)
-        {
-            std::tuple<int, int, int> offset = iter->second;
-            Entity *child = iter->first;
-            int xOff, yOff, zOff;
-            std::tie(xOff, yOff, zOff) = offset;
-            setOtherPosRelativeTo(child, xOff, yOff, zOff);
-            child->setLook(lookAngX, lookAngY);
-        }
-    }
-
-    void Entity::addHP(const int toAdd)
-    {
-        removeHP(toAdd * -1);
-    }
-
-    void Entity::removeHP(const int toRemove)
-    {
-        //This entity doesn't have HP
-        if (this->hp == -1)
-        {
-        }
-        else
-        {
-            if (this->hp - toRemove > 0)
+            for (Entity *dependent : temp_dependents)
             {
-                this->hp -= toRemove;
+                dependent->RemoveDependent(this);
+                dependent->RemoveGhost(this);
+                dependent->RemoveChild(this);
             }
-            else
+        }
+
+        void Entity::AddDependent(Entity *other)
+        {
+            dependents_.insert(other);
+        }
+
+        void Entity::RemoveDependent(Entity *other)
+        {
+            if (InDependents(other))
             {
-                this->hp = 0;
+                dependents_.erase(other);
             }
         }
-    }
 
-
-    void Entity::setMove(int x, int y, int z)
-    {
-        this->coordVector[0] = x;
-        this->coordVector[1] = y;
-        this->coordVector[2] = z;
-    }
-
-    int Entity::xHelper(const int x, const int z) const
-    {
-        float xComponent = approxCos(lookAngX) * (x);
-        float zComponent = 0;
-        if (approxSin(lookAngX) != 0)
+        bool Entity::InDependents(Entity *other)
         {
-            int angX = simplifyAngle(radiansToDegrees(lookAngX));
-            //Positive
-            if (angX > 0 && angX < 90)
-            { //First Quad
-                zComponent = z * approxSin(lookAngX + degreesToRadians(180));
-            }
-            else if (angX == 90 || angX == -90)
-            { //90 Degrees
-                zComponent = -z * approxSin(lookAngX);
-            }
-            else if (angX > 90 && angX < 180)
-            { //Second Quad
-                zComponent = -z * approxSin(lookAngX);
-            }
-            //Negative
-            else if (angX < 0 && angX > -90)
-            { //First Quad
-                zComponent = -z * approxSin(lookAngX);
-            }
-            else if (angX < -90 && angX > -180)
-            { //Second Quad
-                xComponent = x * approxSin(lookAngX);
-                zComponent = z * approxSin(lookAngX - degreesToRadians(90));
-            }
+            return dependents_.find(other) != dependents_.end();
         }
-        return round(xComponent + zComponent);
-    }
 
-    int Entity::zHelper(const int x, const int z) const
-    {
-        float zComponent = approxCos(lookAngX) * (z);
-        float xComponent = 0;
-        if (approxSin(lookAngX) != 0)
+        void Entity::AddGhost(Entity *other)
         {
-            int angX = simplifyAngle(radiansToDegrees(lookAngX));
-            //Positive
-            if (angX > 0 && angX < 90)
-            { //First Quad
-                xComponent = x * approxSin(lookAngX);
-            }
-            else if (angX == 90 || angX == -90)
-            { //90 Degrees
-                xComponent = x * approxSin(lookAngX);
-            }
-            else if (angX > 90 && angX < 180)
-            { //Second Quad
-                xComponent = x * approxSin(lookAngX);
-            }
-            //Negative
-            else if (angX < 0 && angX > -90)
-            { //First Quad
-                xComponent = x * approxSin(lookAngX);
-            }
-            else if (angX < -90 && angX > -180)
-            { //Second Quad
-                zComponent = z * approxSin(lookAngX);
-                xComponent = x * approxCos(lookAngX);
-            }
+            ghosts_.insert(other);
+            other->AddDependent(this);
+            AddDependent(other);
         }
-        return round(zComponent + xComponent);
-    }
 
-    void Entity::doMove()
-    {
-        this->y += coordVector[1];
-        if (physics)
+        void Entity::RemoveGhost(Entity *other)
         {
-            this->x += xHelper(coordVector[0], coordVector[2]) * friction;
-            this->z += zHelper(coordVector[0], coordVector[2]) * friction;
-        }
-        else
-        {
-            this->x += xHelper(coordVector[0], coordVector[2]);
-            this->z += zHelper(coordVector[0], coordVector[2]);
-        }
-        this->updateChildren();
-    }
-
-    void Entity::doMove(int x, int y, int z)
-    {
-        std::tuple<int, int, int> oldVector = getCoordVector();
-        this->setMove(x, y, z);
-        this->doMove();
-        int oldX, oldY, oldZ;
-        std::tie(oldX, oldY, oldZ) = oldVector;
-        this->setMove(oldX, oldY, oldZ);
-    }
-
-    void Entity::doMoveAbsolute(int x, int y, int z)
-    {
-        this->x += x;
-        this->y += y;
-        this->z += z;
-        this->updateChildren();
-    }
-
-
-    void Entity::setLookVector(float x, float y)
-    {
-        this->lookVector[0] = x;
-        this->lookVector[1] = y;
-    }
-
-    void Entity::setLook(float x, float y)
-    {
-        this->lookAngX = x;
-        this->lookAngY = y;
-        this->updateChildren();
-    }
-
-    void Entity::doLook()
-    {
-        this->lookAngX += lookVector[0];
-        this->lookAngY += lookVector[1];
-        if (this->lookAngY > degreesToRadians(90))
-        {
-            this->lookAngY = degreesToRadians(90);
-        }
-        else if (this->lookAngY < degreesToRadians(-90))
-        {
-            this->lookAngY = degreesToRadians(-90);
-        }
-        this->updateChildren();
-    }
-
-    void Entity::doLook(float x, float y)
-    {
-        this->setLookVector(x, y);
-        doLook();
-    }
-
-
-    void Entity::setPos(int x, int y, int z)
-    {
-        this->x = x;
-        this->y = y;
-        this->z = z;
-        this->updateChildren();
-    }
-
-    void Entity::setPosRelativeTo(const Entity *other, int x, int y, int z)
-    {
-        this->x = x + other->getX();
-        this->y = y + other->getY();
-        this->z = z + other->getZ();
-        updateChildren();
-    }
-
-    void Entity::setOtherPosRelativeTo(Entity *other, int x, int y, int z)
-    {
-        other->setPosRelativeTo(this, xHelper(x, z), y, zHelper(x, z));
-    }
-
-
-    void Entity::doTick()
-    {
-        this->doLook();
-        this->doMove();
-    }
-
-
-    int Entity::distToOtherX(const Entity *other) const
-    {
-        if (getMaxX() >= other->getMinX() && getMinX() <= other->getMaxX())
-        { //They're colliding on X
-            return 0;
-        }
-        else if (getMaxX() < other->getMinX())
-        { //This entity is behind the other one on X
-            return other->getMinX() - getMaxX();
-        }
-        else
-        { //This entity is in front of the other one on X
-            return other->getMaxX() - getMinX();
-        }
-    }
-
-    int Entity::distToOtherY(const Entity *other) const
-    {
-        if (getMaxY() >= other->getMinY() && getMinY() <= other->getMaxY())
-        { //They're colliding on Y
-            return 0;
-        }
-        else if (getMaxY() < other->getMinY())
-        { //This entity is behind the other one on Y
-            return other->getMinY() - getMaxY();
-        }
-        else
-        { //This entity is in front of the other one on Y
-            return other->getMaxY() - getMinY();
-        }
-    }
-
-    int Entity::distToOtherZ(const Entity *other) const
-    {
-        if (getMaxZ() >= other->getMinZ() && getMinZ() <= other->getMaxZ())
-        { //They're colliding on Z
-            return 0;
-        }
-        else if (getMaxZ() < other->getMinZ())
-        { //This entity is behind the other one on Z
-            return other->getMinZ() - getMaxZ();
-        }
-        else
-        { //This entity is in front of the other one on Z
-            return other->getMaxZ() - getMinZ();
-        }
-    }
-
-    int Entity::euclideanDistToOther(const Entity *other) const
-    {
-        return round(sqrt(pow(distToOtherX(other), 2.0) + pow(distToOtherY(other), 2.0) + pow(distToOtherZ(other), 2.0)));
-    }
-
-
-    bool Entity::isColliding(const Entity *other)
-    {
-        if (this->solid && other->isSolid() && !this->inGhosts(other) && *this != *other)
-        {
-            //Assumes that x,y, and z are located at the center of the entity
-
-            //This line starts somewhere before the max of the other object and ends somewhere after the min of the other object
-            return (getMinX() <= other->getMaxX() && getMaxX() >= other->getMinX()) && //X axis
-                   (getMinY() <= other->getMaxY() && getMaxY() >= other->getMinY()) && //Y axis
-                   (getMinZ() <= other->getMaxZ() && getMaxZ() >= other->getMinZ());   //Z axis
-        }
-
-        //Would've already returned otherwise, must not be colliding
-        return false;
-    }
-
-    bool Entity::wouldCollide(const Entity *other, int x, int y, int z)
-    {
-        if (!this->inGhosts(other) && *this != *other)
-        {
-            Entity *created = new Entity(this->x, this->y, this->z, this->width, this->height, this->depth);
-            created->doLook(lookAngX, lookAngY);
-            created->doMove(x, y, z);
-            return created->isColliding(other);
-        }
-        //Can't collide
-        return false;
-    }
-
-    bool Entity::passesThrough(const Entity *other, int x, int y, int z)
-    {
-        //If it would collide (on either side of the entity) then it must not have passed through
-        if (!wouldCollide(other, x, y, z))
-        {
-            int rotX = xHelper(x, z);
-            int rotZ = zHelper(x, z);
-            //If it's moving enough to reach the entity and it doesn't collide, it must've passed through it
-            if ((distToOtherX(other) == 0 || distToOtherX(other) > 0 && distToOtherX(other) < rotX || distToOtherX(other) < 0 && distToOtherX(other) > rotX) && //X
-                (distToOtherY(other) == 0 || distToOtherY(other) > 0 && distToOtherY(other) < y || distToOtherY(other) < 0 && distToOtherY(other) > y) &&       //Y
-                (distToOtherZ(other) == 0 || distToOtherZ(other) > 0 && distToOtherZ(other) < rotZ || distToOtherZ(other) < 0 && distToOtherZ(other) > rotZ))
-            { //Z
-                return true;
-            }
-        }
-        //Hasn't returned yet, must not be passing through
-        return false;
-    }
-
-
-    void Entity::setSolid(const bool toSet)
-    {
-        this->solid = toSet;
-    }
-
-    void Entity::setHP(const int toSet)
-    {
-        if (toSet >= -1)
-        {
-            this->hp = toSet;
-        }
-    }
-
-    void Entity::setPhysics(const bool toSet)
-    {
-        this->physics = toSet;
-    }
-
-    void Entity::setGravity(const int toSet)
-    {
-        if (physics)
-        {
-            this->gravity = toSet;
-        }
-    }
-
-    void Entity::setFriction(const float toSet)
-    {
-        if (physics)
-        {
-            if (toSet <= 1.0)
+            if (InGhosts(other))
             {
-                if (toSet >= 0)
+                ghosts_.erase(other);
+            }
+            other->RemoveDependent(this);
+            RemoveDependent(other);
+        }
+
+        bool Entity::InGhosts(const Entity *other)
+        {
+                return ghosts_.find(other) != ghosts_.end();
+        }
+
+        void Entity::AddChild(Entity *other, int x_offset, int y_offset, int z_offset)
+        {
+            if (!InChildren(other) && !other->InChildren(this))
+            {
+                std::tuple<int, int, int> offsets = std::make_tuple(x_offset, y_offset, z_offset);
+                children_.insert(ChildPair(other, offsets));
+                other->AddDependent(this);
+                AddDependent(other);
+                UpdateChildren();
+            }
+        }
+
+        void Entity::RemoveChild(Entity *other)
+        {
+            if (InChildren(other))
+            {
+                children_.erase(other);
+            }
+            other->RemoveDependent(this);
+            RemoveDependent(other);
+        }
+
+        bool Entity::InChildren(Entity *other)
+        {
+            return children_.count(other) || InChildrenDeep(other);
+        }
+
+        bool Entity::InChildrenDeep(Entity *other)
+        {
+            for (ChildMap::iterator iter = children_.begin(); iter != children_.end(); iter++)
+            {
+                if (iter->first->InChildren(other))
                 {
-                    this->friction = toSet;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        void Entity::UpdateChildren()
+        {
+            for (ChildMap::iterator iter = children_.begin(); iter != children_.end(); iter++)
+            {
+                std::tuple<int, int, int> offset = iter->second;
+                Entity *child = iter->first;
+                int x_offset, y_offset, z_offset;
+                std::tie(x_offset, y_offset, z_offset) = offset;
+                set_other_pos_relative_to(child, x_offset, y_offset, z_offset);
+                child->set_look(horizontal_look_angle_, vertical_look_angle_);
+            }
+        }
+
+        void Entity::add_hp(const int to_add)
+        {
+            remove_hp(to_add * -1);
+        }
+
+        void Entity::remove_hp(const int to_remove)
+        {
+            // This entity doesn't have HP
+            if (hp_ != -1)
+            {
+                if (hp_ - to_remove > 0)
+                {
+                    hp_ -= to_remove;
                 }
                 else
                 {
-                    this->friction = 0.0;
+                    hp_ = 0;
                 }
+            }
+        }
+
+        void Entity::set_move(int x, int y, int z)
+        {
+            movement_vector_[0] = x;
+            movement_vector_[1] = y;
+            movement_vector_[2] = z;
+        }
+
+        int Entity::RotatedXMovementHelper(const int x, const int z) const
+        {
+            float x_float = static_cast<float>(x);
+            float z_float = static_cast<float> (z);
+            float x_component = approxcos(horizontal_look_angle_) * x_float;
+            float z_component = 0.0;
+            if (approxsin(horizontal_look_angle_) != 0.0)
+            {
+                int horizontal_angle = SimplifyAngle(RadiansToDegrees(horizontal_look_angle_));
+                // Positive
+                if (horizontal_angle > 0.0 && horizontal_angle < 90.0)
+                { // First Quad
+                    z_component = z_float * approxsin(horizontal_look_angle_ + DegreesToRadians(180));
+                }
+                else if (horizontal_angle == 90.0 || horizontal_angle == -90.0)
+                { // 90 Degrees
+                    z_component = -z_float * approxsin(horizontal_look_angle_);
+                }
+                else if (horizontal_angle > 90.0 && horizontal_angle < 180.0)
+                { // Second Quad
+                    z_component = -z_float * approxsin(horizontal_look_angle_);
+                }
+                // Negative
+                else if (horizontal_angle < 0.0 && horizontal_angle > -90.0)
+                { // First Quad
+                    z_component = -z_float * approxsin(horizontal_look_angle_);
+                }
+                else if (horizontal_angle < -90.0 && horizontal_angle > -180.0)
+                { // Second Quad
+                    x_component = x_float * approxsin(horizontal_look_angle_);
+                    z_component = z_float * approxsin(horizontal_look_angle_ - DegreesToRadians(90));
+                }
+            }
+            return static_cast<int>(round(x_component + z_component));
+        }
+
+        int Entity::RotatedZMovementHelper(const int x, const int z) const
+        {
+            float x_float = static_cast<float>(x);
+            float z_float = static_cast<float> (z);
+            float z_component = approxcos(horizontal_look_angle_) * z_float;
+            float x_component = 0.0;
+            if (approxsin(horizontal_look_angle_) != 0.0)
+            {
+                int horizontal_angle = SimplifyAngle(RadiansToDegrees(horizontal_look_angle_));
+                // Positive
+                if (horizontal_angle > 0.0 && horizontal_angle < 90.0)
+                { // First Quad
+                    x_component = x_float * approxsin(horizontal_look_angle_);
+                }
+                else if (horizontal_angle == 90.0 || horizontal_angle == -90.0)
+                { // 90 Degrees
+                    x_component = x_float * approxsin(horizontal_look_angle_);
+                }
+                else if (horizontal_angle > 90.0 && horizontal_angle < 180.0)
+                { // Second Quad
+                    x_component = x_float * approxsin(horizontal_look_angle_);
+                }
+                // Negative
+                else if (horizontal_angle < 0.0 && horizontal_angle > -90.0)
+                { // First Quad
+                    x_component = x_float * approxsin(horizontal_look_angle_);
+                }
+                else if (horizontal_angle < -90.0 && horizontal_angle > -180.0)
+                { // Second Quad
+                    z_component = z_float * approxsin(horizontal_look_angle_);
+                    x_component = x_float * approxcos(horizontal_look_angle_);
+                }
+            }
+            return static_cast<int>(round(z_component + x_component));
+        }
+
+        void Entity::DoMove()
+        {
+            y_pos_ += movement_vector_[1];
+            if (physics_)
+            {
+                x_pos_ += static_cast<int>(static_cast<float>(RotatedXMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_);
+                z_pos_ += static_cast<int>(static_cast<float>(RotatedZMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_);
             }
             else
             {
-                this->friction = 1.0;
+                x_pos_ += RotatedXMovementHelper(movement_vector_[0], movement_vector_[2]);
+                z_pos_ += RotatedZMovementHelper(movement_vector_[0], movement_vector_[2]);
+            }
+            UpdateChildren();
+        }
+
+        void Entity::DoMove(int x, int y, int z)
+        {
+            std::tuple<int, int, int> movement_vector_old = get_movement_vector();
+            set_move(x, y, z);
+            DoMove();
+            int x_pos_old, y_pos_old, z_pos_old;
+            std::tie(x_pos_old, y_pos_old, z_pos_old) = movement_vector_old;
+            set_move(x_pos_old, y_pos_old, z_pos_old);
+        }
+
+        void Entity::DoMoveAbsolute(int x, int y, int z)
+        {
+            x_pos_ += x;
+            y_pos_ += y;
+            z_pos_ += z;
+            UpdateChildren();
+        }
+
+        void Entity::set_look_change_vector(float x, float y)
+        {
+            look_change_vector_[0] = x;
+            look_change_vector_[1] = y;
+        }
+
+        void Entity::set_look(float x, float y)
+        {
+            horizontal_look_angle_ = x;
+            vertical_look_angle_ = y;
+            UpdateChildren();
+        }
+
+        void Entity::DoLook()
+        {
+            horizontal_look_angle_ += look_change_vector_[0];
+            vertical_look_angle_ += look_change_vector_[1];
+            if (vertical_look_angle_ > DegreesToRadians(90))
+            {
+                vertical_look_angle_ = DegreesToRadians(90);
+            }
+            else if (vertical_look_angle_ < DegreesToRadians(-90))
+            {
+                vertical_look_angle_ = DegreesToRadians(-90);
+            }
+            UpdateChildren();
+        }
+
+        void Entity::DoLook(float x, float y)
+        {
+            set_look_change_vector(x, y);
+            DoLook();
+        }
+
+        void Entity::set_pos(int x, int y, int z)
+        {
+            x_pos_ = x;
+            y_pos_ = y;
+            z_pos_ = z;
+            UpdateChildren();
+        }
+
+        void Entity::set_pos_relative_to(const Entity *other, int x, int y, int z)
+        {
+            x_pos_ = x + other->get_x_pos();
+            y_pos_ = y + other->get_y_pos();
+            z_pos_ = z + other->get_z_pos();
+            UpdateChildren();
+        }
+
+        void Entity::set_other_pos_relative_to(Entity *other, int x, int y, int z)
+        {
+            other->set_pos_relative_to(this, RotatedXMovementHelper(x, z), y, RotatedZMovementHelper(x, z));
+        }
+
+        void Entity::DoTick()
+        {
+            DoLook();
+            DoMove();
+        }
+
+        int Entity::XDistanceToOther(const Entity *other) const
+        {
+            if (get_max_x_pos() >= other->get_min_x_pos() && get_min_x_pos() <= other->get_max_x_pos())
+            { // They're colliding on X
+                return 0;
+            }
+            else if (get_max_x_pos() < other->get_min_x_pos())
+            { // This entity is behind the other one on X
+                return other->get_min_x_pos() - get_max_x_pos();
+            }
+            else
+            { // This entity is in front of the other one on X
+                return other->get_max_x_pos() - get_min_x_pos();
             }
         }
-    }
 
-} // namespace logic
+        int Entity::YDistanceToOther(const Entity *other) const
+        {
+            if (get_max_y_pos() >= other->get_min_y_pos() && get_min_y_pos() <= other->get_max_y_pos())
+            { // They're colliding on Y
+                return 0;
+            }
+            else if (get_max_y_pos() < other->get_min_y_pos())
+            { // This entity is behind the other one on Y
+                return other->get_min_y_pos() - get_max_y_pos();
+            }
+            else
+            { // This entity is in front of the other one on Y
+                return other->get_max_y_pos() - get_min_y_pos();
+            }
+        }
+
+        int Entity::ZDistanceToOther(const Entity *other) const
+        {
+            if (get_max_z_pos() >= other->get_min_z_pos() && get_min_z_pos() <= other->get_max_z_pos())
+            { // They're colliding on Z
+                return 0;
+            }
+            else if (get_max_z_pos() < other->get_min_z_pos())
+            { // This entity is behind the other one on Z
+                return other->get_min_z_pos() - get_max_z_pos();
+            }
+            else
+            { // This entity is in front of the other one on Z
+                return other->get_max_z_pos() - get_min_z_pos();
+            }
+        }
+
+        int Entity::EuclideanDistanceToOther(const Entity *other) const
+        {
+            return static_cast<int>(round(sqrt(pow(XDistanceToOther(other), 2.0) + pow(YDistanceToOther(other), 2.0) + pow(ZDistanceToOther(other), 2.0))));
+        }
+
+        bool Entity::IsColliding(const Entity *other)
+        {
+            if (solid_ && other->is_solid() && !InGhosts(other) && *this != *other)
+            {
+                // Assumes that x,y, and z are located at the center of the entity
+
+                // This line starts somewhere before the max of the other object and ends somewhere after the min of the other object
+                return (get_min_x_pos() <= other->get_max_x_pos() && get_max_x_pos() >= other->get_min_x_pos()) && // X axis
+                       (get_min_y_pos() <= other->get_max_y_pos() && get_max_y_pos() >= other->get_min_y_pos()) && // Y axis
+                       (get_min_z_pos() <= other->get_max_z_pos() && get_max_z_pos() >= other->get_min_z_pos());   // Z axis
+            }
+
+            // Would've already returned otherwise, must not be colliding
+            return false;
+        }
+
+        bool Entity::WouldCollide(const Entity *other, int x, int y, int z)
+        {
+            if (!InGhosts(other) && *this != *other)
+            {
+                Entity *created = new Entity(x_pos_, y_pos_, z_pos_, width_, height_, depth_);
+                created->DoLook(horizontal_look_angle_, vertical_look_angle_);
+                created->DoMove(x, y, z);
+                return created->IsColliding(other);
+            }
+            // Can't collide
+            return false;
+        }
+
+        bool Entity::PassesThrough(const Entity *other, int x, int y, int z)
+        {
+            // If it would collide (on either side of the entity) then it must not have passed through
+            if (!WouldCollide(other, x, y, z))
+            {
+                int rotated_x_movement = RotatedXMovementHelper(x, z);
+                int rotated_z_movement = RotatedZMovementHelper(x, z);
+                // If it's moving enough to reach the entity and it doesn't collide, it must've passed through it
+                if (((XDistanceToOther(other) == 0) || (XDistanceToOther(other) > 0 && XDistanceToOther(other) < rotated_x_movement) || (XDistanceToOther(other) < 0 && XDistanceToOther(other) > rotated_x_movement)) && // X
+                    ((YDistanceToOther(other) == 0) || (YDistanceToOther(other) > 0 && YDistanceToOther(other) < y) || (YDistanceToOther(other) < 0 && YDistanceToOther(other) > y)) &&                                   // Y
+                    ((ZDistanceToOther(other) == 0) || (ZDistanceToOther(other) > 0 && ZDistanceToOther(other) < rotated_z_movement) || (ZDistanceToOther(other) < 0 && ZDistanceToOther(other) > rotated_z_movement)))
+                { // Z
+                    return true;
+                }
+            }
+            // Hasn't returned yet, must not be passing through
+            return false;
+        }
+
+        void Entity::set_solid(const bool to_set)
+        {
+            solid_ = to_set;
+        }
+
+        void Entity::set_hp(const int to_set)
+        {
+            if (to_set >= -1)
+            {
+                hp_ = to_set;
+            }
+        }
+
+        void Entity::set_physics(const bool to_set)
+        {
+            physics_ = to_set;
+        }
+
+        void Entity::set_gravity(const int to_set)
+        {
+            if (physics_)
+            {
+                gravity_ = to_set;
+            }
+        }
+
+        void Entity::set_friction(const float to_set)
+        {
+            if (physics_)
+            {
+                if (to_set <= 1.0)
+                {
+                    if (to_set >= 0.0)
+                    {
+                        friction_ = to_set;
+                    }
+                    else
+                    {
+                        friction_ = 0.0;
+                    }
+                }
+                else
+                {
+                    friction_ = 1.0;
+                }
+            }
+        }
+
+    } // namespace logic
+} // namespace game_engine

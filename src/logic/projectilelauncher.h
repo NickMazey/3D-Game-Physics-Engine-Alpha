@@ -1,3 +1,4 @@
+// Copyright 2022 Nicholas Mazey. All rights reserved
 #include <set>
 #include <tuple>
 #include <vector>
@@ -8,139 +9,142 @@
 #ifndef GAME_ENGINE_LOGIC_PROJECTILELAUNCHER_H
 #define GAME_ENGINE_LOGIC_PROJECTILELAUNCHER_H
 
-namespace logic
+namespace game_engine
 {
-    class ProjectileLauncher : public Entity
+    namespace logic
     {
-    public:
-        //constructs a hitscan projectilelauncher
-        ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazineSize, int damage);
-
-        //constructs a non-hitscan projectilelauncher
-        ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazineSize, int damage, Entity projectile);
-
-        //Reloads the magazine of this projectile launcher
-        void reload();
-
-        //Fires the projectile or casts a ray, returns if it fired successfully
-        bool fire(std::set<Entity *> entities);
-
-        //Whether or not the last shot fired from this launcher has hit anything yet
-        bool hasHit();
-
-        //Performs a tick for a projectilelauncher
-        void doTick();
-
-        //Returns the first entity this projectilelauncher would collide with (hitscan only)
-        Entity *findFirstCollision(std::set<Entity *> entities);
-
-        //Returns a list of Entities the ray cast by this launcher would passthrough (hitscan only)
-        std::vector<Entity *> findCollisions(std::set<Entity *> entities);
-
-        int getAmmo() const
+        class ProjectileLauncher : public Entity
         {
-            return ammo;
-        }
+        public:
+            // constructs a hitscan projectilelauncher
+            ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazine_size, int damage);
 
-        int getMagazineSize() const
-        {
-            return magazineSize;
-        }
+            // constructs a non-hitscan projectilelauncher
+            ProjectileLauncher(int x, int y, int z, int width, int height, int depth, int ammo, int magazine_size, int damage, Entity projectile);
 
-        int getLoadedAmmo() const
-        {
-            return loadedAmmo;
-        }
+            // Reloads the magazine of this projectile launcher
+            void Reload();
 
-        int getDamage() const
-        {
-            return damage;
-        }
+            // Fires the projectile or casts a ray, returns if it fired successfully
+            bool Fire(std::set<Entity *> entities);
 
-        int getShootOffX() const
-        {
-            return shootOffX;
-        }
+            // Whether or not the last shot fired from this launcher has hit anything yet
+            bool has_hit();
 
-        int getShootOffY() const
-        {
-            return shootOffY;
-        }
+            // Performs a tick for a projectilelauncher
+            void DoTick();
 
-        int getShootOffZ() const
-        {
-            return shootOffZ;
-        }
+            // Returns the first entity this projectilelauncher would collide with (hitscan only)
+            Entity *FindFirstCollision(std::set<Entity *> entities);
 
-        bool isHitScan() const
-        {
-            return hitScan;
-        }
+            // Returns a list of Entities the ray cast by this launcher would passthrough (hitscan only)
+            std::vector<Entity *> FindCollisions(std::set<Entity *> entities);
 
-        std::tuple<int, int, int> getVelocity() const
-        {
-            return std::make_tuple(velocity[0], velocity[1], velocity[2]);
-        }
+            int get_ammo() const
+            {
+                return ammo_;
+            }
 
-        Entity getProjectile()
-        {
-            return projectile;
-        }
+            int get_magazine_size() const
+            {
+                return magazine_size_;
+            }
 
-        Entity *getLastHit()
-        {
-            return lastHit;
-        }
+            int get_loaded_ammo() const
+            {
+                return loaded_ammo_;
+            }
 
-        Entity *getActiveProjectile()
-        {
-            return activeProjectile;
-        }
+            int get_damage() const
+            {
+                return damage_;
+            }
 
-        void setAmmo(const int toSet);
+            int get_shoot_offset_x() const
+            {
+                return shoot_offset_x_;
+            }
 
-        void setMagazineSize(const int toSet);
+            int get_shoot_offset_y() const
+            {
+                return shoot_offset_y_;
+            }
 
-        void setDamage(const int toSet);
+            int get_shoot_offset_z() const
+            {
+                return shoot_offset_z_;
+            }
 
-        void setShootOffX(const int toSet);
+            bool is_hitscan() const
+            {
+                return hitscan_;
+            }
 
-        void setShootOffY(const int toSet);
+            std::tuple<int, int, int> get_projectile_starting_velocity() const
+            {
+                return std::make_tuple(projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]);
+            }
 
-        void setShootOffZ(const int toSet);
+            Entity get_projectile()
+            {
+                return projectile_;
+            }
 
-        void setHitscan(const bool toSet);
+            Entity *get_last_hit()
+            {
+                return last_hit_;
+            }
 
-        void setProjectile(Entity toSet);
+            Entity *get_active_projectile()
+            {
+                return active_projectile_;
+            }
 
-        void setLastHit(Entity *toSet);
+            void set_ammo(const int to_set);
 
-        void setActiveProjectile(Entity *toSet);
+            void set_magazine_size(const int to_set);
 
-    private:
-        int ammo;
-        int magazineSize;
-        int loadedAmmo;
+            void set_damage(const int to_set);
 
-        int velocity[3] = {0};
+            void set_shoot_offset_x(const int to_set);
 
-        int damage;
+            void set_shoot_offset_y(const int to_set);
 
-        int shootOffX;
-        int shootOffY;
-        int shootOffZ;
+            void set_shoot_off_z(const int to_set);
 
-        bool hitScan;
+            void set_hitscan(const bool to_set);
 
-        Entity projectile;
+            void set_projectile(Entity to_set);
 
-        //TODO: For testing without a world, should be replaced to point to a list of entities in the future
-        std::set<Entity *> entList;
+            void set_last_hit(Entity *to_set);
 
-        //TODO: Should be changed into a list in the future, will probably also need last hit to be a list that is removed from when used
-        Entity *activeProjectile;
-        
-        Entity *lastHit;
-    };
-} // namespace logic
-#endif //GAME_ENGINE_LOGIC_PROJECTILELAUNCHER_H
+            void set_active_projectile(Entity *to_set);
+
+        private:
+            int ammo_;
+            int magazine_size_;
+            int loaded_ammo_;
+
+            int projectile_starting_velocity_[3] = {0};
+
+            int damage_;
+
+            int shoot_offset_x_;
+            int shoot_offset_y_;
+            int shoot_offset_z_;
+
+            bool hitscan_;
+
+            Entity projectile_;
+
+            // TODO: For testing without a world, should be replaced to point to a list of entities in the future
+            std::set<Entity *> entity_list_;
+
+            // TODO: Should be changed into a list in the future, will probably also need last hit to be a list that is removed from when used
+            Entity *active_projectile_;
+
+            Entity *last_hit_;
+        };
+    } // namespace logic
+} // namespace game_engine
+#endif // GAME_ENGINE_LOGIC_PROJECTILELAUNCHER_H
