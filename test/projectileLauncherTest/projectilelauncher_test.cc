@@ -1,9 +1,13 @@
 //Copyright 2022 Nicholas Mazey. All rights reserved
-#include "gtest/gtest.h"
 #include "projectilelauncher.h"
-#include "logicutil.h"
+
 #include <set>
 #include <math.h>
+
+#include "gtest/gtest.h"
+
+#include "logicutil.h"
+
 
 //Initialisation Tests
 TEST(ProjectileLauncherTest, Init_Hitscan_Test_Entity_Values)

@@ -1,9 +1,13 @@
 //Copyright 2022 Nicholas Mazey. All rights reserved
-#include "gtest/gtest.h"
-#include "math.h"
 #include "entity.h"
-#include "logicutil.h"
 
+#include <map>
+#include <set>
+#include <tuple>
+
+#include "gtest/gtest.h"
+
+#include "logicutil.h"
 
 std::string printInfo(const game_engine::logic::Entity toPrint){
     std::string toReturn = "ID: ";

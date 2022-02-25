@@ -1,6 +1,8 @@
 //Copyright 2022 Nicholas Mazey. All rights reserved
-#include "gtest/gtest.h"
 #include "mockcontroller.h"
+
+#include "gtest/gtest.h"
+
 #include "controller.h"
 
 //Initialisation Tests

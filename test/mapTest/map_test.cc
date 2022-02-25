@@ -1,11 +1,15 @@
 //Copyright 2022 Nicholas Mazey. All rights reserved
 
-#include "gtest/gtest.h"
-#include "entity.h"
-#include "projectilelauncher.h"
 #include "map.h"
+
 #include <string>
 #include <vector>
+
+#include "gtest/gtest.h"
+
+#include "entity.h"
+#include "projectilelauncher.h"
+
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"

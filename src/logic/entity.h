@@ -1,6 +1,4 @@
 // Copyright 2022 Nicholas Mazey. All rights reserved
-#include <math.h>
-
 #include <map>
 #include <set>
 #include <tuple>
