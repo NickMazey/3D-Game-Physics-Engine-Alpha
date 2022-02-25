@@ -198,58 +198,60 @@ namespace game_engine
                 }
                 else if (horizontal_angle == 90.0 || horizontal_angle == -90.0)
                 { // 90 Degrees
-                    z_component = -z * approxsin(horizontal_look_angle_);
+                    z_component = -z_float * approxsin(horizontal_look_angle_);
                 }
-                else if (horizontal_angle > 90 && horizontal_angle < 180)
+                else if (horizontal_angle > 90.0 && horizontal_angle < 180.0)
                 { // Second Quad
-                    z_component = -z * approxsin(horizontal_look_angle_);
+                    z_component = -z_float * approxsin(horizontal_look_angle_);
                 }
                 // Negative
-                else if (horizontal_angle < 0 && horizontal_angle > -90)
+                else if (horizontal_angle < 0.0 && horizontal_angle > -90.0)
                 { // First Quad
-                    z_component = -z * approxsin(horizontal_look_angle_);
+                    z_component = -z_float * approxsin(horizontal_look_angle_);
                 }
-                else if (horizontal_angle < -90 && horizontal_angle > -180)
+                else if (horizontal_angle < -90.0 && horizontal_angle > -180.0)
                 { // Second Quad
-                    x_component = x * approxsin(horizontal_look_angle_);
-                    z_component = z * approxsin(horizontal_look_angle_ - DegreesToRadians(90));
+                    x_component = x_float * approxsin(horizontal_look_angle_);
+                    z_component = z_float * approxsin(horizontal_look_angle_ - DegreesToRadians(90));
                 }
             }
-            return round(x_component + z_component);
+            return static_cast<int>(round(x_component + z_component));
         }
 
         int Entity::RotatedZMovementHelper(const int x, const int z) const
         {
-            float z_component = approxcos(horizontal_look_angle_) * (z);
-            float x_component = 0;
-            if (approxsin(horizontal_look_angle_) != 0)
+            float x_float = static_cast<float>(x);
+            float z_float = static_cast<float> (z);
+            float z_component = approxcos(horizontal_look_angle_) * z_float;
+            float x_component = 0.0;
+            if (approxsin(horizontal_look_angle_) != 0.0)
             {
                 int horizontal_angle = SimplifyAngle(RadiansToDegrees(horizontal_look_angle_));
                 // Positive
-                if (horizontal_angle > 0 && horizontal_angle < 90)
+                if (horizontal_angle > 0.0 && horizontal_angle < 90.0)
                 { // First Quad
-                    x_component = x * approxsin(horizontal_look_angle_);
+                    x_component = x_float * approxsin(horizontal_look_angle_);
                 }
-                else if (horizontal_angle == 90 || horizontal_angle == -90)
+                else if (horizontal_angle == 90.0 || horizontal_angle == -90.0)
                 { // 90 Degrees
-                    x_component = x * approxsin(horizontal_look_angle_);
+                    x_component = x_float * approxsin(horizontal_look_angle_);
                 }
-                else if (horizontal_angle > 90 && horizontal_angle < 180)
+                else if (horizontal_angle > 90.0 && horizontal_angle < 180.0)
                 { // Second Quad
-                    x_component = x * approxsin(horizontal_look_angle_);
+                    x_component = x_float * approxsin(horizontal_look_angle_);
                 }
                 // Negative
-                else if (horizontal_angle < 0 && horizontal_angle > -90)
+                else if (horizontal_angle < 0.0 && horizontal_angle > -90.0)
                 { // First Quad
-                    x_component = x * approxsin(horizontal_look_angle_);
+                    x_component = x_float * approxsin(horizontal_look_angle_);
                 }
-                else if (horizontal_angle < -90 && horizontal_angle > -180)
+                else if (horizontal_angle < -90.0 && horizontal_angle > -180.0)
                 { // Second Quad
-                    z_component = z * approxsin(horizontal_look_angle_);
-                    x_component = x * approxcos(horizontal_look_angle_);
+                    z_component = z_float * approxsin(horizontal_look_angle_);
+                    x_component = x_float * approxcos(horizontal_look_angle_);
                 }
             }
-            return round(z_component + x_component);
+            return static_cast<int>(round(z_component + x_component));
         }
 
         void Entity::DoMove()
@@ -257,8 +259,8 @@ namespace game_engine
             y_pos_ += movement_vector_[1];
             if (physics_)
             {
-                x_pos_ += RotatedXMovementHelper(movement_vector_[0], movement_vector_[2]) * friction_;
-                z_pos_ += RotatedZMovementHelper(movement_vector_[0], movement_vector_[2]) * friction_;
+                x_pos_ += static_cast<int>(static_cast<float>(RotatedXMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_);
+                z_pos_ += static_cast<int>(static_cast<float>(RotatedZMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_);
             }
             else
             {
@@ -397,7 +399,7 @@ namespace game_engine
 
         int Entity::EuclideanDistanceToOther(const Entity *other) const
         {
-            return round(sqrt(pow(XDistanceToOther(other), 2.0) + pow(YDistanceToOther(other), 2.0) + pow(ZDistanceToOther(other), 2.0)));
+            return static_cast<int>(round(sqrt(pow(XDistanceToOther(other), 2.0) + pow(YDistanceToOther(other), 2.0) + pow(ZDistanceToOther(other), 2.0))));
         }
 
         bool Entity::IsColliding(const Entity *other)
@@ -480,7 +482,7 @@ namespace game_engine
             {
                 if (to_set <= 1.0)
                 {
-                    if (to_set >= 0)
+                    if (to_set >= 0.0)
                     {
                         friction_ = to_set;
                     }

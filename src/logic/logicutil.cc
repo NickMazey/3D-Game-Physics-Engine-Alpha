@@ -14,7 +14,7 @@ namespace game_engine
         }
         int RadiansToDegrees(const float radians)
         {
-            return (180.0f * radians) / kPITenDP;
+            return static_cast<int>((180.0f * radians) / kPITenDP);
         }
 
         const int SimplifyAngle(const int degrees)
