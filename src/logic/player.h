@@ -14,7 +14,17 @@ namespace logic
 {
 struct Player
 {
+    //The projectile launcher the player has equipped
+    ProjectileLauncher* active_projectile_launcher = nullptr;
 
+    //The controller to be used with this player
+    Controller* controller = nullptr;
+
+    //The entity that represents this player in the world
+    Entity* entity = nullptr;
+
+    //The player's inventory of projectile launchers
+    std::vector<ProjectileLauncher*> inventory; 
 };
 } // namespace logic
 } // namespace game_engine
