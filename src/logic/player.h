@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+#include "controller.h"
 #include "entity.h"
 #include "projectilelauncher.h"
 
@@ -9,12 +10,12 @@
 #define GAME_ENGINE_LOGIC_PLAYER_H
 namespace game_engine
 {
-    namespace logic
-    {
-        struct Player
-        {
-         
-        };
-    } // namespace logic
+namespace logic
+{
+struct Player
+{
+
+};
+} // namespace logic
 } // namespace game_engine
 #endif // GAME_ENGINE_LOGIC_PLAYER_H

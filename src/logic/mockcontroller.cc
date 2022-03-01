@@ -3,11 +3,11 @@
 
 namespace game_engine
 {
-    namespace logic
-    {
-        void MockController::Update()
-        {
-            return;
-        }
-    } // namespace logic
+namespace logic
+{
+void MockController::Update()
+{
+    return;
+}
+} // namespace logic
 } // namespace game_engine

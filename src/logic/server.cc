@@ -3,8 +3,8 @@
 #include "world.h"
 namespace game_engine
 {
-    namespace logic
-    {
+namespace logic
+{
 
-    } // namespace logic
+} // namespace logic
 } // namespace game_engine
