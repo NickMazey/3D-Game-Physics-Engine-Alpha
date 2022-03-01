@@ -67,6 +67,25 @@ target_include_directories(mockcontroller_test PUBLIC "${LIB}")
 
 gtest_discover_tests(mockcontroller_test)
 
+#Player Test
+add_executable(
+  player_test
+  player_test.cc
+)
+
+target_link_libraries(
+    player_test
+    PUBLIC
+    projectilelauncher
+    entity
+    logicutil
+    gtest_main
+)
+
+target_include_directories(player_test PUBLIC "${LIB}")
+
+gtest_discover_tests(player_test)
+
 #Projectile Launcher Test
 add_executable(
   projectilelauncher_test

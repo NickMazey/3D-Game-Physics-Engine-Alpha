@@ -5,13 +5,13 @@
 #define GAME_ENGINE_LOGIC_MOCKCONTROLLER_H
 namespace game_engine
 {
-    namespace logic
-    {
-        class MockController : public Controller
-        {
-        public:
-            void Update();
-        };
-    } // namespace logic
+namespace logic
+{
+class MockController : public Controller
+{
+public:
+    void Update();
+};
+} // namespace logic
 } // namespace game_engine
 #endif // GAME_ENGINE_LOGIC_MOCKCONTROLLER_H

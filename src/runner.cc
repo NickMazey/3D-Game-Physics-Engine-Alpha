@@ -3,8 +3,8 @@
 #include "server.h"
 namespace game_engine
 {
-    int main()
-    {
-        return 0;
-    }
+int main()
+{
+    return 0;
+}
 } // namespace game_engine
