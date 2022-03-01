@@ -15,6 +15,7 @@
 
 TEST(PlayerTest, Has_Fields){
         struct game_engine::logic::Player player;
+        int active_index = player.active_index;
         game_engine::logic::Controller* controller = player.controller;
         game_engine::logic::Entity* entity = player.entity;
         std::vector<game_engine::logic::ProjectileLauncher> inventory = player.inventory;
