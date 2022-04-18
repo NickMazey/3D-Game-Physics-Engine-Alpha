@@ -39,6 +39,10 @@ public:
     // Removes the passed value from this team's score
     void remove_score(int to_remove);
 
+    int get_max_team_size() const{
+        return max_team_size_;
+    }
+
 private:
     int max_team_size_;
     int score_;
