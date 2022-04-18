@@ -119,6 +119,7 @@ target_link_libraries(
     team
     projectilelauncher
     entity
+    logicutil
     gtest_main
 )
 
