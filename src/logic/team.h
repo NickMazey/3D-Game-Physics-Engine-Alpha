@@ -23,7 +23,13 @@ public:
     // Adds a player to this team
     void add_player(Player* to_add);
 
+    // Removes a player from this team
     void remove_player(Player* to_remove);
+
+    // Returns if this team contains a player
+    bool has_player(Player* to_check) const{
+        return players_.find(to_check) != players_.end();
+    }
 
     // Returns the score of this team
     int get_score() const{
