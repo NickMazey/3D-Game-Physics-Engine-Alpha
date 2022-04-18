@@ -45,30 +45,26 @@ TEST(TeamTest,Cannot_Be_Re_Added){
 
 TEST(TeamTest,Adding_Players_Adds_To_Ghosts){
     // Making one large entity
-    game_engine::logic::Entity* parent_entity_one = new game_engine::logic::Entity(0,0,0,0,0,0);
-    game_engine::logic::Entity* child_entity_one = new game_engine::logic::Entity(0,0,0,0,0,0);
+    game_engine::logic::Entity* entity_one = new game_engine::logic::Entity(0,0,0,0,0,0);
     game_engine::logic::ProjectileLauncher* launcher_one = new game_engine::logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0);
     game_engine::logic::ProjectileLauncher* launcher_two = new game_engine::logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0);
     std::vector<game_engine::logic::ProjectileLauncher*> inventory_one{launcher_one,launcher_two};
-    parent_entity_one->AddChild(child_entity_one,0,0,0);
     game_engine::logic::Player* player_one = new game_engine::logic::Player();
-    player_one->entity = parent_entity_one;
+    player_one->entity = entity_one;
     player_one->inventory = inventory_one;
 
     // Making another large entity
-    game_engine::logic::Entity* parent_entity_two = new game_engine::logic::Entity(0,0,0,0,0,0);
-    game_engine::logic::Entity* child_entity_two = new game_engine::logic::Entity(0,0,0,0,0,0);
+    game_engine::logic::Entity* entity_two = new game_engine::logic::Entity(0,0,0,0,0,0);
     game_engine::logic::ProjectileLauncher* launcher_three = new game_engine::logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0);
     game_engine::logic::ProjectileLauncher* launcher_four = new game_engine::logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0);
     std::vector<game_engine::logic::ProjectileLauncher*> inventory_two{launcher_three,launcher_four};
-    parent_entity_two->AddChild(child_entity_two,0,0,0);
     game_engine::logic::Player* player_two = new game_engine::logic::Player();
-    player_two->entity = parent_entity_two;
+    player_two->entity = entity_two;
     player_two->inventory = inventory_two;
 
     // Condensing all entities into two lists
-    std::vector<game_engine::logic::Entity*> player_one_entities{parent_entity_one,child_entity_one,launcher_one,launcher_two};
-    std::vector<game_engine::logic::Entity*> player_two_entities{parent_entity_two,child_entity_two,launcher_three,launcher_four};
+    std::vector<game_engine::logic::Entity*> player_one_entities{entity_one,launcher_one,launcher_two};
+    std::vector<game_engine::logic::Entity*> player_two_entities{entity_two,launcher_three,launcher_four};
 
     // Making the team
     game_engine::logic::Team* team = new game_engine::logic::Team(2);
@@ -86,10 +82,8 @@ TEST(TeamTest,Adding_Players_Adds_To_Ghosts){
     delete launcher_two;
     delete launcher_three;
     delete launcher_four;
-    delete child_entity_one;
-    delete child_entity_two;
-    delete parent_entity_one;
-    delete parent_entity_two;
+    delete entity_one;
+    delete entity_two;
     delete player_one;
     delete player_two;
     delete team;
@@ -126,31 +120,27 @@ TEST(TeamTest,Removing_Unknown_Player_Does_Not_Crash){
 }
 
 TEST(TeamTest,Removing_Removes_From_Ghosts){
-        // Making one large entity
-    game_engine::logic::Entity* parent_entity_one = new game_engine::logic::Entity(0,0,0,0,0,0);
-    game_engine::logic::Entity* child_entity_one = new game_engine::logic::Entity(0,0,0,0,0,0);
+    // Making one large entity
+    game_engine::logic::Entity* entity_one = new game_engine::logic::Entity(0,0,0,0,0,0);
     game_engine::logic::ProjectileLauncher* launcher_one = new game_engine::logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0);
     game_engine::logic::ProjectileLauncher* launcher_two = new game_engine::logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0);
     std::vector<game_engine::logic::ProjectileLauncher*> inventory_one{launcher_one,launcher_two};
-    parent_entity_one->AddChild(child_entity_one,0,0,0);
     game_engine::logic::Player* player_one = new game_engine::logic::Player();
-    player_one->entity = parent_entity_one;
+    player_one->entity = entity_one;
     player_one->inventory = inventory_one;
 
     // Making another large entity
-    game_engine::logic::Entity* parent_entity_two = new game_engine::logic::Entity(0,0,0,0,0,0);
-    game_engine::logic::Entity* child_entity_two = new game_engine::logic::Entity(0,0,0,0,0,0);
+    game_engine::logic::Entity* entity_two = new game_engine::logic::Entity(0,0,0,0,0,0);
     game_engine::logic::ProjectileLauncher* launcher_three = new game_engine::logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0);
     game_engine::logic::ProjectileLauncher* launcher_four = new game_engine::logic::ProjectileLauncher(0,0,0,0,0,0,0,0,0);
     std::vector<game_engine::logic::ProjectileLauncher*> inventory_two{launcher_three,launcher_four};
-    parent_entity_two->AddChild(child_entity_two,0,0,0);
     game_engine::logic::Player* player_two = new game_engine::logic::Player();
-    player_two->entity = parent_entity_two;
+    player_two->entity = entity_two;
     player_two->inventory = inventory_two;
 
     // Condensing all entities into two lists
-    std::vector<game_engine::logic::Entity*> player_one_entities{parent_entity_one,child_entity_one,launcher_one,launcher_two};
-    std::vector<game_engine::logic::Entity*> player_two_entities{parent_entity_two,child_entity_two,launcher_three,launcher_four};
+    std::vector<game_engine::logic::Entity*> player_one_entities{entity_one,launcher_one,launcher_two};
+    std::vector<game_engine::logic::Entity*> player_two_entities{entity_two,launcher_three,launcher_four};
 
     // Making the team
     game_engine::logic::Team* team = new game_engine::logic::Team(2);
@@ -169,10 +159,8 @@ TEST(TeamTest,Removing_Removes_From_Ghosts){
     delete launcher_two;
     delete launcher_three;
     delete launcher_four;
-    delete child_entity_one;
-    delete child_entity_two;
-    delete parent_entity_one;
-    delete parent_entity_two;
+    delete entity_one;
+    delete entity_two;
     delete player_one;
     delete player_two;
     delete team;
