@@ -105,3 +105,23 @@ target_link_libraries(
 target_include_directories(projectilelauncher_test PUBLIC "${LIB}")
 
 gtest_discover_tests(projectilelauncher_test)
+
+#Team Test
+add_executable(
+  team_test
+  team_test.cc
+  ${PROJECT_SOURCE_DIR}/src/logic/team.cc
+)
+
+target_link_libraries(
+    team_test
+    PUBLIC
+    team
+    projectilelauncher
+    entity
+    gtest_main
+)
+
+target_include_directories(team_test PUBLIC "${LIB}")
+
+gtest_discover_tests(team_test)
