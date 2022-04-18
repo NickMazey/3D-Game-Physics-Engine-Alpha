@@ -4,6 +4,7 @@ add_library(projectilelauncher projectilelauncher.cc)
 add_library(server server.cc)
 add_library(logicutil logicutil.cc)
 add_library(world world.cc)
+add_library(team team.cc)
 
 list(APPEND LOGIC_LIBRARIES [
     entity
@@ -12,4 +13,5 @@ list(APPEND LOGIC_LIBRARIES [
     server
     logicutil
     world
+    team
 ])
