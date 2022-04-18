@@ -13,7 +13,7 @@ class Team{
 public:
 
     // Creates a team with a maximum size specified by max_size
-    Team(int max_team_size);
+    Team(const int max_team_size);
 
     // Returns the list of players in this team
     std::set<Player*> get_players() const{
@@ -37,13 +37,13 @@ public:
     }
 
     // Sets this team's score
-    void set_score(int to_set);
+    void set_score(const int to_set);
 
     // Adds the passed value to this team's score
-    void add_score(int to_add);
+    void add_score(const int to_add);
 
     // Removes the passed value from this team's score
-    void remove_score(int to_remove);
+    void remove_score(const int to_remove);
 
     int get_max_team_size() const{
         return max_team_size_;
@@ -53,6 +53,9 @@ private:
     int max_team_size_;
     int score_;
     std::set<Player*> players_;
+
+    // Creates a set of all entities owned by a player
+    std::set<Entity*> get_entities(Player* player);
 };
 } // namespace logic
 } // namespace game_engine
