@@ -36,11 +36,6 @@ public:
 
     //Returns the list of objects in the game world
     const std::set<const Entity*> get_objects();
-
-private:
-    std::set<Entity*> entities_;
-    std::set<Controller*> controllers_;
-    int gravity_;
 };
 } // namespace logic
 } // namespace game_engine
