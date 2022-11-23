@@ -19,10 +19,15 @@ namespace maps{
         int half_player_width = player_width/2;
         int player_depth = 28;
         int half_player_depth = player_depth/2;
+        int player_hp = 100;
+        
 
         int laser_width = 4;
         int laser_height = 14;
         int laser_depth = 18;
+        int laser_ammo = 100;
+        int laser_magazine_size = 10;
+        int laser_damage = 20;
         
         //Level
         const logic::Entity floor = logic::Entity(0,-half_thickness,0,floor_size,thickness,floor_size);
@@ -33,15 +38,19 @@ namespace maps{
 
         //Players
         int player_z = half_floor_size-half_thickness-1;
-        const logic::Entity player_north = logic::Entity(0,half_player_height + 1,player_z,player_width,player_height,player_depth);
-        const logic::Entity player_south = logic::Entity(0,half_player_height + 1,-player_z,player_width,player_height,player_depth);
+        logic::Entity player_north = logic::Entity(0,half_player_height + 1,player_z,player_width,player_height,player_depth);
+        player_north.set_hp(player_hp);
+        const logic::Entity player_north_const = std::as_const(player_north);
+        logic::Entity player_south = logic::Entity(0,half_player_height + 1,-player_z,player_width,player_height,player_depth);
+        player_south.set_hp(player_hp);
+        const logic::Entity player_south_const = std::as_const(player_south);
 
         //Launcher
-        const logic::ProjectileLauncher laser = logic::ProjectileLauncher(0,0,0,laser_width,laser_height,laser_depth,100,10,20);
+        const logic::ProjectileLauncher laser = logic::ProjectileLauncher(0,0,0,laser_width,laser_height,laser_depth,laser_ammo,laser_magazine_size,laser_damage);
         
         //Vectors
         std::vector<logic::Entity> level = {floor,northWall,southWall,westWall,eastWall};
-        std::vector<logic::Entity> players = {player_north,player_south};
+        std::vector<logic::Entity> players = {player_north_const,player_south_const};
         std::vector<logic::ProjectileLauncher> available_weapons = {laser};
         std::vector<std::vector<int>> loadouts = {{0},{0}};
 
