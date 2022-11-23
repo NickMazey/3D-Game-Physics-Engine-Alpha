@@ -3,6 +3,8 @@
 #include "team.h"
 #include "world.h"
 
+#include <chrono>
+
 #ifndef GAME_ENGINE_LOGIC_SHOOTERWORLD_H
 #define GAME_ENGINE_LOGIC_SHOOTERWORLD_H
 namespace game_engine
@@ -42,8 +44,28 @@ public:
     }
 
     //Gets this ShooterWorld's gravity
-    int get_gravity(){
+    int get_gravity() const{
         return gravity_;
+    }
+
+    void set_score_limit(int limit){
+        score_limit_ = limit;
+    }
+
+    int get_score_limit() const{
+        return score_limit_;
+    }
+
+    uint64_t get_round_time() const{
+        return round_time_;
+    }
+
+    uint64_t get_round_time_limit() const{
+        return round_time_limit_;
+    }
+
+    uint64_t get_last_tick_() const{
+        return last_tick_;
     }
 
 
@@ -51,10 +73,10 @@ public:
 
 private:
     std::set<Team*> teams_;
-    int score_limit;
-    int round_time_limit;
-    int round_time_;
-    time_t last_tick_;
+    int score_limit_;
+    uint64_t round_time_limit_;
+    uint64_t round_time_;
+    uint64_t last_tick_;
     int player_hp_;
     Map map_;
     std::set<Entity*> level_;
