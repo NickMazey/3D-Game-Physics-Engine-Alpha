@@ -28,12 +28,6 @@ public:
     //Removes an entity from the list of objects
     void remove_object(Entity* object);
 
-    //Adds a controller to the list of controllers
-    void add_controller(Controller* controller);
-
-    //Removes a controller from the list of controllers
-    void remove_controller(Controller* controller);
-
     //Returns the list of objects in the game world
     const std::set<Entity*> get_objects();
 };

@@ -136,7 +136,6 @@ private:
     Map map_;
     std::set<Entity*> level_;
     std::set<Entity*> objects_;
-    std::set<Controller*> controllers_;
     int gravity_;
     int move_speed_;
     int jump_speed_;
