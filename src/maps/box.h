@@ -55,11 +55,12 @@ logic::Map box(){
     laser.set_shoot_offset_x(-half_player_width - laser_width/2);
     laser.set_shoot_offset_y(round(half_player_height * 0.6f));
     laser.set_shoot_offset_z(laser_depth/2);
+    logic::ProjectileLauncher laser_const = std::as_const(laser);
     
     //Vectors
     std::vector<logic::Entity> level = {floor,northWall,southWall,westWall,eastWall};
     std::vector<logic::Entity> players = {player_north_const,player_south_const};
-    std::vector<logic::ProjectileLauncher> available_weapons = {laser};
+    std::vector<logic::ProjectileLauncher> available_weapons = {laser_const};
     std::vector<std::vector<int>> loadouts = {{0},{0}};
 
     //Map
