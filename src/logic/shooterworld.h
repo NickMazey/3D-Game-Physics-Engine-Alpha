@@ -38,8 +38,23 @@ public:
     //Sub-tick method for players
     void tick_players();
 
+    //Adds a team to teams
+    void add_team(Team* team){
+        teams_.insert(team);
+    }
+
+    //Removes team from teams
+    void remove_team(Team* team){
+        teams_.erase(team);
+    }
+
+    //Getter for teams
+    std::set<Team*> get_teams() const{ 
+        return teams_;
+    }
+
     //Sets the gravity of this ShooterWorld
-    void set_gravity(int gravity){
+    void set_gravity(const int gravity){
         gravity_ = gravity;
     }
 
@@ -48,22 +63,32 @@ public:
         return gravity_;
     }
 
-    void set_score_limit(int limit){
+    //Sets this ShooterWorld's score limit
+    void set_score_limit(const int limit){
         score_limit_ = limit;
     }
 
+    //Gets this ShooterWorld's score limit
     int get_score_limit() const{
         return score_limit_;
     }
 
+    //Gets this ShooterWorld's round time
     uint64_t get_round_time() const{
         return round_time_;
     }
 
+    //Gets this ShooterWorld's round time limit
     uint64_t get_round_time_limit() const{
         return round_time_limit_;
     }
 
+    //Sets this ShooterWorld's round time limit
+    void set_round_time_limit(const uint64_t limit){
+        round_time_limit_ = limit;
+    }
+
+    //Gets when this ShooterWorld's last tick occurred
     uint64_t get_last_tick_() const{
         return last_tick_;
     }
