@@ -22,7 +22,7 @@ ProjectileLauncher::ProjectileLauncher(int x, int y, int z, int width, int heigh
     loaded_ammo_ = 0;
     set_shoot_offset_x(0);
     set_shoot_offset_y(0);
-    set_shoot_off_z(0);
+    set_shoot_offset_z(0);
     set_projectile(*this);
     set_active_projectile(this);
     set_last_hit(this);
@@ -156,8 +156,8 @@ Entity* ProjectileLauncher::FindFirstCollision(std::set<Entity*> entities)
             int z_movement = static_cast<int>(distance * z_coefficient) / 1000;
 
             //Adding rotation to shoot offsets
-            int shoot_offset_x = RotatedXMovementHelper(shoot_offset_x_,shoot_offset_z_);
-            int shoot_offset_z = RotatedZMovementHelper(shoot_offset_x_,shoot_offset_z_);
+            int shoot_offset_x = get_effective_shoot_offset_x();
+            int shoot_offset_z = get_effective_shoot_offset_z();
 
             // Creating a point to check if this line passes through the other entity
             Entity* test_point = new Entity(get_x_pos() + shoot_offset_x, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_offset_z, 0, 0, 0);
@@ -269,9 +269,17 @@ void ProjectileLauncher::set_shoot_offset_y(const int to_set)
     shoot_offset_y_ = to_set;
 }
 
-void ProjectileLauncher::set_shoot_off_z(const int to_set)
+void ProjectileLauncher::set_shoot_offset_z(const int to_set)
 {
     shoot_offset_z_ = to_set;
+}
+
+int ProjectileLauncher::get_effective_shoot_offset_x() const{
+    return RotatedXMovementHelper(shoot_offset_x_,shoot_offset_z_);
+}
+
+int ProjectileLauncher::get_effective_shoot_offset_z() const{
+    return RotatedZMovementHelper(shoot_offset_x_,shoot_offset_z_);
 }
 
 void ProjectileLauncher::set_hitscan(const bool to_set)

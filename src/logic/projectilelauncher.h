@@ -75,6 +75,10 @@ public:
         return shoot_offset_z_;
     }
 
+    int get_effective_shoot_offset_x() const;
+
+    int get_effective_shoot_offset_z() const;
+
     bool is_hitscan() const
     {
         return hitscan_;
@@ -110,7 +114,7 @@ public:
 
     void set_shoot_offset_y(const int to_set);
 
-    void set_shoot_off_z(const int to_set);
+    void set_shoot_offset_z(const int to_set);
 
     void set_hitscan(const bool to_set);
 
