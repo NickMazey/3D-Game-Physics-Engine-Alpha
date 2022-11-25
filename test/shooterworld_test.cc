@@ -1,10 +1,64 @@
 //Copyright 2022 Nicholas Mazey. All rights reserved
 #include "shooterworld.h"
-#include "box.h"
 
 #include "gtest/gtest.h"
 
 uint64_t zero = (uint64_t)0;
+
+//Saved version of box map for testing
+game_engine::logic::Map test_box(){
+    int floor_size = 2000;
+    int half_floor_size = floor_size/2;
+    int thickness = 10;
+    int half_thickness = thickness/2;
+    int wall_height = 1000;
+    int half_wall_height = wall_height/2;
+
+    int player_height = 184;
+    int half_player_height = player_height/2;
+    int player_width = 44;
+    int half_player_width = player_width/2;
+    int player_depth = 28;
+    int half_player_depth = player_depth/2;
+    int player_hp = 100;
+    
+
+    int laser_width = 4;
+    int laser_height = 14;
+    int laser_depth = 18;
+    int laser_ammo = 100;
+    int laser_magazine_size = 10;
+    int laser_damage = 20;
+    
+    //Level
+    const game_engine::logic::Entity floor = game_engine::logic::Entity(0,-half_thickness,0,floor_size,thickness,floor_size);
+    const game_engine::logic::Entity roof = game_engine::logic::Entity(0,wall_height+half_thickness,0,floor_size,thickness,floor_size);
+    const game_engine::logic::Entity northWall = game_engine::logic::Entity(0,half_wall_height,half_floor_size-half_thickness,floor_size,wall_height,thickness);
+    const game_engine::logic::Entity southWall = game_engine::logic::Entity(0,half_wall_height,-(half_floor_size-half_thickness),floor_size,wall_height,thickness);
+    const game_engine::logic::Entity westWall = game_engine::logic::Entity(-(half_floor_size-half_thickness),half_wall_height,0,thickness,wall_height,floor_size);
+    const game_engine::logic::Entity eastWall = game_engine::logic::Entity(half_floor_size-half_thickness,half_wall_height,0,thickness,wall_height,floor_size);
+
+    //Players
+    int player_z = half_floor_size-half_thickness-half_player_width-1 ;
+    game_engine::logic::Entity player_north = game_engine::logic::Entity(0,half_player_height + 1,player_z,player_width,player_height,player_depth);
+    player_north.set_hp(player_hp);
+    const game_engine::logic::Entity player_north_const = std::as_const(player_north);
+    game_engine::logic::Entity player_south = game_engine::logic::Entity(0,half_player_height + 1,-player_z,player_width,player_height,player_depth);
+    player_south.set_hp(player_hp);
+    const game_engine::logic::Entity player_south_const = std::as_const(player_south);
+
+    //Launcher
+    const game_engine::logic::ProjectileLauncher laser = game_engine::logic::ProjectileLauncher(0,0,0,laser_width,laser_height,laser_depth,laser_ammo,laser_magazine_size,laser_damage);
+        
+    //Vectors
+    std::vector<game_engine::logic::Entity> level = {floor,roof,northWall,southWall,westWall,eastWall};
+    std::vector<game_engine::logic::Entity> players = {player_north_const,player_south_const};
+    std::vector<game_engine::logic::ProjectileLauncher> available_weapons = {laser};
+    std::vector<std::vector<int>> loadouts = {{0},{0}};
+
+    //Map
+    return game_engine::logic::Map{"box",level,players,available_weapons,loadouts,'z'};
+}
 
 std::string printInfo(const game_engine::logic::Entity toPrint){
     std::string toReturn = "ID: ";
@@ -156,17 +210,28 @@ TEST(ShooterWorldTest, Set_Score_Limit_Works_Properly){
 }
 
 
+//Object Adding
+TEST(ShooterWorldTest, Add_Object_Works_Properly){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Entity* e = new game_engine::logic::Entity(0,0,0,0,0,0);
+    world.add_object(e);
+    std::set<const game_engine::logic::Entity*> objects = world.get_objects();
+    EXPECT_EQ((*objects.begin())->get_id(),e->get_id()) << "Add object does not add objects properly, expected: " << printInfo(*e) << " Found: " << printInfo(**objects.begin());
+    delete e;
+}
+
+
 //Map loading
 TEST(ShooterWorldTest, Load_Map_Loads_Correct_Number){
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
-    game_engine::logic::Map box = game_engine::maps::box();
+    game_engine::logic::Map box = test_box();
     world.load_map(box);
-    EXPECT_EQ(world.get_objects().size(),box.available_weapons.size() + box.level.size() + box.players.size()) << "Map does not load";
+    EXPECT_EQ(world.get_objects().size(),box.available_weapons.size() * box.players.size() + box.level.size() + box.players.size()) << "Map does not load";
 }
 
 TEST(ShooterWorldTest, Load_Map_Loads_Players_Correctly){
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
-    game_engine::logic::Map box = game_engine::maps::box();
+    game_engine::logic::Map box = test_box();
     world.load_map(box);
     std::set<const game_engine::logic::Entity*> objects = world.get_objects();
     for(game_engine::logic::Entity player : box.players){
@@ -186,7 +251,7 @@ TEST(ShooterWorldTest, Load_Map_Loads_Players_Correctly){
 
 TEST(ShooterWorldTest, Load_Map_Loads_Launchers_Correctly){
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
-    game_engine::logic::Map box = game_engine::maps::box();
+    game_engine::logic::Map box = test_box();
     world.load_map(box);
     std::set<const game_engine::logic::Entity*> objects = world.get_objects();
     for(game_engine::logic::ProjectileLauncher launcher : box.available_weapons){
@@ -211,7 +276,7 @@ TEST(ShooterWorldTest, Load_Map_Loads_Launchers_Correctly){
 
 TEST(ShooterWorldTest, Load_Map_Loads_Terrain_Correctly){
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
-    game_engine::logic::Map box = game_engine::maps::box();
+    game_engine::logic::Map box = test_box();
     world.load_map(box);
     std::set<const game_engine::logic::Entity*> objects = world.get_objects();
     for(game_engine::logic::Entity terrain : box.level){
@@ -229,3 +294,492 @@ TEST(ShooterWorldTest, Load_Map_Loads_Terrain_Correctly){
     }
 }
 
+
+//Position Validation
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == 974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(0,0,2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),975) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == -974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(0,0,-2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),-975) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PX){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == 974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(0,0,969);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_x_pos(),968) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NX){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == 974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(0,0,-969);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_x_pos(),-968) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PY){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == 974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(0,816,0);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_y_pos(),1000) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NY){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == 974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(0,-2,0);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_y_pos(),0) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == 974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(969,0,2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),975) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_x_pos(),968) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == -974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(969,0,-2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),-975) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_x_pos(),968) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == 974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(-969,0,2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),975) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_x_pos(),-968) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == -974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(-969,0,-2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),-975) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_x_pos(),-968) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX_PY){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == 974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(969,816,2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),975) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_x_pos(),968) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_y_pos(),1000) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX_PY){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == -974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(969,816,-2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),-975) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_x_pos(),968) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_y_pos(),1000) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX_PY){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == 974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(-969,816,2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),975) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_x_pos(),-968) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_y_pos(),1000) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX_PY){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == -974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(-969,816,-2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),-975) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_x_pos(),-968) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_y_pos(),1000) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX_NY){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == 974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(969,-2,2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),975) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_x_pos(),968) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_y_pos(),0) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX_NY){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == -974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(969,-2,-2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),-975) << "Entity's position not validated correctly on neagative Z. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_x_pos(),968) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_y_pos(),0) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX_NY){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == 974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(-969,-2,2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),975) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_x_pos(),-968) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_y_pos(),0) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
+
+TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX_NY){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
+    game_engine::logic::Map box = test_box();
+    world.load_map(box);
+    game_engine::logic::Entity* target_entity = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //North player
+            if(player->entity->get_z_pos() == -974){
+                target_entity = player->entity;
+            }
+        }
+    }
+    EXPECT_NE(target_entity,nullptr) << "Could not find target entity";
+    target_entity->DoMove(-969,-2,-2);
+    world.validate_positions();
+    EXPECT_EQ(target_entity->get_z_pos(),-975) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_x_pos(),-968) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
+    EXPECT_EQ(target_entity->get_y_pos(),0) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            delete player;
+        }
+        delete team;
+    }
+}
