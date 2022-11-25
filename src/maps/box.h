@@ -1,5 +1,6 @@
 #include <utility>
 
+#include "logicutil.h"
 #include "map.h"
 
 #ifndef GAME_ENGINE_MAPS_BOX_H
@@ -42,6 +43,7 @@ logic::Map box(){
     int player_z = half_floor_size-half_thickness-1;
     logic::Entity player_north = logic::Entity(0,half_player_height + 1,player_z,player_width,player_height,player_depth);
     player_north.set_hp(player_hp);
+    player_north.set_look(logic::DegreesToRadians(180),0.0f);
     const logic::Entity player_north_const = std::as_const(player_north);
     logic::Entity player_south = logic::Entity(0,half_player_height + 1,-player_z,player_width,player_height,player_depth);
     player_south.set_hp(player_hp);
