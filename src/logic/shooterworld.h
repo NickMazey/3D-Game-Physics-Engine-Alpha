@@ -17,6 +17,9 @@ public:
     //Constructor
     ShooterWorld();
 
+    //Constructor with arguments
+    ShooterWorld(int move_speed, int jump_speed, int gravity, int air_friction);
+
     //Loads a map for this ShooterWorld
     void load_map(Map map);
 
@@ -93,8 +96,35 @@ public:
         return last_tick_;
     }
 
+    //Setter for move speed
+    void set_move_speed(const int speed){
+        move_speed_ = speed;
+    }
 
+    //Getter for move speed
+    int get_move_speed() const{
+        return move_speed_;
+    }
 
+    //Setter for jump speed
+    void set_jump_speed(const int speed){
+        jump_speed_ = speed;
+    }
+
+    //Getter for jump speed
+    int get_jump_speed() const{
+        return jump_speed_;
+    }
+
+    //Setter for air friction
+    void set_air_friction(const int friction){
+        air_friction_ = friction;
+    }
+
+    //Getter for air friction
+    int get_air_friction() const{
+        return air_friction_;
+    }
 
 private:
     std::set<Team*> teams_;
@@ -108,6 +138,9 @@ private:
     std::set<Entity*> objects_;
     std::set<Controller*> controllers_;
     int gravity_;
+    int move_speed_;
+    int jump_speed_;
+    int air_friction_;
 
 };
 } // namespace logic
