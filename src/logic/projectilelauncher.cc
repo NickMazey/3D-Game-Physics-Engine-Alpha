@@ -155,8 +155,12 @@ Entity* ProjectileLauncher::FindFirstCollision(std::set<Entity*> entities)
             int y_movement = static_cast<int>(distance * y_coefficient) / 1000;
             int z_movement = static_cast<int>(distance * z_coefficient) / 1000;
 
+            //Adding rotation to shoot offsets
+            int shoot_offset_x = RotatedXMovementHelper(shoot_offset_x_,shoot_offset_z_);
+            int shoot_offset_z = RotatedZMovementHelper(shoot_offset_x_,shoot_offset_z_);
+
             // Creating a point to check if this line passes through the other entity
-            Entity* test_point = new Entity(get_x_pos() + shoot_offset_x_, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_offset_z_, 0, 0, 0);
+            Entity* test_point = new Entity(get_x_pos() + shoot_offset_x, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_offset_z, 0, 0, 0);
             test_point->DoMove(x_movement, y_movement, z_movement);
             if (test_point->IsColliding(active_entity))
             {
