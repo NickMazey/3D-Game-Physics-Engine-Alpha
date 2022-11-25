@@ -35,7 +35,7 @@ public:
     void remove_controller(Controller* controller);
 
     //Returns the list of objects in the game world
-    const std::set<const Entity*> get_objects();
+    const std::set<Entity*> get_objects();
 };
 } // namespace logic
 } // namespace game_engine
