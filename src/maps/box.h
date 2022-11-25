@@ -1,4 +1,5 @@
 #include <utility>
+#include <cmath>
 
 #include "logicutil.h"
 #include "map.h"
@@ -50,7 +51,10 @@ logic::Map box(){
     const logic::Entity player_south_const = std::as_const(player_south);
 
     //Launcher
-    const logic::ProjectileLauncher laser = logic::ProjectileLauncher(0,0,0,laser_width,laser_height,laser_depth,laser_ammo,laser_magazine_size,laser_damage);
+    logic::ProjectileLauncher laser = logic::ProjectileLauncher(0,0,0,laser_width,laser_height,laser_depth,laser_ammo,laser_magazine_size,laser_damage);
+    laser.set_shoot_offset_x(-half_player_width - laser_width/2);
+    laser.set_shoot_offset_y(round(half_player_height * 0.6f));
+    laser.set_shoot_offset_z(laser_depth/2);
     
     //Vectors
     std::vector<logic::Entity> level = {floor,northWall,southWall,westWall,eastWall};
