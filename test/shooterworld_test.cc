@@ -179,7 +179,7 @@ TEST(ShooterWorldTest, Initialises_Move_Speed_Properly){
 
 TEST(ShooterWorldTest, Initialises_Jump_Speed_Properly){
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
-    EXPECT_EQ(world.get_move_speed(),0) << "Jump speed does not initialise to 0";
+    EXPECT_EQ(world.get_jump_speed(),0) << "Jump speed does not initialise to 0";
 }
 
 TEST(ShooterWorldTest, Initialises_Air_Friction_Properly){
@@ -199,9 +199,8 @@ TEST(ShooterWorldTest, Initialises_Move_Speed_Arg_Properly){
 
 TEST(ShooterWorldTest, Initialises_Jump_Speed_Arg_Properly){
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(0,10,0,0);
-    EXPECT_EQ(world.get_move_speed(),0) << "Jump speed does not initialise to argument";
+    EXPECT_EQ(world.get_jump_speed(),0) << "Jump speed does not initialise to argument";
 }
-
 
 TEST(ShooterWorldTest, Initialises_Air_Friction_Arg_Properly){
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(0,0,0,10);
