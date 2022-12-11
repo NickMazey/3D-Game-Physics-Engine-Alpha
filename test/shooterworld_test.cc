@@ -45,17 +45,17 @@ game_engine::logic::Map test_box(){
     game_engine::logic::Entity player_north = game_engine::logic::Entity(0,half_player_height + 1,player_z,player_width,player_height,player_depth);
     player_north.set_hp(player_hp);
     player_north.set_look(game_engine::logic::DegreesToRadians(180),0.0f);
-    const game_engine::logic::Entity player_north_const = std::as_const(player_north);
+    const game_engine::logic::Entity player_north_const = *const_cast<const game_engine::logic::Entity*>(&player_north);
     game_engine::logic::Entity player_south = game_engine::logic::Entity(0,half_player_height + 1,-player_z,player_width,player_height,player_depth);
     player_south.set_hp(player_hp);
-    const game_engine::logic::Entity player_south_const = std::as_const(player_south);
+    const game_engine::logic::Entity player_south_const = *const_cast<const game_engine::logic::Entity*>(&player_south);
 
     //Launcher
     game_engine::logic::ProjectileLauncher laser = game_engine::logic::ProjectileLauncher(0,0,0,laser_width,laser_height,laser_depth,laser_ammo,laser_magazine_size,laser_damage);
     laser.set_shoot_offset_x(-half_player_width - laser_width/2);
     laser.set_shoot_offset_y(round(half_player_height * 0.6f));
     laser.set_shoot_offset_z(laser_depth/2);
-    game_engine::logic::ProjectileLauncher laser_const = std::as_const(laser);
+    game_engine::logic::ProjectileLauncher laser_const = *const_cast<const game_engine::logic::ProjectileLauncher*>(&laser);
     
     //Vectors
     std::vector<game_engine::logic::Entity> level = {floor,northWall,southWall,westWall,eastWall};
@@ -199,7 +199,7 @@ TEST(ShooterWorldTest, Initialises_Move_Speed_Arg_Properly){
 
 TEST(ShooterWorldTest, Initialises_Jump_Speed_Arg_Properly){
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(0,10,0,0);
-    EXPECT_EQ(world.get_jump_speed(),0) << "Jump speed does not initialise to argument";
+    EXPECT_EQ(world.get_jump_speed(),10) << "Jump speed does not initialise to argument";
 }
 
 TEST(ShooterWorldTest, Initialises_Air_Friction_Arg_Properly){
@@ -254,7 +254,7 @@ TEST(ShooterWorldTest, Game_Over_Empty_Case){
     EXPECT_FALSE(world.game_over()) << "Game is over in empty case";
 }
 
-TEST(ShooterWorldTest, Initialises_Last_Tick_Properly){
+TEST(ShooterWorldTest, Initialises_Game_Winner_Properly){
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     EXPECT_EQ(world.game_winner(),nullptr) << "Game winner is not null in empty case";
 }
@@ -1331,9 +1331,6 @@ TEST(ShooterWorldTest,Round_Time_Limit_Works){
 TEST(ShooterWorldTest, Firing_Takes_Precedent){
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(10,10,1,1);
     world.load_map(test_box());
-    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
-    game_engine::logic::Map box = test_box();
-    world.load_map(box);
     game_engine::logic::Player* target_player = nullptr;
     std::set<game_engine::logic::Team*> teams = world.get_teams();
     for(game_engine::logic::Team* team : teams){
@@ -1378,9 +1375,6 @@ cleanup(world);
 TEST(ShooterWorldTest, Movement_Stopped_By_Obstacles){
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(10,10,1,1);
     world.load_map(test_box());
-    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
-    game_engine::logic::Map box = test_box();
-    world.load_map(box);
     game_engine::logic::Player* target_player = nullptr;
     std::set<game_engine::logic::Team*> teams = world.get_teams();
     for(game_engine::logic::Team* team : teams){
@@ -1459,7 +1453,9 @@ TEST(ShooterWorldTest, Stairs_Consider_Other_Terrain){
         int start_z = target_player->entity->get_z_pos();
         target_player->entity->set_move(0,0,1);
         world.do_tick();
-        EXPECT_EQ(target_player->entity->get_z_pos(), start_z) << "Entities climb stairs through roofs. Entity: " << printInfo(*target_player->entity) << " stair: " << printInfo(*stair) << " roof: " << printInfo(*roof);
+        EXPECT_EQ(target_player->entity->get_y_pos(), start_y) << "Entities climb stairs through roofs on y. Entity: " << printInfo(*target_player->entity) << " stair: " << printInfo(*stair) << " roof: " << printInfo(*roof);
+        EXPECT_EQ(target_player->entity->get_z_pos(), start_z) << "Entities climb stairs through roofs on z. Entity: " << printInfo(*target_player->entity) << " stair: " << printInfo(*stair) << " roof: " << printInfo(*roof);
+
     }
     cleanup(world);
 }

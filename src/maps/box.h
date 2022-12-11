@@ -45,17 +45,17 @@ logic::Map box(){
     logic::Entity player_north = logic::Entity(0,half_player_height + 1,player_z,player_width,player_height,player_depth);
     player_north.set_hp(player_hp);
     player_north.set_look(logic::DegreesToRadians(180),0.0f);
-    const logic::Entity player_north_const = std::as_const(player_north);
+    const logic::Entity player_north_const = *const_cast<const game_engine::logic::Entity*>(&player_north);
     logic::Entity player_south = logic::Entity(0,half_player_height + 1,-player_z,player_width,player_height,player_depth);
     player_south.set_hp(player_hp);
-    const logic::Entity player_south_const = std::as_const(player_south);
+    const logic::Entity player_south_const = *const_cast<const game_engine::logic::Entity*>(&player_south);
 
     //Launcher
     logic::ProjectileLauncher laser = logic::ProjectileLauncher(0,0,0,laser_width,laser_height,laser_depth,laser_ammo,laser_magazine_size,laser_damage);
     laser.set_shoot_offset_x(-half_player_width - laser_width/2);
     laser.set_shoot_offset_y(round(half_player_height * 0.6f));
     laser.set_shoot_offset_z(laser_depth/2);
-    logic::ProjectileLauncher laser_const = std::as_const(laser);
+    logic::ProjectileLauncher laser_const = *const_cast<const game_engine::logic::ProjectileLauncher*>(&laser);
     
     //Vectors
     std::vector<logic::Entity> level = {floor,northWall,southWall,westWall,eastWall};

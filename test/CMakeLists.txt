@@ -126,3 +126,25 @@ target_link_libraries(
 target_include_directories(team_test PUBLIC "${LIB}")
 
 gtest_discover_tests(team_test)
+
+#ShooterWorld Test
+add_executable(
+  shooterworld_test
+  shooterworld_test.cc
+  ${PROJECT_SOURCE_DIR}/src/logic/shooterworld.cc
+)
+
+target_link_libraries(
+    shooterworld_test
+    PUBLIC
+    team
+    projectilelauncher
+    entity
+    logicutil
+    gtest_main
+    shooterworld
+)
+
+target_include_directories(shooterworld_test PUBLIC "${LIB}")
+
+gtest_discover_tests(shooterworld_test)

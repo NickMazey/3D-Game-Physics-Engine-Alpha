@@ -126,6 +126,18 @@ public:
         return air_friction_;
     }
 
+    void process_controllers();
+
+    void do_tick();
+
+    void validate_positions();
+
+    void add_object(Entity* object);
+
+    void remove_object(Entity* object);
+
+    const std::set<Entity*> get_objects();
+
 private:
     std::set<Team*> teams_;
     int score_limit_;
