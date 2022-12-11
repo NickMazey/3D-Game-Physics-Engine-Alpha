@@ -46,6 +46,9 @@ bool Entity::operator!=(const Entity& other) const
 {
     return !operator==(other);
 }
+bool Entity::operator<(const Entity& other) const{
+    return id_ < other.get_id();
+}
 
 Entity::~Entity()
 {

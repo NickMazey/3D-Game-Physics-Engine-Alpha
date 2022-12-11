@@ -58,10 +58,10 @@ logic::Map box(){
     logic::ProjectileLauncher laser_const = *const_cast<const game_engine::logic::ProjectileLauncher*>(&laser);
     
     //Vectors
-    std::vector<logic::Entity> level = {floor,northWall,southWall,westWall,eastWall};
-    std::vector<logic::Entity> players = {player_north_const,player_south_const};
-    std::vector<logic::ProjectileLauncher> available_weapons = {laser_const};
-    std::vector<std::vector<int>> loadouts = {{0},{0}};
+     std::vector< logic::Entity> level = {floor,northWall,southWall,westWall,eastWall};
+     std::vector< logic::Entity> players = {player_north_const,player_south_const};
+     std::vector< logic::ProjectileLauncher> available_weapons = {laser_const};
+     std::vector< std::vector< int>> loadouts = {{0},{0}};
 
     //Map
     return logic::Map{"box",level,players,available_weapons,loadouts,'z'};

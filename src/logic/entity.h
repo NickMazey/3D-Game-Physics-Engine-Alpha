@@ -33,6 +33,7 @@ public:
 
     bool operator==(const Entity& other) const;
     bool operator!=(const Entity& other) const;
+    bool operator<(const Entity& other) const;
 
     // Destroys the entity and removes it from other entities' lists
     ~Entity();

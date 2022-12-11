@@ -137,6 +137,7 @@ add_executable(
 target_link_libraries(
     shooterworld_test
     PUBLIC
+    mockcontroller
     team
     projectilelauncher
     entity

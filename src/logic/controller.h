@@ -61,8 +61,9 @@ public:
     }
 
     // updates this controller by checking for input
-    void Update();
+    virtual void Update(){};
 
+    virtual ~Controller(){}
 protected:
     std::set<ScaledAction> actions_;
 };

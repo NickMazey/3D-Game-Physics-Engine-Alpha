@@ -4,6 +4,7 @@
 #include "world.h"
 
 #include <chrono>
+#include <map>
 
 #ifndef GAME_ENGINE_LOGIC_SHOOTERWORLD_H
 #define GAME_ENGINE_LOGIC_SHOOTERWORLD_H
@@ -14,11 +15,18 @@ namespace logic
 class ShooterWorld : public World 
 {
 public:
+
+    // pairing between map Entities and their instanced entities
+    typedef std::pair<Entity, Entity*> EntityPair;
+
     //Constructor
     ShooterWorld();
 
     //Constructor with arguments
     ShooterWorld(int move_speed, int jump_speed, int gravity, int air_friction);
+
+    //Destructor
+    ~ShooterWorld();
 
     //Loads a map for this ShooterWorld
     void load_map(Map map);
@@ -126,6 +134,9 @@ public:
         return air_friction_;
     }
 
+    //Sets the corresponding player's active projectile launcher to the launcher at the specified index in its inventory
+    void equip_player(Player* player, int index);
+
     void process_controllers();
 
     void do_tick();
@@ -145,9 +156,10 @@ private:
     uint64_t round_time_;
     uint64_t last_tick_;
     int player_hp_;
-    Map map_;
+    Map map_ = Map{"Empty",{},{},{},{},'x'};
     std::set<Entity*> level_;
     std::set<Entity*> objects_;
+    std::map<Entity,Entity*> obj_map_; 
     int gravity_;
     int move_speed_;
     int jump_speed_;
