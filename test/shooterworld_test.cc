@@ -1412,3 +1412,55 @@ TEST(ShooterWorldTest, Movement_Stopped_By_Obstacles){
     }
     cleanup(world);
 }
+
+TEST(ShooterWorldTest, Stairs_Work_Properly){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(10,10,1,1);
+    world.load_map(test_box());
+    game_engine::logic::Player* target_player = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //South player
+            if(player->entity->get_z_pos() == -974){
+                target_player = player;
+            }
+        }
+    }
+    EXPECT_NE(target_player,nullptr) << "Could not find target player";
+    if(target_player){
+        game_engine::logic::Entity* stair = new game_engine::logic::Entity(0,10,target_player->entity->get_max_z_pos() + 51,100,20,100);
+        world.add_object(stair);
+        target_player->entity->set_move(0,0,1);
+        world.do_tick();
+        EXPECT_EQ(target_player->entity->get_min_y_pos(), stair->get_max_y_pos() + 1) << "Entities cannot climb stairs. Entity moving:" << printInfo(*target_player->entity) << " stair: " << printInfo(*stair);
+    }
+    cleanup(world);
+}
+
+TEST(ShooterWorldTest, Stairs_Consider_Other_Terrain){
+    game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(10,10,1,1);
+    world.load_map(test_box());
+    game_engine::logic::Player* target_player = nullptr;
+    std::set<game_engine::logic::Team*> teams = world.get_teams();
+    for(game_engine::logic::Team* team : teams){
+        for(game_engine::logic::Player* player : team->get_players()){
+            //South player
+            if(player->entity->get_z_pos() == -974){
+                target_player = player;
+            }
+        }
+    }
+    EXPECT_NE(target_player,nullptr) << "Could not find target player";
+    if(target_player){
+        game_engine::logic::Entity* stair = new game_engine::logic::Entity(0,10,target_player->entity->get_max_z_pos() + 51,100,20,100);
+        game_engine::logic::Entity* roof = new game_engine::logic::Entity(target_player->entity->get_x_pos(),target_player->entity->get_max_y_pos() + 6,target_player->entity->get_z_pos(),target_player->entity->get_width(),10,target_player->entity->get_depth());
+        world.add_object(stair);
+        world.add_object(roof);
+        int start_y = target_player->entity->get_y_pos();
+        int start_z = target_player->entity->get_z_pos();
+        target_player->entity->set_move(0,0,1);
+        world.do_tick();
+        EXPECT_EQ(target_player->entity->get_z_pos(), start_z) << "Entities climb stairs through roofs. Entity: " << printInfo(*target_player->entity) << " stair: " << printInfo(*stair) << " roof: " << printInfo(*roof);
+    }
+    cleanup(world);
+}
