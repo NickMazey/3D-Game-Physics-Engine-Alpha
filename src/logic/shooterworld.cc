@@ -337,7 +337,7 @@ void ShooterWorld::tick_players(){
                         if(!airborne_checked){
                             for(Entity* other : objects_){
                                 //If moving the entity down by one unit it would collide then it must be on a surface
-                                if(entity->WouldCollide(other,0,1,0)){
+                                if(entity->WouldCollide(other,0,-1,0)){
                                     airborne = false;
                                     break;
                                 }
