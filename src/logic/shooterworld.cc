@@ -119,11 +119,12 @@ void ShooterWorld::load_map(Map map){
         //Load launchers for players
         for(int j = 0; j < map_.loadouts.at(i).size(); j++){
             ProjectileLauncher launcher = map_.available_weapons.at(j);
-            ProjectileLauncher* used_launcher;
+            ProjectileLauncher* used_launcher = nullptr;
+            int ammo = launcher.get_loaded_ammo() + launcher.get_ammo();
             if(launcher.is_hitscan()){
-                used_launcher = new ProjectileLauncher(launcher.get_x_pos(),launcher.get_y_pos(),launcher.get_z_pos(),launcher.get_width(),launcher.get_height(),launcher.get_depth(),launcher.get_loaded_ammo() + launcher.get_ammo(),launcher.get_magazine_size(),launcher.get_damage());
+                used_launcher = new ProjectileLauncher(launcher.get_x_pos(),launcher.get_y_pos(),launcher.get_z_pos(),launcher.get_width(),launcher.get_height(),launcher.get_depth(),ammo,launcher.get_magazine_size(),launcher.get_damage());
             }else{
-                used_launcher = new ProjectileLauncher(launcher.get_x_pos(),launcher.get_y_pos(),launcher.get_z_pos(),launcher.get_width(),launcher.get_height(),launcher.get_depth(),launcher.get_loaded_ammo() + launcher.get_ammo(),launcher.get_magazine_size(),launcher.get_damage(),launcher.get_projectile());
+                used_launcher = new ProjectileLauncher(launcher.get_x_pos(),launcher.get_y_pos(),launcher.get_z_pos(),launcher.get_width(),launcher.get_height(),launcher.get_depth(),ammo,launcher.get_magazine_size(),launcher.get_damage(),launcher.get_projectile());
             }
             player->inventory.push_back(used_launcher);            
         }
@@ -166,7 +167,7 @@ void ShooterWorld::equip_player(Player* player, int index){
                 player->entity->RemoveChild(player->active_projectile_launcher);
             }
             player->active_projectile_launcher=launcher;
-            player->entity->AddChild(launcher,-launcher->get_shoot_offset_x(),launcher->get_shoot_offset_y(),-launcher->get_shoot_offset_z());
+            player->entity->AddChild(launcher,-launcher->get_shoot_offset_x(),0,-launcher->get_shoot_offset_z());
             player->entity->AddGhost(launcher);
             add_object(player->active_projectile_launcher);
 }
@@ -244,7 +245,7 @@ void ShooterWorld::new_round(){
             for(int i = 0; i < player->inventory.size(); i++){
                 ProjectileLauncher launcher = map_.available_weapons.at(map_.loadouts.at(index).at(i));
                 ProjectileLauncher* used_launcher = player->inventory.at(i);
-                used_launcher->set_ammo(launcher.get_ammo() - used_launcher->get_loaded_ammo());
+                used_launcher->set_ammo((launcher.get_ammo()+launcher.get_loaded_ammo()) - used_launcher->get_loaded_ammo());
                 used_launcher->Reload();
             }
             equip_player(player,0);

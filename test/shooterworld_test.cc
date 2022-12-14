@@ -360,7 +360,6 @@ TEST(ShooterWorldTest, Load_Map_Loads_Launchers_Correctly)
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
     world.load_map(box);
-    std::set<game_engine::logic::Entity *> objects = world.get_objects();
     for (game_engine::logic::ProjectileLauncher launcher : box.available_weapons)
     {
         bool launcher_present = false;
@@ -368,8 +367,7 @@ TEST(ShooterWorldTest, Load_Map_Loads_Launchers_Correctly)
         for(game_engine::logic::Player* player : team->get_players()){
         for (game_engine::logic::ProjectileLauncher* found_launcher : player->inventory)
         {   
-                EXPECT_TRUE(false) << "Found launcher " << printInfo(*found_launcher);
-                if (launcher.get_width() == found_launcher->get_width() &&
+                if (found_launcher && launcher.get_width() == found_launcher->get_width() &&
                     launcher.get_height() == found_launcher->get_height() &&
                     launcher.get_depth() == found_launcher->get_depth() && launcher.get_ammo() == found_launcher->get_ammo() &&
                     launcher.get_magazine_size() == found_launcher->get_magazine_size() &&
@@ -381,11 +379,9 @@ TEST(ShooterWorldTest, Load_Map_Loads_Launchers_Correctly)
                 }
         }
         }
-        EXPECT_TRUE(launcher_present) << "Could not find launcher " << printInfo(launcher);
     }
+    EXPECT_TRUE(launcher_present) << "Could not find launcher " << printInfo(launcher);
     }
-    cleanup(world);
-    world.~ShooterWorld();
 }
 
 TEST(ShooterWorldTest, Load_Map_Loads_Terrain_Correctly)
