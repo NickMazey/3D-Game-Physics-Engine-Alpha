@@ -279,17 +279,11 @@ void ShooterWorld::tick_players(){
                     
                     //Launcher Controls
                     if(action.action == Controller::Action::kReload){
-                        player->active_projectile_launcher->Reload();
+                        launcher->Reload();
                     }
 
                     if(action.action == Controller::Action::kShoot){
                         launcher->Fire(objects_);
-                        if(launcher->get_last_hit() != launcher){
-                            launcher->get_last_hit()->remove_hp(launcher->get_damage());
-                            if(launcher->get_last_hit()->get_hp() == 0){
-                                launcher->get_last_hit()->set_solid(false);
-                            }
-                        }
                     }
 
                     if(action.action == Controller::Action::kSwapWeaponUp || action.action == Controller::Action::kSwapWeaponDown){
@@ -370,6 +364,19 @@ void ShooterWorld::tick_players(){
         }
     }
     }
+
+    //Handle launchers hitting
+    for(Team* team : teams_){
+        for(Player* player : team->get_players()){
+            for(ProjectileLauncher* launcher : player->inventory){
+                if(launcher->get_last_hit() != launcher){
+                            launcher->get_last_hit()->remove_hp(launcher->get_damage());
+                            launcher->set_last_hit(launcher);
+                        }
+            }
+        }
+    }
+
     std::set<Entity*> movers = std::set<Entity*>();
     std::set<Entity*> stationary = std::set<Entity*>();
     for(Entity* e : objects_){
@@ -391,7 +398,9 @@ void ShooterWorld::tick_players(){
             bool validated = false;
             //Limit of 10 steps
             for(int steps = 0; steps < 10 && !validated; steps++){
-            bool valid_x, valid_y, valid_z = false;
+            bool valid_x = false;
+            bool valid_y = false;
+            bool valid_z = false;
             std::tuple<int,int,int> movement_vector = entity->get_movement_vector();
             int x,y,z;
             std::tie(x,y,z) = movement_vector;
@@ -448,9 +457,13 @@ void ShooterWorld::tick_players(){
                     std::tuple<bool,bool,bool> responsibilities;
                     Entity* other;
                     std::tie(distance,responsibilities,other) = collisions.at(0);
-                    bool x_resp,y_resp,z_resp;
+                    bool x_resp = false;
+                    bool y_resp = false;
+                    bool z_resp = false;
                     std::tie(x_resp,y_resp,z_resp) = responsibilities;
-                    int x_change,y_change,z_change = 0;
+                    int x_change = 0;
+                    int y_change = 0;
+                    int z_change = 0;
                    
                     if(x_resp){
                         x_change = entity->XDistanceToOther(other) - x;
@@ -517,7 +530,165 @@ void ShooterWorld::do_tick(){
 }
 
 void ShooterWorld::validate_positions(){
-
+    for(Entity* entity : objects_){
+        bool final = false;
+        for(int steps = 0; !final && steps < 10; steps++){
+            final = true;
+        for(Entity* other : objects_){
+            if(entity->IsColliding(other)){
+                final = false;
+               Entity* responsible = nullptr;
+               int x,y,z,other_x,other_y,other_z;
+               std::tie(x,y,z) = entity->get_movement_vector();
+               std::tie(other_x,other_y,other_z) = other->get_movement_vector();
+               if(((x!= 0 || y != 0 || z != 0) && other_x == other_y && other_y == other_z && other_z == 0 ) || (entity->has_physics() && !other->has_physics())){
+                responsible = entity;
+               }
+               if((x == y && y == z && z == 0 && (other_x != 0 || other_y != 0 || other_z != 0))|| (other->has_physics() && !entity->has_physics())){
+                    responsible = other;
+               }
+               //How much total movement is needed to break overlap (- values mean other is in front)
+               int x_move = 0;
+               int y_move = 0;
+               int z_move = 0;
+               if(false){
+                    if(entity->XDistanceToOther(other) == 0){
+                        if(other->get_x_pos() <= entity->get_x_pos()){
+                            x_move = other->get_max_x_pos() - entity->get_min_x_pos();
+                        }else{
+                            x_move = -(entity->get_max_x_pos() - other->get_min_x_pos());
+                        }
+                    }
+                    if(entity->YDistanceToOther(other) == 0){
+                        if(other->get_y_pos() <= entity->get_y_pos()){
+                            y_move = other->get_max_y_pos() - entity->get_min_y_pos();
+                        }else{
+                            y_move = -(entity->get_max_y_pos() - other->get_min_y_pos());
+                        }
+                    }
+                    if(entity->ZDistanceToOther(other) == 0){
+                        if(other->get_z_pos() <= entity->get_z_pos()){
+                            z_move = other->get_max_z_pos() - entity->get_min_z_pos();
+                        }else{
+                            z_move = -(entity->get_max_z_pos() - other->get_min_z_pos());
+                        }
+                    }
+                    int abs_x_move = 0;
+                    int abs_y_move = 0; 
+                    int abs_z_move = 0;
+                    abs_x_move = abs(x_move);
+                    abs_y_move = abs(y_move);
+                    abs_z_move = abs(z_move);
+                    //Take the shortest move to get out of object
+                    if(abs_x_move != 0 && abs_x_move <= abs_y_move && abs_x_move <= abs_z_move){
+                        z_move = 0;
+                        y_move = 0;
+                    }
+                    if(abs_y_move != 0 && abs_y_move <= abs_x_move && abs_y_move <= abs_z_move){
+                        x_move = 0;
+                        z_move = 0;
+                    }
+                    if(abs_z_move != 0 && abs_z_move <= abs_x_move && abs_z_move <= abs_y_move){
+                        x_move = 0;
+                        y_move = 0;
+                    }
+                    int ent_move_x = 0;
+                    int ent_move_y = 0;
+                    int ent_move_z = 0;
+                    int other_move_x = 0;
+                    int other_move_y = 0;
+                    int other_move_z = 0;
+                    if(x_move < 0){
+                        x_move *= -1;
+                        other_move_x = x_move / 2;
+                        ent_move_x = -(x_move - other_move_x); 
+                    } else{
+                        ent_move_x = x_move / 2;
+                        other_move_x = -(x_move - ent_move_x); 
+                    }
+                    if(y_move < 0){
+                        y_move *= -1;
+                        other_move_y = y_move / 2;
+                        ent_move_y = -(y_move - other_move_y); 
+                    } else{
+                        ent_move_y = y_move / 2;
+                        other_move_y = -(y_move - ent_move_y); 
+                    }
+                    if(z_move < 0){
+                        z_move *= -1;
+                        other_move_z = z_move / 2;
+                        ent_move_z = -(z_move - other_move_z);
+                    }else{
+                        ent_move_z = z_move / 2;
+                        other_move_z = -(z_move - ent_move_z);
+                    }
+                    entity->DoMoveAbsolute(ent_move_x,ent_move_y,ent_move_z);
+                    other->DoMoveAbsolute(other_move_x,other_move_y,other_move_z);
+               }
+               
+               if(responsible != nullptr){
+                    Entity* non_responsible = nullptr;
+                    int x_mul = 1;
+                    int y_mul = 1;
+                    int z_mul = 1;
+                    if(responsible == entity){
+                        non_responsible = other;
+                    }else{
+                        non_responsible = entity;
+                    }
+                    int x_dist = responsible->XDistanceToOther(non_responsible);
+                    int y_dist = responsible->YDistanceToOther(non_responsible);
+                    int z_dist = responsible->ZDistanceToOther(non_responsible);
+                    if(x_dist == 0){
+                        if(non_responsible->get_x_pos() <= responsible->get_x_pos()){
+                            x_move = non_responsible->get_max_x_pos() - responsible->get_min_x_pos();
+                            x_mul = -1;
+                        }else{
+                            x_move = responsible->get_max_x_pos() - non_responsible->get_min_x_pos();
+                        }
+                    }
+                    if(y_dist == 0){
+                        if(non_responsible->get_y_pos() <= responsible->get_y_pos()){
+                            y_move = non_responsible->get_max_y_pos() - responsible->get_min_y_pos();
+                            y_mul = -1;
+                        }else{
+                            y_move = (responsible->get_max_y_pos() - non_responsible->get_min_y_pos());
+                        }
+                    }
+                    if(z_dist == 0){
+                        if(non_responsible->get_z_pos() <= responsible->get_z_pos()){
+                            z_move = non_responsible->get_max_z_pos() - responsible->get_min_z_pos();
+                            z_mul = -1;
+                        }else{
+                            z_move = responsible->get_max_z_pos() - non_responsible->get_min_z_pos();
+                        }
+                    }
+                    bool x_valid = false;
+                    bool y_valid = false;
+                    bool z_valid = false;
+                    x_valid = x_dist == 0;
+                    y_valid = y_dist == 0;
+                    z_valid = z_dist == 0;
+                    //Because the difference is how far to be at the edge, one needs to be added
+                    if(x_valid && (x_move <= y_move || !y_valid) && (x_move <= z_move || !z_valid)){
+                        x_move += 1;
+                        y_move = 0;
+                        z_move = 0;
+                    }else if(y_valid && (y_move <= z_move || !z_valid) && (y_move <= x_move || !x_valid)){
+                        x_move = 0;
+                        y_move += 1;
+                        z_move = 0;
+                    }else if (z_valid && (z_move <= y_move || !(y_valid)) && (z_move <= x_move || !x_valid)){
+                        x_move = 0;
+                        y_move = 0;
+                        z_move += 1;
+                    }
+                    responsible->DoMoveAbsolute(-x_move * x_mul,-y_move * y_mul,-z_move * z_mul);
+               }
+            }
+        }
+    }
+    }
 }
 
 void ShooterWorld::add_object(Entity* object){
