@@ -57,7 +57,7 @@ game_engine::logic::Map test_box()
     laser.set_shoot_offset_z(laser_depth / 2);
 
     // Vectors
-    std::vector<game_engine::logic::Entity> level = {floor, northWall, southWall, westWall, eastWall};
+    std::vector<game_engine::logic::Entity> level = {floor, roof, northWall, southWall, westWall, eastWall};
     std::vector<game_engine::logic::Entity> players = {player_north, player_south};
     std::vector<game_engine::logic::ProjectileLauncher> available_weapons = {laser};
     std::vector<std::vector<int>> loadouts = {{0}, {0}};
@@ -431,7 +431,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(0, 0, 2);
+        target_entity->DoMoveAbsolute(0, 0, 4);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_z_pos(), 975) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
     }
@@ -459,7 +459,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(0, 0, -2);
+        target_entity->DoMoveAbsolute(0, 0, -4);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_z_pos(), -975) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
     }
@@ -487,7 +487,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PX)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(0, 0, 969);
+        target_entity->DoMoveAbsolute(969, 0, 0);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_x_pos(), 967) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
     }
@@ -515,7 +515,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NX)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(0, 0, -969);
+        target_entity->DoMoveAbsolute(-969, 0,0);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_z_pos(), -967) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
     }
