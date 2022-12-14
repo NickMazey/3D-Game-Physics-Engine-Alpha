@@ -349,7 +349,7 @@ void ShooterWorld::tick_players(){
                             //only allowed small movements in the air
                             air_coeff = 0.1f;
                         }
-                        int movement = (int)(action.scale * move_speed_* air_coeff);
+                        int movement = (int)(action.scale * move_speed_* air_coeff + 0.5f);
                         if(action.action == Controller::Action::kJump && !airborne){
                             entity->set_move(x,std::max((int)(action.scale * jump_speed_),jump_speed_),z);
                         }
@@ -478,8 +478,13 @@ void ShooterWorld::tick_players(){
                         }
                     }
                     entity->set_move(x + x_change, y + y_change, z + z_change);
+                }else{
+                    validated = true;
                 }
             }
+    }
+    for(Entity* entity : objects_){
+        entity->DoTick();
     }
 }
 
