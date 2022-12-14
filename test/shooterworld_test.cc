@@ -1056,7 +1056,7 @@ TEST(ShooterWorldTest, Right_Input_Behaves_Properly)
         game_engine::logic::MockController *controller = new game_engine::logic::MockController();
         int start_x = target_player->entity->get_x_pos();
         target_player->controller = controller;
-        controller->performAction(game_engine::logic::Controller::Action::kWalkLeft, 1.0f);
+        controller->performAction(game_engine::logic::Controller::Action::kWalkRight, 1.0f);
         world.do_tick();
         EXPECT_EQ(target_player->entity->get_x_pos(), start_x + world.get_move_speed()) << "Right input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
