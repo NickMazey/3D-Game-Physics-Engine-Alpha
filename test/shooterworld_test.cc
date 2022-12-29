@@ -101,6 +101,17 @@ std::string printInfo(const game_engine::logic::Entity toPrint)
     toReturn.append(std::to_string(toPrint.get_gravity()));
     toReturn.append(" Friction: ");
     toReturn.append(std::to_string(toPrint.get_friction()));
+    int x,y,z;
+    std::tie(x,y,z) = toPrint.get_movement_vector();
+    toReturn.append(" Movement Vector: ");
+    toReturn.append("x:");
+    toReturn.append(std::to_string(x));
+    toReturn.append(", ");
+    toReturn.append("y:");
+    toReturn.append(std::to_string(y));
+    toReturn.append(", ");
+    toReturn.append("z:");
+    toReturn.append(std::to_string(z));
     return toReturn;
 }
 
@@ -994,7 +1005,7 @@ TEST(ShooterWorldTest, Backward_Input_Behaves_Properly)
         target_player->controller = controller;
         controller->performAction(game_engine::logic::Controller::Action::kWalkBackwards, 1.0f);
         world.do_tick();
-        EXPECT_EQ(target_player->entity->get_z_pos(), start_z + 1) << "Backwards input does not work properly. Entity: " << printInfo(*target_player->entity);
+        EXPECT_EQ(target_player->entity->get_z_pos(), start_z + world.get_move_speed()) << "Backwards input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
     cleanup(world);
 }
@@ -1087,9 +1098,10 @@ TEST(ShooterWorldTest, Jump_Input_Behaves_Properly)
         world.do_tick();
         game_engine::logic::MockController *controller = new game_engine::logic::MockController();
         target_player->controller = controller;
+        int startY = target_player->entity->get_y_pos();
         controller->performAction(game_engine::logic::Controller::Action::kJump, 1.0f);
         world.do_tick();
-        EXPECT_EQ(target_player->entity->get_y_pos(), world.get_jump_speed()) << "Jump input does not work properly. Entity: " << printInfo(*target_player->entity);
+        EXPECT_EQ(target_player->entity->get_y_pos(), startY + world.get_jump_speed()) << "Jump input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
     cleanup(world);
 }
@@ -1635,7 +1647,8 @@ TEST(ShooterWorldTest, Movement_Stopped_By_Obstacles)
         EXPECT_NE(other_player, nullptr) << "Could not find other player";
         if (other_player)
         {
-            target_player->entity->set_move(5000, 0, 0);
+            target_player->entity->set_move(0, 0, 5000);
+            world.do_tick();
             EXPECT_EQ(target_player->entity->get_max_z_pos(), other_player->entity->get_min_z_pos() - 1) << "Entities are not stopped by obstacles. Entity moving: " << printInfo(*target_player->entity) << " other entity: " << printInfo(*other_player->entity);
         }
     }
