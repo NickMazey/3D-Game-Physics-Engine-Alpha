@@ -29,7 +29,7 @@ public:
     ~ShooterWorld();
 
     //Loads a map for this ShooterWorld
-    void load_map(Map map);
+    void load_map(const Map &map);
 
     //Determines whether or not the round is over
     bool round_over();
@@ -150,16 +150,16 @@ public:
     const std::set<Entity*> get_objects();
 
 private:
-    std::set<Team*> teams_;
+    std::set<Team*> teams_ = std::set<Team*>() ;
     int score_limit_;
     uint64_t round_time_limit_;
     uint64_t round_time_;
     uint64_t last_tick_;
     int player_hp_;
     Map map_ = Map{"Empty",{},{},{},{},'x'};
-    std::set<Entity*> level_;
-    std::set<Entity*> objects_;
-    std::map<Entity,Entity*> obj_map_; 
+    std::set<Entity*> level_ = std::set<Entity*>();
+    std::set<Entity*> objects_ = std::set<Entity*>();
+    std::map<Entity,Entity*> obj_map_ = std::map<Entity, Entity*>(); 
     int gravity_;
     int move_speed_;
     int jump_speed_;

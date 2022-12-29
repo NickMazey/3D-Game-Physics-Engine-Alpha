@@ -26,7 +26,7 @@ public:
     void Reload();
 
     // Fires the projectile or casts a ray, returns if it fired successfully
-    bool Fire(std::set<Entity*> entities);
+    bool Fire(const std::set<Entity*> &entities);
 
     // Whether or not the last shot fired from this launcher has hit anything yet
     bool has_hit();
@@ -118,7 +118,7 @@ public:
 
     void set_hitscan(const bool to_set);
 
-    void set_projectile(Entity to_set);
+    void set_projectile(const Entity &to_set);
 
     void set_last_hit(Entity* to_set);
 

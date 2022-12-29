@@ -134,7 +134,7 @@ bool Entity::InChildren(Entity* other)
 
 bool Entity::InChildrenDeep(Entity* other)
 {
-    for (ChildMap::iterator iter = children_.begin(); iter != children_.end(); iter++)
+    for (ChildMap::iterator iter = children_.begin(); iter != children_.end(); ++iter)
     {
         if (iter->first->InChildren(other))
         {
@@ -146,7 +146,7 @@ bool Entity::InChildrenDeep(Entity* other)
 
 void Entity::UpdateChildren()
 {
-    for (ChildMap::iterator iter = children_.begin(); iter != children_.end(); iter++)
+    for (ChildMap::iterator iter = children_.begin(); iter != children_.end(); ++iter)
     {
         std::tuple<int, int, int> offset = iter->second;
         Entity* child = iter->first;
@@ -262,8 +262,8 @@ void Entity::DoMove()
     y_pos_ += movement_vector_[1];
     if (physics_)
     {
-        x_pos_ += static_cast<int>(static_cast<float>(RotatedXMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_);
-        z_pos_ += static_cast<int>(static_cast<float>(RotatedZMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_);
+        x_pos_ += static_cast<int>(round(static_cast<float>(RotatedXMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_));
+        z_pos_ += static_cast<int>(round(static_cast<float>(RotatedZMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_));
     }
     else
     {

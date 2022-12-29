@@ -24,11 +24,6 @@ ShooterWorld::ShooterWorld(int move_speed, int jump_speed, int gravity, int air_
     round_time_limit_ = (uint64_t)0;
     round_time_ = (uint64_t)0;
     last_tick_ = (uint64_t)0;
-    teams_ = std::set<Team*>();
-    level_ = std::set<Entity*>();
-    objects_ = std::set<Entity*>();
-    map_ = Map{"Empty",{},{},{},{},'x'};
-    obj_map_ = std::map<Entity, Entity*>();
 }
 
 ShooterWorld::ShooterWorld() : ShooterWorld(0,0,0,0){}
@@ -60,7 +55,7 @@ ShooterWorld::~ShooterWorld(){
     objects_.clear();
 }
 
-void ShooterWorld::load_map(Map map){
+void ShooterWorld::load_map(const Map &map){
     obj_map_.clear();
     //Delete all old objects
     std::set<Player*> players = std::set<Player*>();
@@ -126,6 +121,9 @@ void ShooterWorld::load_map(Map map){
             }else{
                 used_launcher = new ProjectileLauncher(launcher.get_x_pos(),launcher.get_y_pos(),launcher.get_z_pos(),launcher.get_width(),launcher.get_height(),launcher.get_depth(),ammo,launcher.get_magazine_size(),launcher.get_damage(),launcher.get_projectile());
             }
+            used_launcher->set_shoot_offset_x(launcher.get_shoot_offset_x());
+            used_launcher->set_shoot_offset_y(launcher.get_shoot_offset_y());
+            used_launcher->set_shoot_offset_z(launcher.get_shoot_offset_z());
             player->inventory.push_back(used_launcher);            
         }
         equip_player(player,0);
@@ -271,9 +269,9 @@ void ShooterWorld::tick_players(){
     for(Team* team : teams_){
         for(Player* player : team->get_players()){
             if(player->controller && player->entity->get_hp() > 0){
+                bool airborne_checked = false;
+                bool airborne = true;
                 for(Controller::ScaledAction action : actions.at(player)){
-                    bool airborne_checked = false;
-                    bool airborne = true;
                     Entity* entity = player->entity;
                     ProjectileLauncher* launcher = player->active_projectile_launcher;
                     
@@ -283,7 +281,9 @@ void ShooterWorld::tick_players(){
                     }
 
                     if(action.action == Controller::Action::kShoot){
-                        launcher->Fire(objects_);
+                        if(launcher->Fire(objects_)){
+                        }else{
+                        }
                     }
 
                     if(action.action == Controller::Action::kSwapWeaponUp || action.action == Controller::Action::kSwapWeaponDown){
@@ -343,9 +343,9 @@ void ShooterWorld::tick_players(){
                             //only allowed small movements in the air
                             entity->set_friction(0.1f);
                         }
-                        int movement = (int)(action.scale * move_speed_ + 0.5f);
+                        int movement = static_cast<int>(round(action.scale * move_speed_));
                         if(action.action == Controller::Action::kJump && !airborne){
-                            entity->set_move(x,std::max(0,std::min((int)(action.scale * jump_speed_ + 0.5f),jump_speed_)),z);
+                            entity->set_move(x,std::max(0,std::min(static_cast<int>(round(action.scale * jump_speed_)),jump_speed_)),z);
                         }
                         if(action.action == Controller::Action::kWalkForward){
                             entity->set_move(x,y,std::max(-move_speed_,std::min(move_speed_, z + movement)));
@@ -496,8 +496,11 @@ void ShooterWorld::tick_players(){
                 }
             }
     }
-    for(Entity* entity : objects_){
-        entity->DoTick();
+    for(Entity* ent : objects_){
+        ent->DoTick();
+    }
+    for(Entity* ent : movers){
+        ent->DoTick();
     }
 }
 

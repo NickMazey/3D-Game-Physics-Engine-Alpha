@@ -13,7 +13,7 @@ class Team{
 public:
 
     // Creates a team with a maximum size specified by max_size
-    Team(const int max_team_size);
+    explicit Team(const int max_team_size);
 
     // Returns the list of players in this team
     std::set<Player*> get_players() const{

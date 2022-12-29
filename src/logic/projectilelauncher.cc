@@ -60,7 +60,7 @@ void ProjectileLauncher::Reload()
     }
 }
 
-bool ProjectileLauncher::Fire(std::set<Entity*> entities)
+bool ProjectileLauncher::Fire(const std::set<Entity*> &entities)
 {
     entity_list_ = entities;
     set_last_hit(this);
@@ -287,7 +287,7 @@ void ProjectileLauncher::set_hitscan(const bool to_set)
     hitscan_ = to_set;
 }
 
-void ProjectileLauncher::set_projectile(Entity to_set)
+void ProjectileLauncher::set_projectile(const Entity &to_set)
 {
     projectile_ = to_set;
 }
