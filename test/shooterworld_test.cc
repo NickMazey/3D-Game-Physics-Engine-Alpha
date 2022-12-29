@@ -90,6 +90,7 @@ std::string printInfo(const game_engine::logic::Entity toPrint)
     toReturn.append(std::to_string(game_engine::logic::RadiansToDegrees(toPrint.get_horizontal_look_angle())));
     toReturn.append(" degrees) ");
     toReturn.append(" LookAngY: ");
+    toReturn.append(std::to_string(toPrint.get_vertical_look_angle()));
     toReturn.append(" (");
     toReturn.append(std::to_string(game_engine::logic::RadiansToDegrees(toPrint.get_vertical_look_angle())));
     toReturn.append(" degrees) ");
@@ -165,6 +166,29 @@ std::string printInfo(const game_engine::logic::ProjectileLauncher toPrint)
     toReturn.append(std::to_string(toPrint.get_damage()));
     toReturn.append(" Hitscan: ");
     toReturn.append(std::to_string(toPrint.is_hitscan()));
+    int x,y,z;
+    std::tie(x,y,z) = toPrint.get_movement_vector();
+    toReturn.append(" Movement Vector: ");
+    toReturn.append("x:");
+    toReturn.append(std::to_string(x));
+    toReturn.append(", ");
+    toReturn.append("y:");
+    toReturn.append(std::to_string(y));
+    toReturn.append(", ");
+    toReturn.append("z:");
+    toReturn.append(std::to_string(z));
+    x = toPrint.get_shoot_offset_x();
+    y = toPrint.get_shoot_offset_y();
+    z = toPrint.get_shoot_offset_z();
+    toReturn.append(" Shoot Offsets: ");
+    toReturn.append("x:");
+    toReturn.append(std::to_string(x));
+    toReturn.append(", ");
+    toReturn.append("y:");
+    toReturn.append(std::to_string(y));
+    toReturn.append(", ");
+    toReturn.append("z:");
+    toReturn.append(std::to_string(z));
     return toReturn;
 }
 
@@ -1272,7 +1296,7 @@ TEST(ShooterWorldTest, Fire_Works_Properly)
             controller->performAction(game_engine::logic::Controller::Action::kShoot, 1.0f);
             world.do_tick();
             EXPECT_EQ(target_player->active_projectile_launcher->get_loaded_ammo(), target_player->active_projectile_launcher->get_magazine_size() - 1) << "Fire does not consume ammo. Launcher: " << printInfo(*target_player->active_projectile_launcher);
-            EXPECT_EQ(other_player->entity->get_hp(), 80) << "Fire does not hit healthy entities. Entity firing: " << printInfo(*target_player->entity) << " Entity being hit: " << printInfo(*other_player->entity);
+            EXPECT_EQ(other_player->entity->get_hp(), 80) << "Fire does not hit healthy entities. Entity firing: " << printInfo(*target_player->entity) << " Entity being hit: " << printInfo(*other_player->entity) << "Launcher: " << printInfo(*target_player->active_projectile_launcher) << " Hit id" << target_player->active_projectile_launcher->get_last_hit()->get_id();
         }
     }
     cleanup(world);
