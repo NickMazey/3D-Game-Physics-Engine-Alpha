@@ -338,26 +338,26 @@ void ShooterWorld::tick_players(){
                             }
                             airborne_checked = true;
                         }
-                        float air_coeff = 1.0f;
+                        entity->set_friction(1.0f);
                         if(airborne){
                             //only allowed small movements in the air
-                            air_coeff = 0.1f;
+                            entity->set_friction(0.1f);
                         }
-                        int movement = (int)(action.scale * move_speed_* air_coeff + 0.5f);
+                        int movement = (int)(action.scale * move_speed_ + 0.5f);
                         if(action.action == Controller::Action::kJump && !airborne){
-                            entity->set_move(x,std::max((int)(action.scale * jump_speed_),jump_speed_),z);
+                            entity->set_move(x,std::max(0,std::min((int)(action.scale * jump_speed_ + 0.5f),jump_speed_)),z);
                         }
                         if(action.action == Controller::Action::kWalkForward){
-                            entity->set_move(x,y,std::max(move_speed_, z + movement));
+                            entity->set_move(x,y,std::max(-move_speed_,std::min(move_speed_, z + movement)));
                         }
                         if(action.action == Controller::Action::kWalkBackwards){
-                            entity->set_move(x,y,std::min(-move_speed_, z - movement));
+                            entity->set_move(x,y,std::max(-move_speed_,std::min(move_speed_, z - movement)));
                         }
                         if(action.action == Controller::Action::kWalkLeft){
-                            entity->set_move(std::min(-move_speed_, x - movement),y,z);
+                            entity->set_move(std::max(-move_speed_,std::min(move_speed_, x - movement)),y,z);
                         }
                         if(action.action == Controller::Action::kWalkRight){
-                            entity->set_move(std::max(move_speed_, x + movement),y,z);
+                            entity->set_move(std::max(-move_speed_,std::min(move_speed_, x + movement)),y,z);
                         }
                     }
             }
