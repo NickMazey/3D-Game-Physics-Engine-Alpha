@@ -139,13 +139,13 @@ private:
 
     bool hitscan_;
 
-    Entity projectile_;
+    Entity projectile_ = Entity();
 
     // TODO: For testing without a world, should be replaced to point to a list of entities in the future
-    std::set<Entity*> entity_list_;
+    std::set<Entity*> entity_list_ = std::set<Entity*>();
 
     // TODO: Should be changed into a list in the future, will probably also need last hit to be a list that is removed from when used
-    Entity* active_projectile_;
+    Entity* active_projectile_ = nullptr;
 
     Entity* last_hit_;
 };

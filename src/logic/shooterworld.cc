@@ -83,7 +83,7 @@ void ShooterWorld::load_map(const Map &map){
     //Load in new map
     map_ = map;
     //Load terrain
-    for(int i = 0; i < map_.level.size(); i++){
+    for(int i = 0; i < (int)map_.level.size(); i++){
         Entity terrain = map_.level.at(i);
         Entity* used_terrain = new Entity(terrain.get_x_pos(),terrain.get_y_pos(),terrain.get_z_pos(),terrain.get_width(),terrain.get_height(),terrain.get_depth());
         used_terrain->set_look(terrain.get_horizontal_look_angle(),terrain.get_vertical_look_angle());
@@ -94,10 +94,10 @@ void ShooterWorld::load_map(const Map &map){
         add_object(used_terrain);
     }
 
-    Team* above_team = new Team(map_.players.size() / 2);
-    Team* below_team = new Team(map_.players.size() / 2);
+    Team* above_team = new Team((int)map_.players.size() / 2);
+    Team* below_team = new Team((int)map_.players.size() / 2);
     //Load Players
-    for(int i = 0; i < map_.players.size(); i++){
+    for(int i = 0; i < (int)map_.players.size(); i++){
         Entity entity = map_.players.at(i);
         if(entity.get_hp() > player_hp_){
             player_hp_ = entity.get_hp();
@@ -108,11 +108,12 @@ void ShooterWorld::load_map(const Map &map){
         player->entity->set_solid(entity.is_solid());
         player->entity->set_hp(entity.get_hp());
         player->entity->set_physics(true);
+        player->entity->set_friction(1.0f);
         obj_map_.insert(EntityPair(entity,player->entity));
         add_object(player->entity);
         player->inventory = std::vector<ProjectileLauncher*>();
         //Load launchers for players
-        for(int j = 0; j < map_.loadouts.at(i).size(); j++){
+        for(int j = 0; j < (int)map_.loadouts.at(i).size(); j++){
             ProjectileLauncher launcher = map_.available_weapons.at(j);
             ProjectileLauncher* used_launcher = nullptr;
             int ammo = launcher.get_loaded_ammo() + launcher.get_ammo();
@@ -156,7 +157,7 @@ bool ShooterWorld::round_over(){
 }
 
 void ShooterWorld::equip_player(Player* player, int index){
-            if(index < 0 || index >= player->inventory.size() || player->inventory.at(index) == player->active_projectile_launcher){
+            if(index < 0 || index >= (int)player->inventory.size() || player->inventory.at(index) == player->active_projectile_launcher){
                 return;
             }
             ProjectileLauncher* launcher = player->inventory.at(index);
@@ -195,6 +196,14 @@ Team* ShooterWorld::round_winner(){
 }
 
 bool ShooterWorld::game_over(){
+    if(score_limit_ <= 0){
+        return false;
+    }
+    for(Team* team : teams_){
+        if(team->get_score() >= score_limit_){
+            return true;
+        }
+    }
     return false;
 }
 
@@ -223,7 +232,7 @@ Team* ShooterWorld::game_winner(){
 
 void ShooterWorld::new_round(){
     round_time_ = (uint64_t) 0;
-    for(std::map<const Entity, Entity*>::iterator it = obj_map_.begin(); it != obj_map_.end(); ++it){
+    for(std::map<Entity, Entity*>::iterator it = obj_map_.begin(); it != obj_map_.end(); ++it){
         it->second->set_pos_relative_to(&it->first,0,0,0);
         it->second->set_hp(it->first.get_hp());
         it->second->set_look(it->first.get_horizontal_look_angle(),it->first.get_vertical_look_angle());
@@ -232,7 +241,7 @@ void ShooterWorld::new_round(){
     for(Team* team : teams_){
         for(Player* player : team->get_players()){
             int index = -1;
-            for(std::map<const Entity, Entity*>::iterator it = obj_map_.begin(); it != obj_map_.end(); ++it){
+            for(std::map<Entity, Entity*>::iterator it = obj_map_.begin(); it != obj_map_.end(); ++it){
                 if(it->second == player->entity){
                     std::vector<Entity>::iterator iter = std::find(map_.players.begin(),map_.players.end(),it->first);
                     if(iter != map_.players.end()){
@@ -240,7 +249,7 @@ void ShooterWorld::new_round(){
                     }
                 }
             }
-            for(int i = 0; i < player->inventory.size(); i++){
+            for(int i = 0; i < (int)player->inventory.size(); i++){
                 ProjectileLauncher launcher = map_.available_weapons.at(map_.loadouts.at(index).at(i));
                 ProjectileLauncher* used_launcher = player->inventory.at(i);
                 used_launcher->set_ammo((launcher.get_ammo()+launcher.get_loaded_ammo()) - used_launcher->get_loaded_ammo());
@@ -271,10 +280,9 @@ void ShooterWorld::tick_players(){
             if(player->controller && player->entity->get_hp() > 0){
                 bool airborne_checked = false;
                 bool airborne = true;
+                Entity* entity = player->entity;
+                ProjectileLauncher* launcher = player->active_projectile_launcher;
                 for(Controller::ScaledAction action : actions.at(player)){
-                    Entity* entity = player->entity;
-                    ProjectileLauncher* launcher = player->active_projectile_launcher;
-                    
                     //Launcher Controls
                     if(action.action == Controller::Action::kReload){
                         launcher->Reload();
@@ -287,7 +295,7 @@ void ShooterWorld::tick_players(){
                     }
 
                     if(action.action == Controller::Action::kSwapWeaponUp || action.action == Controller::Action::kSwapWeaponDown){
-                        if(player->inventory.size() > 1){
+                        if((int)player->inventory.size() > 1){
                             int index = -1;
                             std::vector<ProjectileLauncher*>::iterator iter = std::find(player->inventory.begin(),player->inventory.end(),player->active_projectile_launcher);
                             if(iter != player->inventory.end()){
@@ -295,12 +303,18 @@ void ShooterWorld::tick_players(){
                             }
                             int change = 0;
                             if(action.action == Controller::Action::kSwapWeaponUp){
-                                int change = 1;
+                                change = 1;
                             }
                             if(action.action == Controller::Action::kSwapWeaponDown){
-                                int change = -1;
+                                change = -1;
                             }
                             if(index != -1){
+                                if(index+change < 0){
+                                    change = (int)player->inventory.size() - index -1;
+                                }
+                                if(index + change >= (int)player->inventory.size()){
+                                    change = -index;
+                                }
                                 equip_player(player,index + change);
                             }
                         }
@@ -308,7 +322,7 @@ void ShooterWorld::tick_players(){
 
                     //View Controls
                     if(action.action == Controller::Action::kLookUp || action.action == Controller::Action::kLookDown || action.action == Controller::Action::kLookLeft || action.action == Controller::Action::kLookRight){
-                        float look_horizontal,look_vertical;
+                        float look_horizontal = 0.0f,look_vertical = 0.0f;
                         std::tie(look_horizontal,look_vertical) = entity->get_look_change_vector();
                     if(action.action == Controller::Action::kLookUp){
                         entity->set_look_change_vector(look_horizontal,look_vertical + action.scale);
@@ -326,7 +340,7 @@ void ShooterWorld::tick_players(){
 
                     //Movement Controls
                     if(action.action == Controller::Action::kJump || action.action == Controller::Action::kWalkForward || action.action == Controller::Action::kWalkBackwards || action.action == Controller::Action::kWalkLeft || action.action == Controller::Action::kWalkRight){
-                        int x,y,z;
+                        int x = 0,y = 0,z = 0;
                         std::tie(x,y,z) = entity->get_movement_vector();
                         if(!airborne_checked){
                             for(Entity* other : objects_){
@@ -380,12 +394,14 @@ void ShooterWorld::tick_players(){
     std::set<Entity*> movers = std::set<Entity*>();
     std::set<Entity*> stationary = std::set<Entity*>();
     for(Entity* e : objects_){
-
+        if(e == nullptr){
+            continue;
+        }
         if(e->get_hp() == 0){
             e->set_solid(false);
             continue;
         }
-        int x,y,z;
+        int x = 0,y = 0,z = 0;
         std::tie(x,y,z) = e->get_movement_vector();
         if(x == 0 && y == 0 && z == 0){
             stationary.insert(e);
@@ -398,11 +414,8 @@ void ShooterWorld::tick_players(){
             bool validated = false;
             //Limit of 10 steps
             for(int steps = 0; steps < 10 && !validated; steps++){
-            bool valid_x = false;
-            bool valid_y = false;
-            bool valid_z = false;
             std::tuple<int,int,int> movement_vector = entity->get_movement_vector();
-            int x,y,z;
+            int x = 0,y = 0,z = 0;
             std::tie(x,y,z) = movement_vector;
             int x_rot = entity->RotatedXMovementHelper(x,z);
             int z_rot = entity->RotatedZMovementHelper(x,z);
@@ -451,11 +464,11 @@ void ShooterWorld::tick_players(){
                     collisions.push_back(distance_tuple);
                    } 
                 }
-                if(collisions.size() > 0){
+                if((int)collisions.size() > 0){
                     std::sort(collisions.begin(), collisions.end());
                     int distance;
                     std::tuple<bool,bool,bool> responsibilities;
-                    Entity* other;
+                    Entity* other = nullptr;
                     std::tie(distance,responsibilities,other) = collisions.at(0);
                     bool x_resp = false;
                     bool y_resp = false;
@@ -496,12 +509,6 @@ void ShooterWorld::tick_players(){
                 }
             }
     }
-    for(Entity* ent : objects_){
-        ent->DoTick();
-    }
-    for(Entity* ent : movers){
-        ent->DoTick();
-    }
 }
 
 void ShooterWorld::process_controllers(){
@@ -520,9 +527,14 @@ void ShooterWorld::do_tick(){
     }
     process_controllers();
     tick_players();
+    for(Entity* ent : objects_){
+        if(ent){
+            ent->DoTick();
+        }
+    }
     validate_positions();
     round_time_ += time_ms() - last_tick_;
-    if(round_over()){
+    if(round_over() && !game_over()){
         Team* winner = round_winner();
         if(winner){
             winner->add_score(1);
@@ -541,7 +553,7 @@ void ShooterWorld::validate_positions(){
             if(entity->IsColliding(other)){
                 final = false;
                Entity* responsible = nullptr;
-               int x,y,z,other_x,other_y,other_z;
+               int x = 0,y = 0,z = 0,other_x = 0,other_y = 0,other_z = 0;
                std::tie(x,y,z) = entity->get_movement_vector();
                std::tie(other_x,other_y,other_z) = other->get_movement_vector();
                if(((x!= 0 || y != 0 || z != 0) && other_x == other_y && other_y == other_z && other_z == 0 ) || (entity->has_physics() && !other->has_physics())){

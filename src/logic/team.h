@@ -52,7 +52,7 @@ public:
 private:
     int max_team_size_;
     int score_;
-    std::set<Player*> players_;
+    std::set<Player*> players_ = std::set<Player*>();
 
     // Creates a set of all entities owned by a player
     std::set<Entity*> get_entities(Player* player);

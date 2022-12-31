@@ -34,8 +34,12 @@ Entity::Entity(int x, int y, int z, int width, int height, int depth)
     entity_count_++;
 }
 
-Entity::Entity()
+//Null entity
+Entity::Entity() : Entity(0,0,0,0,0,0)
 {
+    entity_count_--;
+    id_ = -1;
+    solid_ = false;
 }
 
 bool Entity::operator==(const Entity& other) const
@@ -100,7 +104,7 @@ void Entity::RemoveGhost(Entity* other)
     RemoveDependent(other);
 }
 
-bool Entity::InGhosts(const Entity* other)
+bool Entity::InGhosts(Entity* other)
 {
     return ghosts_.find(other) != ghosts_.end();
 }
@@ -262,8 +266,8 @@ void Entity::DoMove()
     y_pos_ += movement_vector_[1];
     if (physics_)
     {
-        x_pos_ += static_cast<int>(round(static_cast<float>(RotatedXMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_));
-        z_pos_ += static_cast<int>(round(static_cast<float>(RotatedZMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_));
+        x_pos_ = x_pos_ + (round((RotatedXMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_));
+        z_pos_ = z_pos_ + (round((RotatedZMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_));
     }
     else
     {
@@ -405,7 +409,7 @@ int Entity::EuclideanDistanceToOther(const Entity* other) const
     return static_cast<int>(round(sqrt(pow(XDistanceToOther(other), 2.0) + pow(YDistanceToOther(other), 2.0) + pow(ZDistanceToOther(other), 2.0))));
 }
 
-bool Entity::IsColliding(const Entity* other)
+bool Entity::IsColliding(Entity* other)
 {
     if (solid_ && other->is_solid() && !InGhosts(other) && *this != *other)
     {
@@ -421,7 +425,7 @@ bool Entity::IsColliding(const Entity* other)
     return false;
 }
 
-bool Entity::WouldCollide(const Entity* other, int x, int y, int z)
+bool Entity::WouldCollide(Entity* other, int x, int y, int z)
 {
     if (!InGhosts(other) && *this != *other)
     {
@@ -434,7 +438,7 @@ bool Entity::WouldCollide(const Entity* other, int x, int y, int z)
     return false;
 }
 
-bool Entity::PassesThrough(const Entity* other, int x, int y, int z)
+bool Entity::PassesThrough(Entity* other, int x, int y, int z)
 {
     // If it would collide (on either side of the entity) then it must not have passed through
     if (!WouldCollide(other, x, y, z))

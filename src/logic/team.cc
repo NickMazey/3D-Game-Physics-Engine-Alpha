@@ -19,7 +19,7 @@ Team::Team(const int max_team_size) {
 }
 
 void Team::add_player(Player* to_add) {
-    if (players_.size() < max_team_size_ && !has_player(to_add)) {
+    if ((int)players_.size() < max_team_size_ && !has_player(to_add)) {
         players_.insert(to_add);
 
         // Adding to ghosts

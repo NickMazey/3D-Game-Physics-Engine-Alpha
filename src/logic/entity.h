@@ -54,7 +54,7 @@ public:
     void RemoveGhost(Entity* other);
 
     // Whether or not another entity is in the ghosts of this entity
-    bool InGhosts(const Entity* other);
+    bool InGhosts(Entity* other);
 
     // Adds to children
     void AddChild(Entity* other, int x_offset, int y_offset, int z_offset);
@@ -122,7 +122,7 @@ public:
     // Returns the width of this entity with rotation
     int effective_width() const
     {
-        return static_cast<int>(abs(approxcos(horizontal_look_angle_)) * static_cast<float>(width_) + abs(sin(horizontal_look_angle_)) * static_cast<float>(depth_));
+        return static_cast<int>(abs(approxcos(horizontal_look_angle_)) * static_cast<float>(width_) + abs(approxsin(horizontal_look_angle_)) * static_cast<float>(depth_));
     }
 
     // Returns the depth of this entity with rotation
@@ -144,13 +144,13 @@ public:
     int EuclideanDistanceToOther(const Entity* other) const;
 
     // whether or not this entity is colliding with the other (atm uses bounding box)
-    bool IsColliding(const Entity* other);
+    bool IsColliding(Entity* other);
 
     // whether or not this entity would collide with the other if it moved by x,y, and z
-    bool WouldCollide(const Entity* other, int x, int y, int z);
+    bool WouldCollide(Entity* other, int x, int y, int z);
 
     // whether or not this entity would completely pass through the other if it moved by x,y, and z
-    bool PassesThrough(const Entity* other, int x, int y, int z);
+    bool PassesThrough(Entity* other, int x, int y, int z);
 
     int get_id() const
     {
@@ -275,19 +275,19 @@ public:
 private:
     int id_;
     int hp_;
-    std::set<Entity*> dependents_;
+    std::set<Entity*> dependents_ = std::set<Entity*>();
 
     int x_pos_;
     int y_pos_;
     int z_pos_;
     int movement_vector_[3] = { 0 };
-    ChildMap children_;
+    ChildMap children_ = ChildMap();
 
     bool solid_;
     int width_;
     int height_;
     int depth_;
-    std::set<const Entity*> ghosts_;
+    std::set<Entity*> ghosts_ = std::set<Entity*>();
 
     bool physics_;
     int gravity_;
