@@ -24,7 +24,7 @@ game_engine::logic::Map test_box()
     int player_width = 44;
     int half_player_width = player_width / 2;
     int player_depth = 28;
-    int half_player_depth = player_depth / 2;
+    //int half_player_depth = player_depth / 2;
     int player_hp = 100;
 
     int laser_width = 4;
@@ -102,7 +102,7 @@ std::string printInfo(const game_engine::logic::Entity toPrint)
     toReturn.append(std::to_string(toPrint.get_gravity()));
     toReturn.append(" Friction: ");
     toReturn.append(std::to_string(toPrint.get_friction()));
-    int x,y,z;
+    int x = 0,y = 0,z = 0;
     std::tie(x,y,z) = toPrint.get_movement_vector();
     toReturn.append(" Movement Vector: ");
     toReturn.append("x:");
@@ -166,7 +166,7 @@ std::string printInfo(const game_engine::logic::ProjectileLauncher toPrint)
     toReturn.append(std::to_string(toPrint.get_damage()));
     toReturn.append(" Hitscan: ");
     toReturn.append(std::to_string(toPrint.is_hitscan()));
-    int x,y,z;
+    int x = 0,y = 0,z = 0;
     std::tie(x,y,z) = toPrint.get_movement_vector();
     toReturn.append(" Movement Vector: ");
     toReturn.append("x:");
@@ -1542,20 +1542,6 @@ TEST(ShooterWorldTest, Game_Is_Won_On_Limit_Reached)
                 {
                     EXPECT_EQ(player->entity->get_hp(), 100) << "Health is not reset on round restart on iteration: " << i;
                 }
-            }
-
-            EXPECT_TRUE(world.round_over()) << "Round is not considered over when all players on one team have 0 health.";
-            EXPECT_EQ(world.round_winner(), other_team) << "Round winner is not calculated correctly.";
-            world.do_tick();
-            EXPECT_EQ(other_team->get_score(), 1) << "Score is not updated correctly after winning a round.";
-            world.do_tick();
-            EXPECT_EQ(other_team->get_score(), 1) << "Score updates each tick after winning a round.";
-            world.new_round();
-            EXPECT_FALSE(world.round_over()) << "Round over does not reset on round reset.";
-            EXPECT_EQ(world.round_winner(), nullptr) << "Round winner does not reset after round reset.";
-            for (game_engine::logic::Player *player : target_team->get_players())
-            {
-                EXPECT_EQ(player->entity->get_hp(), 100) << "Health is not reset on round restart.";
             }
         }
     }
