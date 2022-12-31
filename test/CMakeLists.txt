@@ -137,13 +137,13 @@ add_executable(
 target_link_libraries(
     shooterworld_test
     PUBLIC
-    mockcontroller
+    shooterworld
     team
     projectilelauncher
     entity
+    mockcontroller
     logicutil
     gtest_main
-    shooterworld
 )
 
 target_include_directories(shooterworld_test PUBLIC "${LIB}")
