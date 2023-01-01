@@ -194,34 +194,7 @@ int Entity::RotatedXMovementHelper(const int x, const int z) const
     float x_float = static_cast<float>(x);
     float z_float = static_cast<float> (z);
     float x_component = approxcos(horizontal_look_angle_) * x_float;
-    float z_component = 0.0;
-    if (approxsin(horizontal_look_angle_) != 0.0)
-    {
-        int horizontal_angle = SimplifyAngle(RadiansToDegrees(horizontal_look_angle_));
-        // Positive
-        if (horizontal_angle > 0.0 && horizontal_angle < 90.0)
-        { // First Quad
-            z_component = z_float * approxsin(horizontal_look_angle_ + DegreesToRadians(180));
-        }
-        else if (horizontal_angle == 90.0 || horizontal_angle == -90.0)
-        { // 90 Degrees
-            z_component = -z_float * approxsin(horizontal_look_angle_);
-        }
-        else if (horizontal_angle > 90.0 && horizontal_angle < 180.0)
-        { // Second Quad
-            z_component = -z_float * approxsin(horizontal_look_angle_);
-        }
-        // Negative
-        else if (horizontal_angle < 0.0 && horizontal_angle > -90.0)
-        { // First Quad
-            z_component = -z_float * approxsin(horizontal_look_angle_);
-        }
-        else if (horizontal_angle < -90.0 && horizontal_angle > -180.0)
-        { // Second Quad
-            x_component = x_float * approxsin(horizontal_look_angle_);
-            z_component = z_float * approxsin(horizontal_look_angle_ - DegreesToRadians(90));
-        }
-    }
+    float z_component = -approxsin(horizontal_look_angle_) * z_float;
     return static_cast<int>(round(x_component + z_component));
 }
 
@@ -230,34 +203,7 @@ int Entity::RotatedZMovementHelper(const int x, const int z) const
     float x_float = static_cast<float>(x);
     float z_float = static_cast<float> (z);
     float z_component = approxcos(horizontal_look_angle_) * z_float;
-    float x_component = 0.0;
-    if (approxsin(horizontal_look_angle_) != 0.0)
-    {
-        int horizontal_angle = SimplifyAngle(RadiansToDegrees(horizontal_look_angle_));
-        // Positive
-        if (horizontal_angle > 0.0 && horizontal_angle < 90.0)
-        { // First Quad
-            x_component = x_float * approxsin(horizontal_look_angle_);
-        }
-        else if (horizontal_angle == 90.0 || horizontal_angle == -90.0)
-        { // 90 Degrees
-            x_component = x_float * approxsin(horizontal_look_angle_);
-        }
-        else if (horizontal_angle > 90.0 && horizontal_angle < 180.0)
-        { // Second Quad
-            x_component = x_float * approxsin(horizontal_look_angle_);
-        }
-        // Negative
-        else if (horizontal_angle < 0.0 && horizontal_angle > -90.0)
-        { // First Quad
-            x_component = x_float * approxsin(horizontal_look_angle_);
-        }
-        else if (horizontal_angle < -90.0 && horizontal_angle > -180.0)
-        { // Second Quad
-            z_component = z_float * approxsin(horizontal_look_angle_);
-            x_component = x_float * approxcos(horizontal_look_angle_);
-        }
-    }
+    float x_component = approxsin(horizontal_look_angle_) * x_float;
     return static_cast<int>(round(z_component + x_component));
 }
 
