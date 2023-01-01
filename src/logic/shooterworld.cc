@@ -303,10 +303,10 @@ void ShooterWorld::tick_players(){
                             }
                             int change = 0;
                             if(action.action == Controller::Action::kSwapWeaponUp){
-                                change = 1;
+                                change = -1;
                             }
                             if(action.action == Controller::Action::kSwapWeaponDown){
-                                change = -1;
+                                change = 1;
                             }
                             if(index != -1){
                                 if(index+change < 0){
@@ -514,7 +514,7 @@ void ShooterWorld::tick_players(){
 void ShooterWorld::process_controllers(){
     for(Team* team : teams_){
         for(Player* player : team->get_players()){
-            if(player->controller){
+            if(player->controller != nullptr){
                 player->controller->Update();
             }
         }
@@ -528,7 +528,7 @@ void ShooterWorld::do_tick(){
     process_controllers();
     tick_players();
     for(Entity* ent : objects_){
-        if(ent){
+        if(ent != nullptr){
             ent->DoTick();
         }
     }
@@ -536,7 +536,7 @@ void ShooterWorld::do_tick(){
     round_time_ += time_ms() - last_tick_;
     if(round_over() && !game_over()){
         Team* winner = round_winner();
-        if(winner){
+        if(winner != nullptr){
             winner->add_score(1);
         }
         new_round();
