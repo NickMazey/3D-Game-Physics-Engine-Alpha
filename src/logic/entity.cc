@@ -150,6 +150,9 @@ bool Entity::InChildrenDeep(Entity* other)
 
 void Entity::UpdateChildren()
 {
+    if(children_.size() == 0u){
+        return;
+    }
     for (ChildMap::iterator iter = children_.begin(); iter != children_.end(); ++iter)
     {
         std::tuple<int, int, int> offset = iter->second;
@@ -212,8 +215,10 @@ void Entity::DoMove()
     y_pos_ += movement_vector_[1];
     if (physics_)
     {
-        x_pos_ = x_pos_ + (round((RotatedXMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_));
-        z_pos_ = z_pos_ + (round((RotatedZMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_));
+        int x_delta = (round((RotatedXMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_));
+        int z_delta = (round((RotatedZMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_));
+        x_pos_ = x_pos_ + x_delta;
+        z_pos_ = z_pos_ + z_delta;
     }
     else
     {

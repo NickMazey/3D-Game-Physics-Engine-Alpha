@@ -273,29 +273,29 @@ public:
     void set_friction(const float to_set);
 
 private:
-    int id_;
-    int hp_;
+    int id_ = -1;
+    int hp_ = -1;
     std::set<Entity*> dependents_ = std::set<Entity*>();
 
-    int x_pos_;
-    int y_pos_;
-    int z_pos_;
+    int x_pos_ = 0;
+    int y_pos_ = 0;
+    int z_pos_ = 0;
     int movement_vector_[3] = { 0 };
     ChildMap children_ = ChildMap();
 
-    bool solid_;
-    int width_;
-    int height_;
-    int depth_;
+    bool solid_ = true;
+    int width_ = 0;
+    int height_ = 0;
+    int depth_ = 0;
     std::set<Entity*> ghosts_ = std::set<Entity*>();
 
-    bool physics_;
-    int gravity_;
-    float friction_;
+    bool physics_ = false;
+    int gravity_ = 0;
+    float friction_ = 1.0f;
 
-    float horizontal_look_angle_;
-    float vertical_look_angle_;
-    int fov_;
+    float horizontal_look_angle_ = 0.0f;
+    float vertical_look_angle_ = 0.0f;
+    int fov_ = 0;
     float look_change_vector_[2] = { 0.0 }; // Radians
 };
 } // namespace logic

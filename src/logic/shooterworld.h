@@ -25,9 +25,6 @@ public:
     //Constructor with arguments
     ShooterWorld(int move_speed, int jump_speed, int gravity, int air_friction);
 
-    //Destructor
-    ~ShooterWorld();
-
     //Loads a map for this ShooterWorld
     void load_map(const Map &map);
 
