@@ -5,6 +5,7 @@
 #include <chrono>
 #include <cstdlib>
 #include <tuple>
+#include <signal.h>
 
 namespace game_engine
 {
@@ -24,9 +25,9 @@ namespace game_engine
             air_friction_ = air_friction;
             player_hp_ = 0;
             score_limit_ = 0;
-            round_time_limit_ = (uint64_t)0;
-            round_time_ = (uint64_t)0;
-            last_tick_ = (uint64_t)0;
+            round_time_limit_ = (uint64_t)0u;
+            round_time_ = (uint64_t)0u;
+            last_tick_ = (uint64_t)0u;
         }
 
         ShooterWorld::ShooterWorld() : ShooterWorld(0, 0, 0, 0) {}
@@ -151,7 +152,7 @@ namespace game_engine
 
         bool ShooterWorld::round_over()
         {
-            return (round_time_limit_ > (uint64_t)0 || round_time_ > round_time_limit_) || round_winner();
+            return (round_time_limit_ > (uint64_t)0u && round_time_ > round_time_limit_) || round_winner();
         }
 
         void ShooterWorld::equip_player(Player *player, int index)
@@ -251,13 +252,14 @@ namespace game_engine
 
         void ShooterWorld::new_round()
         {
-            round_time_ = (uint64_t)0;
-            for (std::map<Entity, Entity *>::iterator it = obj_map_.begin(); it != obj_map_.end(); ++it)
+            round_time_ = (uint64_t)0u;
+            for (auto const& it : obj_map_)
             {
-                it->second->set_pos_relative_to(&it->first, 0, 0, 0);
-                it->second->set_hp(it->first.get_hp());
-                it->second->set_look(it->first.get_horizontal_look_angle(), it->first.get_vertical_look_angle());
-                it->second->set_solid(it->first.is_solid());
+                it.second->set_pos(it.first.get_x_pos(),it.first.get_y_pos(),it.first.get_z_pos());
+                it.second->set_hp(it.first.get_hp());
+                it.second->set_look(it.first.get_horizontal_look_angle(), it.first.get_vertical_look_angle());
+                it.second->set_solid(it.first.is_solid());
+                it.second->set_move(0,0,0);
             }
             for (Team *team : teams_)
             {
@@ -687,6 +689,7 @@ namespace game_engine
                             int x_move = 0;
                             int y_move = 0;
                             int z_move = 0;
+                            //TODO: make adjustment consider rotation
                             if (false)
                             {
                                 if (entity->XDistanceToOther(other) == 0)
