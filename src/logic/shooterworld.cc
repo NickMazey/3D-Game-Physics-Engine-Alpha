@@ -547,11 +547,16 @@ namespace game_engine
                     }
                     if ((int)collisions.size() > 0)
                     {
-                        std::sort(collisions.begin(), collisions.end());
+                        std::tuple<int,std::tuple<bool, bool, bool>,Entity*> closest = collisions.at(0);
+                        for(auto& entry : collisions){
+                            if(std::get<0>(entry) < std::get<0>(closest)){
+                                closest = entry;
+                            }
+                        }
                         int distance;
                         std::tuple<bool, bool, bool> responsibilities;
                         Entity *other = nullptr;
-                        std::tie(distance, responsibilities, other) = collisions.at(0);
+                        std::tie(distance, responsibilities, other) = closest;
                         bool x_resp = false;
                         bool y_resp = false;
                         bool z_resp = false;
@@ -559,17 +564,63 @@ namespace game_engine
                         int x_change = 0;
                         int y_change = 0;
                         int z_change = 0;
-
+                        float horizontal_look_angle = entity->get_horizontal_look_angle();
+                        float vertical_look_angle = entity->get_vertical_look_angle();
+                        //Whether or not x or z needs to be considered due to rotation
+                        bool update_x = false;
+                        bool update_z = false;
                         if (x_resp)
-                        {
-                            x_change = entity->XDistanceToOther(other) - x;
-                            if (abs_x != x)
+                        {   
+                            int delta = entity->XDistanceToOther(other) - x_rot;
+                            if (abs_x != x_rot)
                             {
-                                x_change += 1;
+                                if(round(approxcos(horizontal_look_angle) * x) < 0){
+                                    update_x = true;
+                                }
+                                if(round(-approxsin(horizontal_look_angle) * z) < 0){
+                                    update_z = true;
+                                }
+                                if(update_x){
+                                    if(update_z){
+                                        //Delta is shared over both x and z
+                                        delta /= 2;
+                                    }
+                                    x_change = round(delta * approxcos(horizontal_look_angle));
+                                }
+                                if(update_z){
+                                    z_change = round(delta * -approxsin(horizontal_look_angle));
+                                }
+                                if(x_change < 0){
+                                    x_change += 1;
+                                }
+                                if(z_change < 0){
+                                    z_change += 1;
+                                }
                             }
                             else
                             {
-                                x_change -= 1;
+                                if(round(approxcos(horizontal_look_angle) * x) > 0){
+                                    update_x = true;
+                                }
+                                if(round(-approxsin(horizontal_look_angle) * z) > 0){
+                                    update_z = true;
+                                }
+                                if(update_x){
+                                    if(update_z){
+                                        //Delta is shared over both x and z
+                                        delta /= 2;
+                                    }
+                                    x_change = round(delta / approxcos(horizontal_look_angle));
+                                }
+                                if(update_z){
+                                    z_change = round(delta / -approxsin(horizontal_look_angle));
+                                }
+                                if(x_change > 0){
+                                    x_change -= 1;
+                                }
+                                if(z_change > 0){
+                                    z_change -= 1;
+                                }
                             }
                         }
                         else if (y_resp)
@@ -586,14 +637,56 @@ namespace game_engine
                         }
                         else if (z_resp)
                         {
-                            z_change = entity->ZDistanceToOther(other) - z;
-                            if (abs_z != z)
+                            int delta = entity->ZDistanceToOther(other) - z_rot;
+                            if (abs_z != z_rot)
                             {
-                                z_change += 1;
+                                if(round(approxsin(horizontal_look_angle) * x) < 0){
+                                    update_x = true;
+                                }
+                                if(round(approxcos(horizontal_look_angle) * z) < 0){
+                                    update_z = true;
+                                }
+                                if(update_x){
+                                    if(update_z){
+                                        //Delta is shared over both x and z
+                                        delta /= 2;
+                                    }
+                                    x_change = round(delta / approxsin(horizontal_look_angle));
+                                }
+                                if(update_z){
+                                    z_change = round(delta / approxcos(horizontal_look_angle));
+                                }
+                                if(x_change < 0){
+                                    x_change += 1;
+                                }
+                                if(z_change < 0){
+                                    z_change += 1;
+                                }
                             }
                             else
                             {
-                                z_change -= 1;
+                                if(round(approxsin(horizontal_look_angle) * x) > 0){
+                                    update_x = true;
+                                }
+                                if(round(approxcos(horizontal_look_angle) * z) > 0){
+                                    update_z = true;
+                                }
+                                if(update_x){
+                                    if(update_z){
+                                        //Delta is shared over both x and z
+                                        delta /= 2;
+                                    }
+                                    x_change = round(delta / approxsin(horizontal_look_angle));
+                                }
+                                if(update_z){
+                                    z_change = round(delta / approxcos(horizontal_look_angle));
+                                }
+                                if(x_change > 0){
+                                    x_change -= 1;
+                                }
+                                if(z_change > 0){
+                                    z_change -= 1;
+                                }
                             }
                         }
                         entity->set_move(x + x_change, y + y_change, z + z_change);
@@ -694,7 +787,7 @@ namespace game_engine
                     ent->DoTick();
                 }
             }
-            validate_positions();
+            //validate_positions();
             round_time_ += time_ms() - last_tick_;
             if (round_over() && !game_over())
             {
