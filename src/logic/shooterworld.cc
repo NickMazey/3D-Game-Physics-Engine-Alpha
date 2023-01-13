@@ -610,6 +610,57 @@ namespace game_engine
                 for (Player *player : team->get_players())
                 {
                     player->entity->DoTick();
+                    //Slow the entity down and apply gravity
+                    int x,y,z;
+                    std::tie(x,y,z) = player->entity->get_movement_vector();
+                    int x_update = 0;
+                    int y_update = 0;
+                    int z_update = 0;
+                    if(x > 0){
+                        if(x - air_friction_ >= 0){
+                        x_update = -air_friction_;
+                        } else{
+                            x_update = -x;
+                        }
+                    }
+
+                    if(x < 0){
+                       if(x + air_friction_ <= 0){
+                        x_update = air_friction_;
+                        } else{
+                            x_update = -x;
+                        } 
+                    }
+                    bool airborne = true;
+                    for(Entity* other : objects_){
+                        if(player->entity->WouldCollide(other,0,-1,0)){
+                            airborne = false;
+                            break;
+                        }
+                    }
+                    if(airborne){
+                        y_update = -gravity_;
+                    }else{
+                        y_update = -y;
+                    }
+
+                    if(z > 0){
+                        if(z - air_friction_ >= 0){
+                        z_update = -air_friction_;
+                        } else{
+                            z_update = -z;
+                        }
+                    }
+
+                    if(z < 0){
+                        if(z + air_friction_ <= 0){
+                        z_update = air_friction_;
+                        } else{
+                            z_update = -z;
+                        }
+                    }
+                    
+                    player->entity->set_move(x + x_update, y + y_update, z + z_update);
                 }
             }
         }
