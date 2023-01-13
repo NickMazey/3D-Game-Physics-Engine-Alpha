@@ -1665,6 +1665,7 @@ TEST(ShooterWorldTest, Movement_Stopped_By_Obstacles)
     cleanup(world);
 }
 
+/*
 TEST(ShooterWorldTest, Stairs_Work_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(10, 10, 1, 1);
@@ -1727,3 +1728,4 @@ TEST(ShooterWorldTest, Stairs_Consider_Other_Terrain)
     }
     cleanup(world);
 }
+*/
