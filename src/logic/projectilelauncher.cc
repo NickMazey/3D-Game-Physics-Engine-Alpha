@@ -140,20 +140,13 @@ Entity* ProjectileLauncher::FindFirstCollision(std::set<Entity*> entities)
     Entity* closest_hittable_entity = this;
     for (Entity* active_entity : entities)
     {
-        if (active_entity->is_solid() && !InGhosts(active_entity))
+        if (active_entity->get_id() != get_id() && active_entity->is_solid() && !InGhosts(active_entity))
         {
             // How much the line should move in each dimension per step with the given angles
-            int y_coefficient = static_cast<int>(round(approxsin(get_vertical_look_angle()) * 1000.0f));
-            int xz_coefficient = static_cast<int>(round(approxcos(get_vertical_look_angle()) * 1000.0f));
-            int x_coefficient = static_cast<int>(round(approxcos(get_horizontal_look_angle()) * 1000.0f) * xz_coefficient) / 1000;
-            int z_coefficient = static_cast<int>(round(approxsin(get_horizontal_look_angle()) * 1000.0f) * xz_coefficient) / 1000;
-
-            float distance = static_cast<float>(EuclideanDistanceToOther(active_entity));
-
-            // For x, y, and z
-            int x_movement = static_cast<int>(distance * x_coefficient) / 1000;
-            int y_movement = static_cast<int>(distance * y_coefficient) / 1000;
-            int z_movement = static_cast<int>(distance * z_coefficient) / 1000;
+            float y_coefficient = approxsin(get_vertical_look_angle());
+            float xz_coefficient = approxcos(get_vertical_look_angle());
+            float x_coefficient = approxcos(get_horizontal_look_angle()) * xz_coefficient;
+            float z_coefficient = approxsin(get_horizontal_look_angle()) * xz_coefficient;
 
             //Adding rotation to shoot offsets
             int shoot_offset_x = get_effective_shoot_offset_x();
@@ -161,8 +154,17 @@ Entity* ProjectileLauncher::FindFirstCollision(std::set<Entity*> entities)
 
             // Creating a point to check if this line passes through the other entity
             Entity* test_point = new Entity(get_x_pos() + shoot_offset_x, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_offset_z, 0, 0, 0);
-            test_point->DoMove(x_movement, y_movement, z_movement);
-            if (test_point->IsColliding(active_entity))
+
+
+            float distance = static_cast<float>(test_point->EuclideanDistanceToOther(active_entity));
+
+            // For x, y, and z
+            int x_movement = round(distance * x_coefficient);
+            int y_movement = round(distance * y_coefficient);
+            int z_movement = round(distance * z_coefficient);
+            
+
+              if (test_point->WouldCollide(active_entity,x_movement,y_movement,z_movement) || test_point->PassesThrough(active_entity,x_movement,y_movement,z_movement))
             {
                 if (closest_hittable_entity == this)
                 {
