@@ -46,9 +46,10 @@ game_engine::logic::Map test_box()
     int player_z = half_floor_size - half_thickness - half_player_width - 1;
     game_engine::logic::Entity player_north = game_engine::logic::Entity(0, half_player_height + 1, player_z, player_width, player_height, player_depth);
     player_north.set_hp(player_hp);
-    player_north.set_look(game_engine::logic::DegreesToRadians(180), 0.0f);
+    player_north.set_look(game_engine::logic::DegreesToRadians(-90), 0.0f);
     game_engine::logic::Entity player_south = game_engine::logic::Entity(0, half_player_height + 1, -player_z, player_width, player_height, player_depth);
     player_south.set_hp(player_hp);
+    player_south.set_look(game_engine::logic::DegreesToRadians(90), 0.0f);
 
     // Launcher
     game_engine::logic::ProjectileLauncher laser = game_engine::logic::ProjectileLauncher(0, 0, 0, laser_width, laser_height, laser_depth, laser_ammo, laser_magazine_size, laser_damage);
@@ -522,7 +523,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PX)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(978, 0, 0);
+        target_entity->DoMoveAbsolute(986, 0, 0);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
     }
@@ -550,7 +551,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NX)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(-978, 0,0);
+        target_entity->DoMoveAbsolute(-986, 0,0);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
     }
@@ -634,7 +635,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(978, 0, 22);
+        target_entity->DoMoveAbsolute(986, 0, 22);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
@@ -663,7 +664,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(978, 0, -22);
+        target_entity->DoMoveAbsolute(986, 0, -22);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
@@ -692,7 +693,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(-978, 0, 22);
+        target_entity->DoMoveAbsolute(-986, 0, 22);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
@@ -721,7 +722,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(-978, 0, -22);
+        target_entity->DoMoveAbsolute(-986, 0, -22);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
@@ -750,7 +751,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX_PY)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(978, 1000 - target_entity->get_max_y_pos(), 22);
+        target_entity->DoMoveAbsolute(986, 1000 - target_entity->get_max_y_pos(), 22);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
@@ -780,7 +781,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX_PY)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(978, 1000 - target_entity->get_max_y_pos(), -22);
+        target_entity->DoMoveAbsolute(986, 1000 - target_entity->get_max_y_pos(), -22);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
@@ -810,7 +811,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX_PY)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(-978, 1000 - target_entity->get_max_y_pos(), 22);
+        target_entity->DoMoveAbsolute(-986, 1000 - target_entity->get_max_y_pos(), 22);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
@@ -840,7 +841,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX_PY)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(-978, 1000 - target_entity->get_max_y_pos(), -22);
+        target_entity->DoMoveAbsolute(-986, 1000 - target_entity->get_max_y_pos(), -22);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
@@ -870,7 +871,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX_NY)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(978, -1, 22);
+        target_entity->DoMoveAbsolute(986, -1, 22);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
@@ -900,7 +901,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX_NY)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(978, -1, -22);
+        target_entity->DoMoveAbsolute(986, -1, -22);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on neagative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
@@ -930,7 +931,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX_NY)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(-978, -1, 22);
+        target_entity->DoMoveAbsolute(-986, -1, 22);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
@@ -960,7 +961,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX_NY)
     EXPECT_NE(target_entity, nullptr) << "Could not find target entity";
     if (target_entity)
     {
-        target_entity->DoMoveAbsolute(-978, -1, -22);
+        target_entity->DoMoveAbsolute(-986, -1, -22);
         world.validate_positions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
@@ -1028,8 +1029,9 @@ TEST(ShooterWorldTest, Backward_Input_Behaves_Properly)
         int start_z = target_player->entity->get_z_pos();
         target_player->controller = controller;
         controller->performAction(game_engine::logic::Controller::Action::kWalkBackwards, 1.0f);
+        target_player->entity->set_look(game_engine::logic::DegreesToRadians(90),0.0f);
         world.do_tick();
-        EXPECT_EQ(target_player->entity->get_z_pos(), start_z + world.get_move_speed()) << "Backwards input does not work properly. Entity: " << printInfo(*target_player->entity);
+        EXPECT_EQ(target_player->entity->get_z_pos(), start_z - world.get_move_speed()) << "Backwards input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
     cleanup(world);
 }

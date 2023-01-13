@@ -320,12 +320,7 @@ namespace game_engine
 
                             case Controller::Action::kShoot:
                             {
-                                if (launcher->Fire(objects_))
-                                {
-                                }
-                                else
-                                {
-                                }
+                            launcher->Fire(objects_);
                             }
                             break;
                             case Controller::Action::kSwapWeaponUp:
@@ -422,19 +417,21 @@ namespace game_engine
                                 }
                                 if (action.action == Controller::Action::kWalkForward)
                                 {
-                                    entity->set_move(x, y, std::max(-move_speed_, std::min(move_speed_, z + movement)));
+                                    entity->set_move(std::max(-move_speed_, std::min(move_speed_, x + movement)), y, z);
+                                    
                                 }
                                 if (action.action == Controller::Action::kWalkBackwards)
                                 {
-                                    entity->set_move(x, y, std::max(-move_speed_, std::min(move_speed_, z - movement)));
+                                    entity->set_move(std::max(-move_speed_, std::min(move_speed_, x - movement)), y, z);
+                                    
                                 }
                                 if (action.action == Controller::Action::kWalkLeft)
                                 {
-                                    entity->set_move(std::max(-move_speed_, std::min(move_speed_, x - movement)), y, z);
+                                    entity->set_move(x, y, std::max(-move_speed_, std::min(move_speed_, z + movement)));
                                 }
                                 if (action.action == Controller::Action::kWalkRight)
                                 {
-                                    entity->set_move(std::max(-move_speed_, std::min(move_speed_, x + movement)), y, z);
+                                    entity->set_move(x, y, std::max(-move_speed_, std::min(move_speed_, z - movement)));
                                 }
                             }
                             break;
