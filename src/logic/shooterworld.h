@@ -19,6 +19,8 @@ public:
     // pairing between map Entities and their instanced entities
     typedef std::pair<Entity, Entity*> EntityPair;
 
+    typedef std::map<Entity, Entity*> ObjectMap;
+
     //Constructor
     ShooterWorld();
 
@@ -156,7 +158,7 @@ private:
     Map map_ = Map{"Empty",{},{},{},{},'x'};
     std::set<Entity*> level_ = std::set<Entity*>();
     std::set<Entity*> objects_ = std::set<Entity*>();
-    std::map<Entity,Entity*> obj_map_ = std::map<Entity, Entity*>(); 
+    ObjectMap obj_map_ = ObjectMap(); 
     int gravity_;
     int move_speed_;
     int jump_speed_;
