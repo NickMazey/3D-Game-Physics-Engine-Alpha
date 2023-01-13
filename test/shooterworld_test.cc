@@ -1657,7 +1657,7 @@ TEST(ShooterWorldTest, Movement_Stopped_By_Obstacles)
         EXPECT_NE(other_player, nullptr) << "Could not find other player";
         if (other_player)
         {
-            target_player->entity->set_move(0, 0, 5000);
+            target_player->entity->set_move(5000, 0,0);
             world.do_tick();
             EXPECT_EQ(target_player->entity->get_max_z_pos(), other_player->entity->get_min_z_pos() - 1) << "Entities are not stopped by obstacles. Entity moving: " << printInfo(*target_player->entity) << " other entity: " << printInfo(*other_player->entity);
         }
