@@ -1606,8 +1606,7 @@ TEST(ShooterWorldTest, Firing_Takes_Precedent)
         EXPECT_NE(other_player, nullptr) << "Could not find other player";
         if (other_player)
         {
-            world.do_tick();
-            other_player->entity->DoMoveAbsolute(21, 0, 0);
+            other_player->entity->DoMoveAbsolute(14,0,0);
             game_engine::logic::MockController *controllerNorth = new game_engine::logic::MockController();
             game_engine::logic::MockController *controllerSouth = new game_engine::logic::MockController();
             other_player->controller = controllerNorth;
@@ -1616,7 +1615,7 @@ TEST(ShooterWorldTest, Firing_Takes_Precedent)
             controllerSouth->performAction(game_engine::logic::Controller::Action::kShoot, 1.0f);
             world.do_tick();
             EXPECT_EQ(other_player->entity->get_hp(), 80) << "Entity is not hit before moving. Entity: " << printInfo(*other_player->entity);
-            EXPECT_EQ(other_player->entity->get_x_pos(), 31) << "Entity does not move. Entity : " << printInfo(*other_player->entity);
+            EXPECT_EQ(other_player->entity->get_x_pos(), 24) << "Entity does not move. Entity : " << printInfo(*other_player->entity);
         }
     }
     cleanup(world);
