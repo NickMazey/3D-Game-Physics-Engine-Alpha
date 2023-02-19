@@ -456,7 +456,7 @@ namespace game_engine
                         //Stairs
                         if(entity->YDistanceToOther(other) == 0 && entity->get_max_y_pos() >= other->get_min_y_pos()){
                                 int elevation_change = other->get_max_y_pos() - entity->get_min_y_pos();
-                                int ratio = entity->get_height() / elevation_change;
+                                int ratio = round(entity->get_height() / static_cast<double>(elevation_change));
                                 if(elevation_change > 0 && ratio >= 10){
                                     elevation_change +=1;
                                     bool can_shift_up = true;
