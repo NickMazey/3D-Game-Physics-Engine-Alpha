@@ -80,11 +80,20 @@ public:
     // sets the x y and z move vectors
     void set_move(int x, int y, int z);
 
+    // sets the x y and z move vectors relative to this entity
+    void set_move_relative(int x, int y, int z);
+
     // Applies x rotation for movement
     int RotatedXMovementHelper(const int x, const int z) const;
 
     // Applies z rotation for movement
     int RotatedZMovementHelper(const int x, const int z) const;
+
+     // Applies rotation for width
+    int RotatedWidthHelper(const int x, const int z) const;
+
+    // Applies rotation for depth
+    int RotatedDepthHelper(const int x, const int z) const;
 
     // Applies movement
     void DoMove();
@@ -122,13 +131,13 @@ public:
     // Returns the width of this entity with rotation
     int effective_width() const
     {
-        return static_cast<int>(abs(approxcos(horizontal_look_angle_)) * static_cast<float>(width_) + abs(approxsin(horizontal_look_angle_)) * static_cast<float>(depth_));
+        return static_cast<int>(abs(RotatedWidthHelper(width_,depth_)));
     }
 
     // Returns the depth of this entity with rotation
     int effective_depth() const
     {
-        return static_cast<int>(abs(approxcos(horizontal_look_angle_)) * static_cast<float>(depth_) + abs(approxsin(horizontal_look_angle_)) * static_cast<float>(width_));
+        return static_cast<int>(abs(RotatedDepthHelper(width_,depth_)));
     }
 
     // Returns the distance to another entity on X
@@ -148,9 +157,18 @@ public:
 
     // whether or not this entity would collide with the other if it moved by x,y, and z
     bool WouldCollide(Entity* other, int x, int y, int z);
+    
+    // whether or not this entity would collide with the other if it moved relatively by x,y, and z 
+    bool WouldCollideRelative(Entity* other,int x, int y, int z);
+
+    // whether or not his entity would collide with the other if it rotated by horizontal and vertical
+    bool WouldCollideRotate(Entity* other, float horizontal,float vertical);
 
     // whether or not this entity would completely pass through the other if it moved by x,y, and z
     bool PassesThrough(Entity* other, int x, int y, int z);
+
+    // whether or not this entity would completely pass through the other if it moved relatively by x,y, and z
+    bool PassesThroughRelative(Entity* other, int x, int y, int z);
 
     int get_id() const
     {

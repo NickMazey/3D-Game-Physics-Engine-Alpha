@@ -252,16 +252,16 @@ TEST(EntityTest, Movement_Single_Tick_None){
 
 TEST(EntityTest, Movement_Single_Tick_Set){
     game_engine::logic::Entity a (0,0,0,100,100,100);
-    a.set_move(1,0,0);
+    a.set_move_relative(1,0,0);
     a.DoMove();
     EXPECT_TRUE(a.get_x_pos() == 1 && a.get_y_pos() == 0 && a.get_z_pos() == 0) << "Entity moved unexpectedly. \n Entity:" << printInfo(a);
 }
 
 TEST(EntityTest, Movement_Single_Tick_Variable){
     game_engine::logic::Entity a (0,0,0,100,100,100);
-    a.set_move(1,0,0);
+    a.set_move_relative(1,0,0);
     a.DoMove();
-    a.set_move(-1,1,1);
+    a.set_move_relative(-1,1,1);
     EXPECT_TRUE(a.get_x_pos() == 1 && a.get_y_pos() == 0 && a.get_z_pos() == 0) << "Entity moved unexpectedly. \n Entity:" << printInfo(a);
 }
 
@@ -275,7 +275,7 @@ TEST(EntityTest, Movement_Multi_Tick_None){
 
 TEST(EntityTest,Movement_Multi_Tick_Set){
     game_engine::logic::Entity a (0,0,0,100,100,100);
-    a.set_move(1,0,0);
+    a.set_move_relative(1,0,0);
     for(int i = 0; i < 5; i++){
         a.DoMove();
     }
@@ -284,11 +284,11 @@ TEST(EntityTest,Movement_Multi_Tick_Set){
 
 TEST(EntityTest,Movement_Multi_Tick_Variable){
     game_engine::logic::Entity a (0,0,0,100,100,100);
-    a.set_move(1,0,0);
+    a.set_move_relative(1,0,0);
     for(int i = 0; i < 5; i++){
         a.DoMove();
     }
-    a.set_move(0,1,1);
+    a.set_move_relative(0,1,1);
     for(int i = 0; i < 5; i++){
         a.DoMove();
     }
@@ -1256,7 +1256,7 @@ TEST(EntityTest, Self_Rotated_45_X_Collides){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,100,100);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(100,0,0,100,100,100);
     a->DoLook(game_engine::logic::DegreesToRadians(45),0);
-    EXPECT_TRUE(a->IsColliding(b)) << "Entity a didn't collide on X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->IsColliding(b)) << "Entity a didn't collide on X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n effective_width,depth " << a->effective_width() << a->effective_depth() << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1547,7 +1547,7 @@ TEST(EntityTest, Rotation_Affects_Would_Collide_Movement_X){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(100,0,100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(45),0);
-    EXPECT_TRUE(a->WouldCollide(b,100,0,0)) << "Would collide doesn't move properly on X when rotated. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->WouldCollideRelative(b,100,0,0)) << "Would collide doesn't move properly on X when rotated. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1556,10 +1556,11 @@ TEST(EntityTest, Rotation_Affects_Would_Collide_Movement_Z){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(-100,0,100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(45),0);
-    EXPECT_TRUE(a->WouldCollide(b,0,0,100)) << "Would collide doesn't move properly on Z when rotated. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->WouldCollideRelative(b,0,0,100)) << "Would collide doesn't move properly on Z when rotated. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
+
 
 
 
@@ -1568,7 +1569,7 @@ TEST(EntityTest, Self_Rotated_45_Passes_Through_Pos_X){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(100,0,100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(45),0);
-    EXPECT_TRUE(a->PassesThrough(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1577,7 +1578,7 @@ TEST(EntityTest, Self_Rotated_45_Passes_Through_Neg_X){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(-100,0,-100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(45),0);
-    EXPECT_TRUE(a->PassesThrough(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);;
+    EXPECT_TRUE(a->PassesThroughRelative(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);;
     delete a;
     delete b;
 }
@@ -1586,7 +1587,7 @@ TEST(EntityTest, Self_Rotated_45_Passes_Through_Pos_Z){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(-100,0,100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(45),0);
-    EXPECT_TRUE(a->PassesThrough(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1595,7 +1596,7 @@ TEST(EntityTest, Self_Rotated_45_Passes_Through_Neg_Z){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(100,0,-100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(45),0);
-    EXPECT_TRUE(a->PassesThrough(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);;
+    EXPECT_TRUE(a->PassesThroughRelative(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 45 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);;
     delete a;
     delete b;
 }
@@ -1604,7 +1605,7 @@ TEST(EntityTest, Self_Rotated_90_Passes_Through_Pos_X){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(0,0,100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(90),0);
-    EXPECT_TRUE(a->PassesThrough(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1613,7 +1614,7 @@ TEST(EntityTest, Self_Rotated_90_Passes_Through_Neg_X){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(0,0,-100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(90),0);
-    EXPECT_TRUE(a->PassesThrough(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1622,7 +1623,7 @@ TEST(EntityTest, Self_Rotated_90_Passes_Through_Pos_Z){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(-100,0,0,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(90),0);
-    EXPECT_TRUE(a->PassesThrough(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1631,7 +1632,7 @@ TEST(EntityTest, Self_Rotated_90_Passes_Through_Neg_Z){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(100,0,0,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(90),0);
-    EXPECT_TRUE(a->PassesThrough(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 90 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1640,7 +1641,7 @@ TEST(EntityTest, Self_Rotated_135_Passes_Through_Pos_X){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(-100,0,100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(135),0);
-    EXPECT_TRUE(a->PassesThrough(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1649,7 +1650,7 @@ TEST(EntityTest, Self_Rotated_135_Passes_Through_Neg_X){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(100,0,-100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(135),0);
-    EXPECT_TRUE(a->PassesThrough(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1658,7 +1659,7 @@ TEST(EntityTest, Self_Rotated_135_Passes_Through_Pos_Z){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(-100,0,-100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(135),0);
-    EXPECT_TRUE(a->PassesThrough(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1667,7 +1668,7 @@ TEST(EntityTest, Self_Rotated_135_Passes_Through_Neg_Z){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(100,0,100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(135),0);
-    EXPECT_TRUE(a->PassesThrough(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 135 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1676,7 +1677,7 @@ TEST(EntityTest, Self_Rotated_180_Passes_Through_Pos_X){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(-100,0,0,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(180),0);
-    EXPECT_TRUE(a->PassesThrough(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,400,0,0)) << "Entity a doesn't pass through b on pos X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1685,7 +1686,7 @@ TEST(EntityTest, Self_Rotated_180_Passes_Through_Neg_X){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(100,0,0,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(180),0);
-    EXPECT_TRUE(a->PassesThrough(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,-400,0,0)) << "Entity a doesn't pass through b on neg X when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1694,7 +1695,7 @@ TEST(EntityTest, Self_Rotated_180_Passes_Through_Pos_Z){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(0,0,-100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(180),0);
-    EXPECT_TRUE(a->PassesThrough(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,0,0,400)) << "Entity a doesn't pass through b on pos Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
@@ -1703,12 +1704,10 @@ TEST(EntityTest, Self_Rotated_180_Passes_Through_Neg_Z){
     game_engine::logic::Entity* a = new game_engine::logic::Entity(0,0,0,50,50,50);
     game_engine::logic::Entity* b = new game_engine::logic::Entity(0,0,100,50,50,50);
     a->DoLook(game_engine::logic::DegreesToRadians(180),0);
-    EXPECT_TRUE(a->PassesThrough(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
+    EXPECT_TRUE(a->PassesThroughRelative(b,0,0,-400)) << "Entity a doesn't pass through b on neg Z when rotated 180 degrees. \n Entity a: " << printInfo(*a) << "\n Entity b: " << printInfo(*b);
     delete a;
     delete b;
 }
-
-
 
 //Entity Relative Placement Rotation Tests
 TEST(EntityTest, Position_Relative_No_Rotate){

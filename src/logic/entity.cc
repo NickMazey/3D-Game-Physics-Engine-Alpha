@@ -185,11 +185,28 @@ void Entity::remove_hp(const int to_remove)
     }
 }
 
-void Entity::set_move(int x, int y, int z)
+void Entity::set_move_relative(int x, int y, int z)
 {
-    movement_vector_[0] = x;
     movement_vector_[1] = y;
-    movement_vector_[2] = z;
+    if(physics_){
+        movement_vector_[0] = round(static_cast<float>(RotatedXMovementHelper(x, z))*friction_);
+        movement_vector_[2] = round(static_cast<float>(RotatedZMovementHelper(x, z))*friction_);
+    }else{
+        movement_vector_[0] = RotatedXMovementHelper(x, z);
+        movement_vector_[2] = RotatedZMovementHelper(x, z);
+    }
+
+}
+
+void Entity::set_move(int x, int y, int z){
+    movement_vector_[1] = y;
+    if(physics_){
+        movement_vector_[0] = round(static_cast<float>(x) * friction_);
+        movement_vector_[2] = round(static_cast<float>(z) * friction_);
+    }else{
+        movement_vector_[0] = x;
+        movement_vector_[2] = z;
+    }
 }
 
 int Entity::RotatedXMovementHelper(const int x, const int z) const
@@ -205,33 +222,39 @@ int Entity::RotatedZMovementHelper(const int x, const int z) const
 {
     float x_float = static_cast<float>(x);
     float z_float = static_cast<float> (z);
-    float z_component = approxcos(horizontal_look_angle_) * z_float;
     float x_component = approxsin(horizontal_look_angle_) * x_float;
+    float z_component = approxcos(horizontal_look_angle_) * z_float;
     return static_cast<int>(round(z_component + x_component));
+}
+
+int Entity::RotatedWidthHelper(const int x,const int z) const{
+    float x_float = static_cast<float>(x);
+    float z_float = static_cast<float>(z);
+    float x_component = approxcos(horizontal_look_angle_) * x_float;
+    float z_component = -approxsin(horizontal_look_angle_) * z_float;
+    return static_cast<int>(round(abs(x_component) + abs(z_component)));
+}
+
+int Entity::RotatedDepthHelper(const int x,const int z) const{
+    float x_float = static_cast<float>(x);
+    float z_float = static_cast<float> (z);
+    float x_component = approxsin(horizontal_look_angle_) * x_float;
+    float z_component = approxcos(horizontal_look_angle_) * z_float;
+    return static_cast<int>(round(abs(z_component) + abs(x_component)));
 }
 
 void Entity::DoMove()
 {
     y_pos_ += movement_vector_[1];
-    if (physics_)
-    {
-        int x_delta = (round((RotatedXMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_));
-        int z_delta = (round((RotatedZMovementHelper(movement_vector_[0], movement_vector_[2])) * friction_));
-        x_pos_ = x_pos_ + x_delta;
-        z_pos_ = z_pos_ + z_delta;
-    }
-    else
-    {
-        x_pos_ += RotatedXMovementHelper(movement_vector_[0], movement_vector_[2]);
-        z_pos_ += RotatedZMovementHelper(movement_vector_[0], movement_vector_[2]);
-    }
+    x_pos_ += movement_vector_[0];
+    z_pos_ += movement_vector_[2];
     UpdateChildren();
 }
 
 void Entity::DoMove(int x, int y, int z)
 {
     std::tuple<int, int, int> movement_vector_old = get_movement_vector();
-    set_move(x, y, z);
+    set_move_relative(x, y, z);
     DoMove();
     int x_pos_old, y_pos_old, z_pos_old;
     std::tie(x_pos_old, y_pos_old, z_pos_old) = movement_vector_old;
@@ -371,18 +394,34 @@ bool Entity::IsColliding(Entity* other)
             (get_min_y_pos() <= other->get_max_y_pos() && get_max_y_pos() >= other->get_min_y_pos()) && // Y axis
             (get_min_z_pos() <= other->get_max_z_pos() && get_max_z_pos() >= other->get_min_z_pos());   // Z axis
     }
-
     // Would've already returned otherwise, must not be colliding
     return false;
 }
 
 bool Entity::WouldCollide(Entity* other, int x, int y, int z)
 {
-    if (!InGhosts(other) && *this != *other)
+    if (solid_ && other->is_solid() && !InGhosts(other) && *this != *other)
     {
         Entity* created = new Entity(x_pos_, y_pos_, z_pos_, width_, height_, depth_);
         created->DoLook(horizontal_look_angle_, vertical_look_angle_);
-        created->DoMove(x, y, z);
+        created->DoMoveAbsolute(x, y, z);
+        return created->IsColliding(other);
+    }
+    // Can't collide
+    return false;
+}
+
+bool Entity::WouldCollideRelative(Entity* other, int x, int y, int z)
+{
+    return WouldCollide(other,RotatedXMovementHelper(x,z),y,RotatedZMovementHelper(x,z));
+}
+
+bool Entity::WouldCollideRotate(Entity* other, float horizontal, float vertical){
+    if (solid_ && other->is_solid() && !InGhosts(other) && *this != *other)
+    {
+        Entity* created = new Entity(x_pos_, y_pos_, z_pos_, width_, height_, depth_);
+        created->DoLook(horizontal_look_angle_, vertical_look_angle_);
+        created->DoLook(horizontal,vertical);
         return created->IsColliding(other);
     }
     // Can't collide
@@ -392,20 +431,47 @@ bool Entity::WouldCollide(Entity* other, int x, int y, int z)
 bool Entity::PassesThrough(Entity* other, int x, int y, int z)
 {
     // If it would collide (on either side of the entity) then it must not have passed through
-    if (!WouldCollide(other, x, y, z))
+    if (!WouldCollide(other, x, y, z) && solid_ && other->is_solid() && !InGhosts(other) && (x != 0 || y != 0 || z != 0))
     {
-        int rotated_x_movement = RotatedXMovementHelper(x, z);
-        int rotated_z_movement = RotatedZMovementHelper(x, z);
-        // If it's moving enough to reach the entity and it doesn't collide, it must've passed through it
-        if (((XDistanceToOther(other) == 0) || (XDistanceToOther(other) > 0 && XDistanceToOther(other) < rotated_x_movement) || (XDistanceToOther(other) < 0 && XDistanceToOther(other) > rotated_x_movement)) && // X
-            ((YDistanceToOther(other) == 0) || (YDistanceToOther(other) > 0 && YDistanceToOther(other) < y) || (YDistanceToOther(other) < 0 && YDistanceToOther(other) > y)) &&                                   // Y
-            ((ZDistanceToOther(other) == 0) || (ZDistanceToOther(other) > 0 && ZDistanceToOther(other) < rotated_z_movement) || (ZDistanceToOther(other) < 0 && ZDistanceToOther(other) > rotated_z_movement)))
-        { // Z
-            return true;
+        int rotated_x_movement = x;
+        int rotated_z_movement = z;
+       //X Step 
+       int x_dist = XDistanceToOther(other);
+       int y_dist = YDistanceToOther(other);
+       int z_dist = ZDistanceToOther(other);
+       float coeff = 0.f;
+       if(x != 0){
+        if((x > x_dist && x_dist >0 )|| (x < x_dist && x_dist < 0)){
+            coeff = static_cast<float>(x_dist) / static_cast<float>(x);
+            if(WouldCollide(other,x_dist,round(y * coeff),round(z*coeff))){
+                return true;
+            }
+        }
+        }
+        if(y != 0){
+        if((y > y_dist && y_dist >0 )|| (y < y_dist && y_dist < 0)){
+            coeff = static_cast<float>(y_dist) / static_cast<float>(y);
+            if(WouldCollide(other,round(x * coeff),y_dist,round(z*coeff))){
+                return true;
+            }
+        }
+        }
+        if(z != 0){
+        if((z > z_dist && z_dist >0 )|| (z < z_dist && z_dist < 0)){
+             coeff = static_cast<float>(z_dist) / static_cast<float>(z);
+             other->set_gravity(z_dist);
+            if(WouldCollide(other,round(x * coeff),round(y * coeff),z_dist)){
+                return true;
+            }
+        }
         }
     }
     // Hasn't returned yet, must not be passing through
     return false;
+}
+
+bool Entity::PassesThroughRelative(Entity* other, int x, int y, int z){ 
+    return PassesThrough(other,RotatedXMovementHelper(x,z),y,RotatedZMovementHelper(x,z));
 }
 
 void Entity::set_solid(const bool to_set)
