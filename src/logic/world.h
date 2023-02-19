@@ -14,13 +14,13 @@ class World
 {
 public:
     //Reads input from this world's controllers
-    void process_controllers();
+    void ProcessControllers();
 
     //Ticks the game world
-    void do_tick();
+    void DoTick();
 
     //Validates the position of all of the world's objects
-    void validate_positions();
+    void ValidatePositions();
 
     //Adds an Entity to the list of objects
     void add_object(Entity* object);
