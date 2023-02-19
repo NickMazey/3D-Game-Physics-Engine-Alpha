@@ -26,7 +26,7 @@ public:
     void Reload();
 
     // Fires the projectile or casts a ray, returns if it fired successfully
-    bool Fire(std::set<Entity*> entities);
+    bool Fire(const std::set<Entity*> &entities);
 
     // Whether or not the last shot fired from this launcher has hit anything yet
     bool has_hit();
@@ -75,6 +75,10 @@ public:
         return shoot_offset_z_;
     }
 
+    int get_effective_shoot_offset_x() const;
+
+    int get_effective_shoot_offset_z() const;
+
     bool is_hitscan() const
     {
         return hitscan_;
@@ -110,11 +114,11 @@ public:
 
     void set_shoot_offset_y(const int to_set);
 
-    void set_shoot_off_z(const int to_set);
+    void set_shoot_offset_z(const int to_set);
 
     void set_hitscan(const bool to_set);
 
-    void set_projectile(Entity to_set);
+    void set_projectile(const Entity &to_set);
 
     void set_last_hit(Entity* to_set);
 
@@ -135,13 +139,13 @@ private:
 
     bool hitscan_;
 
-    Entity projectile_;
+    Entity projectile_ = Entity();
 
     // TODO: For testing without a world, should be replaced to point to a list of entities in the future
-    std::set<Entity*> entity_list_;
+    std::set<Entity*> entity_list_ = std::set<Entity*>();
 
     // TODO: Should be changed into a list in the future, will probably also need last hit to be a list that is removed from when used
-    Entity* active_projectile_;
+    Entity* active_projectile_ = nullptr;
 
     Entity* last_hit_;
 };

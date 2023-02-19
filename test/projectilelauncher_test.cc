@@ -261,7 +261,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Hit_Off_Z)
 {
     game_engine::logic::Entity *target = new game_engine::logic::Entity(0, 0, 6, 10, 10, 10);
     game_engine::logic::ProjectileLauncher *proj = new game_engine::logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0);
-    proj->set_shoot_off_z(6);
+    proj->set_shoot_offset_z(6);
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
@@ -638,7 +638,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Hit_Off_Z_Tick)
 {
     game_engine::logic::Entity *target = new game_engine::logic::Entity(0, 0, 10, 10, 10, 10);
     game_engine::logic::ProjectileLauncher *proj = new game_engine::logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0, game_engine::logic::Entity(10, 0, 0, 1, 1, 1));
-    proj->set_shoot_off_z(10);
+    proj->set_shoot_offset_z(10);
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);

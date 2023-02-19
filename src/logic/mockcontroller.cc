@@ -7,7 +7,7 @@ namespace logic
 {
 void MockController::Update()
 {
-    return;
+    
 }
 } // namespace logic
 } // namespace game_engine

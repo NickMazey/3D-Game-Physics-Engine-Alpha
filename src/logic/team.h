@@ -13,7 +13,7 @@ class Team{
 public:
 
     // Creates a team with a maximum size specified by max_size
-    Team(const int max_team_size);
+    explicit Team(const int max_team_size);
 
     // Returns the list of players in this team
     std::set<Player*> get_players() const{
@@ -52,7 +52,7 @@ public:
 private:
     int max_team_size_;
     int score_;
-    std::set<Player*> players_;
+    std::set<Player*> players_ = std::set<Player*>();
 
     // Creates a set of all entities owned by a player
     std::set<Entity*> get_entities(Player* player);

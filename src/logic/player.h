@@ -24,7 +24,7 @@ struct Player
     Entity* entity = nullptr;
 
     //The player's inventory of projectile launchers
-    std::vector<ProjectileLauncher*> inventory; 
+    std::vector<ProjectileLauncher*> inventory = std::vector<ProjectileLauncher*>(); 
 };
 } // namespace logic
 } // namespace game_engine

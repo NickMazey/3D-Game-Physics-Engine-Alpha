@@ -46,12 +46,9 @@ public:
     }
 
     // Adds an action to the action set
-    void performAction(Action to_take, double scale)
+    void performAction(Action to_take, float scale)
     {
-        ScaledAction taken;
-        taken.action = to_take;
-        taken.scale = scale;
-        actions_.insert(taken);
+        actions_.insert(ScaledAction{to_take,scale});
     }
 
     // resets the action set
@@ -61,10 +58,11 @@ public:
     }
 
     // updates this controller by checking for input
-    void Update();
+    virtual void Update(){};
 
+    virtual ~Controller(){}
 protected:
-    std::set<ScaledAction> actions_;
+    std::set<ScaledAction> actions_ = std::set<ScaledAction>();
 };
 } // namespace logic
 } // namespace game_engine

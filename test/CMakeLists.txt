@@ -1,7 +1,7 @@
 include(FetchContent)
 FetchContent_Declare(
     googletest
-    URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
 )
 
 include(GoogleTest)
@@ -126,3 +126,26 @@ target_link_libraries(
 target_include_directories(team_test PUBLIC "${LIB}")
 
 gtest_discover_tests(team_test)
+
+#ShooterWorld Test
+add_executable(
+  shooterworld_test
+  shooterworld_test.cc
+  ${PROJECT_SOURCE_DIR}/src/logic/shooterworld.cc
+)
+
+target_link_libraries(
+    shooterworld_test
+    PUBLIC
+    shooterworld
+    team
+    projectilelauncher
+    entity
+    mockcontroller
+    logicutil
+    gtest_main
+)
+
+target_include_directories(shooterworld_test PUBLIC "${LIB}")
+
+gtest_discover_tests(shooterworld_test)

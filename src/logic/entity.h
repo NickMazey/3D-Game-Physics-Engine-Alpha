@@ -33,6 +33,7 @@ public:
 
     bool operator==(const Entity& other) const;
     bool operator!=(const Entity& other) const;
+    bool operator<(const Entity& other) const;
 
     // Destroys the entity and removes it from other entities' lists
     ~Entity();
@@ -53,7 +54,7 @@ public:
     void RemoveGhost(Entity* other);
 
     // Whether or not another entity is in the ghosts of this entity
-    bool InGhosts(const Entity* other);
+    bool InGhosts(Entity* other);
 
     // Adds to children
     void AddChild(Entity* other, int x_offset, int y_offset, int z_offset);
@@ -79,11 +80,20 @@ public:
     // sets the x y and z move vectors
     void set_move(int x, int y, int z);
 
+    // sets the x y and z move vectors relative to this entity
+    void set_move_relative(int x, int y, int z);
+
     // Applies x rotation for movement
     int RotatedXMovementHelper(const int x, const int z) const;
 
     // Applies z rotation for movement
     int RotatedZMovementHelper(const int x, const int z) const;
+
+     // Applies rotation for width
+    int RotatedWidthHelper(const int x, const int z) const;
+
+    // Applies rotation for depth
+    int RotatedDepthHelper(const int x, const int z) const;
 
     // Applies movement
     void DoMove();
@@ -121,13 +131,13 @@ public:
     // Returns the width of this entity with rotation
     int effective_width() const
     {
-        return static_cast<int>(abs(approxcos(horizontal_look_angle_)) * static_cast<float>(width_) + abs(sin(horizontal_look_angle_)) * static_cast<float>(depth_));
+        return static_cast<int>(abs(RotatedWidthHelper(width_,depth_)));
     }
 
     // Returns the depth of this entity with rotation
     int effective_depth() const
     {
-        return static_cast<int>(abs(approxcos(horizontal_look_angle_)) * static_cast<float>(depth_) + abs(approxsin(horizontal_look_angle_)) * static_cast<float>(width_));
+        return static_cast<int>(abs(RotatedDepthHelper(width_,depth_)));
     }
 
     // Returns the distance to another entity on X
@@ -143,13 +153,22 @@ public:
     int EuclideanDistanceToOther(const Entity* other) const;
 
     // whether or not this entity is colliding with the other (atm uses bounding box)
-    bool IsColliding(const Entity* other);
+    bool IsColliding(Entity* other);
 
     // whether or not this entity would collide with the other if it moved by x,y, and z
-    bool WouldCollide(const Entity* other, int x, int y, int z);
+    bool WouldCollide(Entity* other, int x, int y, int z);
+    
+    // whether or not this entity would collide with the other if it moved relatively by x,y, and z 
+    bool WouldCollideRelative(Entity* other,int x, int y, int z);
+
+    // whether or not his entity would collide with the other if it rotated by horizontal and vertical
+    bool WouldCollideRotate(Entity* other, float horizontal,float vertical);
 
     // whether or not this entity would completely pass through the other if it moved by x,y, and z
-    bool PassesThrough(const Entity* other, int x, int y, int z);
+    bool PassesThrough(Entity* other, int x, int y, int z);
+
+    // whether or not this entity would completely pass through the other if it moved relatively by x,y, and z
+    bool PassesThroughRelative(Entity* other, int x, int y, int z);
 
     int get_id() const
     {
@@ -272,29 +291,29 @@ public:
     void set_friction(const float to_set);
 
 private:
-    int id_;
-    int hp_;
-    std::set<Entity*> dependents_;
+    int id_ = -1;
+    int hp_ = -1;
+    std::set<Entity*> dependents_ = std::set<Entity*>();
 
-    int x_pos_;
-    int y_pos_;
-    int z_pos_;
+    int x_pos_ = 0;
+    int y_pos_ = 0;
+    int z_pos_ = 0;
     int movement_vector_[3] = { 0 };
-    ChildMap children_;
+    ChildMap children_ = ChildMap();
 
-    bool solid_;
-    int width_;
-    int height_;
-    int depth_;
-    std::set<const Entity*> ghosts_;
+    bool solid_ = true;
+    int width_ = 0;
+    int height_ = 0;
+    int depth_ = 0;
+    std::set<Entity*> ghosts_ = std::set<Entity*>();
 
-    bool physics_;
-    int gravity_;
-    float friction_;
+    bool physics_ = false;
+    int gravity_ = 0;
+    float friction_ = 1.0f;
 
-    float horizontal_look_angle_;
-    float vertical_look_angle_;
-    int fov_;
+    float horizontal_look_angle_ = 0.0f;
+    float vertical_look_angle_ = 0.0f;
+    int fov_ = 0;
     float look_change_vector_[2] = { 0.0 }; // Radians
 };
 } // namespace logic
