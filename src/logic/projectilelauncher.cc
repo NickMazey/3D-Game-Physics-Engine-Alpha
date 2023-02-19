@@ -5,6 +5,7 @@
 #include <set>
 #include <tuple>
 #include <vector>
+#include <cstdio>
 
 #include "entity.h"
 #include "logicutil.h"
@@ -93,7 +94,7 @@ bool ProjectileLauncher::Fire(const std::set<Entity*> &entities)
         { // Non-hitscan
             active_projectile_ = new Entity(get_x_pos() + shoot_offset_x_, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_offset_z_, projectile_.get_width(), projectile_.get_height(), projectile_.get_depth());
             active_projectile_->set_look(get_horizontal_look_angle(), get_vertical_look_angle());
-            active_projectile_->set_move(projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]);
+            active_projectile_->set_move_relative(projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]);
             active_projectile_->AddGhost(this);
         }
     }
@@ -112,7 +113,7 @@ void ProjectileLauncher::DoTick()
     {
         for (Entity* active_entity : entity_list_)
         {
-            if (active_projectile_->PassesThrough(active_entity, projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]))
+            if (active_projectile_->IsColliding(active_entity) || active_projectile_->PassesThrough(active_entity, projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]))
             {
                 last_hit_ = active_entity;
                 delete active_projectile_;
@@ -137,12 +138,9 @@ void ProjectileLauncher::DoTick()
 
 Entity* ProjectileLauncher::FindFirstCollision(std::set<Entity*> entities)
 {
+    int closest = -1;
     Entity* closest_hittable_entity = this;
-    for (Entity* active_entity : entities)
-    {
-        if (active_entity->get_id() != get_id() && active_entity->is_solid() && !InGhosts(active_entity))
-        {
-            // How much the line should move in each dimension per step with the given angles
+    // How much the line should move in each dimension per step with the given angles
             float y_coefficient = approxsin(get_vertical_look_angle());
             float xz_coefficient = approxcos(get_vertical_look_angle());
             float x_coefficient = approxcos(get_horizontal_look_angle()) * xz_coefficient;
@@ -154,33 +152,71 @@ Entity* ProjectileLauncher::FindFirstCollision(std::set<Entity*> entities)
 
             // Creating a point to check if this line passes through the other entity
             Entity* test_point = new Entity(get_x_pos() + shoot_offset_x, get_y_pos() + shoot_offset_y_, get_z_pos() + shoot_offset_z, 0, 0, 0);
-
-
-            float distance = static_cast<float>(test_point->EuclideanDistanceToOther(active_entity));
-
+    for (Entity* active_entity : entities)
+    {
+        if (active_entity->get_id() != get_id() && active_entity->is_solid() && !InGhosts(active_entity))
+        {
+            //float distance = static_cast<float>(test_point->EuclideanDistanceToOther(active_entity));
+            int x_distance = test_point->XDistanceToOther(active_entity);
+            int y_distance = test_point->YDistanceToOther(active_entity);
+            int z_distance = test_point->ZDistanceToOther(active_entity);
+            float distance = 100000;
             // For x, y, and z
-            int x_movement = round(distance * x_coefficient);
-            int y_movement = round(distance * y_coefficient);
-            int z_movement = round(distance * z_coefficient);
-            
-
-              if (test_point->WouldCollide(active_entity,x_movement,y_movement,z_movement) || test_point->PassesThrough(active_entity,x_movement,y_movement,z_movement))
+            float x_val = distance * x_coefficient;
+            int x_movement = round(x_val);
+            float y_val = distance * y_coefficient;
+            int y_movement = round(y_val);
+            float z_val = distance * z_coefficient;
+            int z_movement = round(z_val);
+            bool found = false;
+            float coeff = 0.f;
+            if(x_movement != 0){
+            if((x_movement > x_distance && x_distance >0 )|| (x_movement < x_distance && x_distance < 0)){
+            coeff = static_cast<float>(x_distance) / static_cast<float>(x_movement);
+            if(WouldCollide(active_entity,x_distance,round(y_movement * coeff),round(z_movement*coeff))){
+                found = true;
+            }
+            }
+            }
+            if(y_movement != 0 && !found){
+            if((y_movement > y_distance && y_distance >0 )|| (y_movement < y_distance && y_distance < 0)){
+            coeff = static_cast<float>(y_distance) / static_cast<float>(y_movement);
+            if(WouldCollide(active_entity,round(x_movement * coeff),y_distance,round(z_movement*coeff))){
+                found = true;
+            }
+            }
+            }
+            if(z_movement != 0 && !found){
+            if((z_movement > z_distance && z_distance >0 )|| (z_movement < z_distance && z_distance < 0)){
+            coeff = static_cast<float>(z_distance) / static_cast<float>(z_movement);
+            if(WouldCollide(active_entity,round(x_movement * coeff),round(y_movement*coeff),z_distance)){
+                found = true;
+            }
+            }
+            }
+            int dist = -1;
+            if(found){
+                dist = abs(round(sqrt(pow(x_movement*coeff,2) + pow(y_movement*coeff,2) + pow(z_movement*coeff,2))));
+            }
+            if (test_point->IsColliding(active_entity) || test_point->WouldCollide(active_entity,x_movement,y_movement,z_movement) || test_point->PassesThrough(active_entity,x_movement,y_movement,z_movement) )
             {
                 if (closest_hittable_entity == this)
                 {
                     closest_hittable_entity = active_entity;
+                    closest = dist;
                 }
                 else
                 {
-                    if (EuclideanDistanceToOther(active_entity) < EuclideanDistanceToOther(closest_hittable_entity))
+                    if (dist < closest || closest == -1)
                     {
                         closest_hittable_entity = active_entity;
+                        closest = dist;
                     }
                 }
             }
-            delete test_point;
         }
     }
+    delete test_point;
     return closest_hittable_entity;
 }
 

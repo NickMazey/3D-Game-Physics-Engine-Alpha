@@ -459,7 +459,6 @@ bool Entity::PassesThrough(Entity* other, int x, int y, int z)
         if(z != 0){
         if((z > z_dist && z_dist >0 )|| (z < z_dist && z_dist < 0)){
              coeff = static_cast<float>(z_dist) / static_cast<float>(z);
-             other->set_gravity(z_dist);
             if(WouldCollide(other,round(x * coeff),round(y * coeff),z_dist)){
                 return true;
             }
