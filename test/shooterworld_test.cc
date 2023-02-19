@@ -299,25 +299,25 @@ TEST(ShooterWorldTest, Initialises_Teams_Properly)
 TEST(ShooterWorldTest, Round_Over_Empty_Case)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
-    EXPECT_FALSE(world.round_over()) << "Round is over in empty case";
+    EXPECT_FALSE(world.RoundOver()) << "Round is over in empty case";
 }
 
 TEST(ShooterWorldTest, Round_Winner_Empty_Case)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
-    EXPECT_EQ(world.round_winner(), nullptr) << "Round winner is not null in empty case";
+    EXPECT_EQ(world.RoundWinner(), nullptr) << "Round winner is not null in empty case";
 }
 
 TEST(ShooterWorldTest, Game_Over_Empty_Case)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
-    EXPECT_FALSE(world.game_over()) << "Game is over in empty case";
+    EXPECT_FALSE(world.GameOver()) << "Game is over in empty case";
 }
 
 TEST(ShooterWorldTest, Initialises_Game_Winner_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
-    EXPECT_EQ(world.game_winner(), nullptr) << "Game winner is not null in empty case";
+    EXPECT_EQ(world.GameWinner(), nullptr) << "Game winner is not null in empty case";
 }
 
 // Setters
@@ -352,7 +352,7 @@ TEST(ShooterWorldTest, Zero_HP_Not_Solid)
     game_engine::logic::Entity *e = new game_engine::logic::Entity(0, 0, 0, 0, 0, 0);
     world.add_object(e);
     e->set_hp(0);
-    world.do_tick();
+    world.DoTick();
     EXPECT_EQ(e->is_solid(), false) << "0 health entities are still solid. Entity: " << printInfo(*e);
 }
 
@@ -361,7 +361,7 @@ TEST(ShooterWorldTest, Load_Map_Loads_Correct_Number)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     EXPECT_EQ((int)world.get_objects().size(), box.players.size() + box.level.size() + box.players.size()) << "Map does not load correctly.";
     cleanup(world);
 }
@@ -370,7 +370,7 @@ TEST(ShooterWorldTest, Load_Map_Loads_Players_Correctly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     std::set<game_engine::logic::Entity *> objects = world.get_objects();
     for (game_engine::logic::Entity player : box.players)
     {
@@ -395,7 +395,7 @@ TEST(ShooterWorldTest, Load_Map_Loads_Launchers_Correctly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     for (game_engine::logic::ProjectileLauncher launcher : box.available_weapons)
     {
         bool launcher_present = false;
@@ -407,7 +407,7 @@ TEST(ShooterWorldTest, Load_Map_Loads_Launchers_Correctly)
                     launcher.get_height() == found_launcher->get_height() &&
                     launcher.get_depth() == found_launcher->get_depth() && launcher.get_ammo() == found_launcher->get_ammo() &&
                     launcher.get_magazine_size() == found_launcher->get_magazine_size() &&
-                    launcher.is_hitscan() == found_launcher->is_hitscan() && launcher.is_solid() == found_launcher->is_solid() &&
+                    launcher.is_hitscan() == found_launcher->is_hitscan() &&
                     launcher.get_damage() == found_launcher->get_damage() && launcher.get_hp() == found_launcher->get_hp() &&
                     launcher.get_id() != found_launcher->get_id())
                 {
@@ -424,7 +424,7 @@ TEST(ShooterWorldTest, Load_Map_Loads_Terrain_Correctly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     std::set<game_engine::logic::Entity *> objects = world.get_objects();
     for (game_engine::logic::Entity terrain : box.level)
     {
@@ -450,7 +450,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -468,7 +468,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(0, 0, 22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
     }
     cleanup(world);
@@ -478,7 +478,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -496,7 +496,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(0, 0, -22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
     }
     cleanup(world);
@@ -506,7 +506,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PX)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -524,7 +524,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PX)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(986, 0, 0);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
     }
     cleanup(world);
@@ -534,7 +534,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NX)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -552,7 +552,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NX)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(-986, 0,0);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
     }
     cleanup(world);
@@ -562,7 +562,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PY)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -580,7 +580,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PY)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(0, 1000 - target_entity->get_max_y_pos(), 0);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_max_y_pos(), 999) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
     }
     cleanup(world);
@@ -590,7 +590,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NY)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -608,7 +608,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NY)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(0, -1, 0);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_min_y_pos(), 1) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
     }
     cleanup(world);
@@ -618,7 +618,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -636,7 +636,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(986, 0, 22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
     }
@@ -647,7 +647,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -665,7 +665,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(986, 0, -22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
     }
@@ -676,7 +676,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -694,7 +694,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(-986, 0, 22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
     }
@@ -705,7 +705,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -723,7 +723,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(-986, 0, -22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
     }
@@ -734,7 +734,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX_PY)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -752,7 +752,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX_PY)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(986, 1000 - target_entity->get_max_y_pos(), 22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_y_pos(), 999) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
@@ -764,7 +764,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX_PY)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -782,7 +782,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX_PY)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(986, 1000 - target_entity->get_max_y_pos(), -22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_y_pos(), 999) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
@@ -794,7 +794,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX_PY)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -812,7 +812,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX_PY)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(-986, 1000 - target_entity->get_max_y_pos(), 22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_y_pos(), 999) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
@@ -824,7 +824,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX_PY)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -842,7 +842,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX_PY)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(-986, 1000 - target_entity->get_max_y_pos(), -22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_y_pos(), 999) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
@@ -854,7 +854,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX_NY)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -872,7 +872,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX_NY)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(986, -1, 22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_y_pos(), 1) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
@@ -884,7 +884,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX_NY)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -902,7 +902,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX_NY)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(986, -1, -22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on neagative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_y_pos(), 1) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
@@ -914,7 +914,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX_NY)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -932,7 +932,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX_NY)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(-986, -1, 22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_y_pos(), 1) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
@@ -944,7 +944,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX_NY)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Entity *target_entity = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -962,7 +962,7 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX_NY)
     if (target_entity)
     {
         target_entity->DoMoveAbsolute(-986, -1, -22);
-        world.validate_positions();
+        world.ValidatePositions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_y_pos(), 1) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
@@ -975,7 +975,7 @@ TEST(ShooterWorldTest, Forward_Input_Behaves_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(10, 0, 1, 0);
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -992,12 +992,13 @@ TEST(ShooterWorldTest, Forward_Input_Behaves_Properly)
     EXPECT_NE(target_player, nullptr) << "Could not find target player";
     if (target_player)
     {
-        world.do_tick();
+        world.DoTick();
         game_engine::logic::MockController *controller = new game_engine::logic::MockController();
         int start_z = target_player->entity->get_z_pos();
         target_player->controller = controller;
         controller->performAction(game_engine::logic::Controller::Action::kWalkForward, 1.0f);
-        world.do_tick();
+        world.DoTick();
+        world.DoTick();
         EXPECT_EQ(target_player->entity->get_z_pos(), start_z - world.get_move_speed()) << "Forward input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
     cleanup(world);
@@ -1007,7 +1008,7 @@ TEST(ShooterWorldTest, Backward_Input_Behaves_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(10, 0, 1, 0);
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1024,13 +1025,14 @@ TEST(ShooterWorldTest, Backward_Input_Behaves_Properly)
     EXPECT_NE(target_player, nullptr) << "Could not find target player";
     if (target_player)
     {
-        world.do_tick();
+        world.DoTick();
         game_engine::logic::MockController *controller = new game_engine::logic::MockController();
         int start_z = target_player->entity->get_z_pos();
         target_player->controller = controller;
         controller->performAction(game_engine::logic::Controller::Action::kWalkBackwards, 1.0f);
         target_player->entity->set_look(game_engine::logic::DegreesToRadians(90),0.0f);
-        world.do_tick();
+        world.DoTick();
+        world.DoTick();
         EXPECT_EQ(target_player->entity->get_z_pos(), start_z - world.get_move_speed()) << "Backwards input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
     cleanup(world);
@@ -1040,7 +1042,7 @@ TEST(ShooterWorldTest, Left_Input_Behaves_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(10, 0, 1, 0);
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1057,13 +1059,14 @@ TEST(ShooterWorldTest, Left_Input_Behaves_Properly)
     EXPECT_NE(target_player, nullptr) << "Could not find target player";
     if (target_player)
     {
-        world.do_tick();
+        world.DoTick();
         game_engine::logic::MockController *controller = new game_engine::logic::MockController();
         int start_x = target_player->entity->get_x_pos();
         target_player->controller = controller;
         controller->performAction(game_engine::logic::Controller::Action::kWalkLeft, 1.0f);
-        world.do_tick();
-        EXPECT_EQ(target_player->entity->get_x_pos(), start_x - world.get_move_speed()) << "Left input does not work properly. Entity: " << printInfo(*target_player->entity);
+        world.DoTick();
+        world.DoTick();
+        EXPECT_EQ(target_player->entity->get_x_pos(), start_x + world.get_move_speed()) << "Left input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
     cleanup(world);
 }
@@ -1072,7 +1075,7 @@ TEST(ShooterWorldTest, Right_Input_Behaves_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(10, 0, 1, 0);
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1089,13 +1092,19 @@ TEST(ShooterWorldTest, Right_Input_Behaves_Properly)
     EXPECT_NE(target_player, nullptr) << "Could not find target player";
     if (target_player)
     {
-        world.do_tick();
+        world.DoTick();
         game_engine::logic::MockController *controller = new game_engine::logic::MockController();
         int start_x = target_player->entity->get_x_pos();
         target_player->controller = controller;
         controller->performAction(game_engine::logic::Controller::Action::kWalkRight, 1.0f);
-        world.do_tick();
-        EXPECT_EQ(target_player->entity->get_x_pos(), start_x + world.get_move_speed()) << "Right input does not work properly. Entity: " << printInfo(*target_player->entity);
+        world.DoTick();
+        for(game_engine::logic::Entity* entity : world.get_objects()){
+            if(target_player->entity->WouldCollide(entity,-10,0,0)){
+                EXPECT_TRUE(false) << printInfo(*entity);
+            }
+        }
+        world.DoTick();
+        EXPECT_EQ(target_player->entity->get_x_pos(), start_x - world.get_move_speed()) << "Right input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
     cleanup(world);
 }
@@ -1104,7 +1113,7 @@ TEST(ShooterWorldTest, Jump_Input_Behaves_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(0, 10, 1, 0);
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1121,12 +1130,13 @@ TEST(ShooterWorldTest, Jump_Input_Behaves_Properly)
     EXPECT_NE(target_player, nullptr) << "Could not find target player";
     if (target_player)
     {
-        world.do_tick();
+        world.DoTick();
         game_engine::logic::MockController *controller = new game_engine::logic::MockController();
         target_player->controller = controller;
         int startY = target_player->entity->get_y_pos();
         controller->performAction(game_engine::logic::Controller::Action::kJump, 1.0f);
-        world.do_tick();
+        world.DoTick();
+        world.DoTick();
         EXPECT_EQ(target_player->entity->get_y_pos(), startY + world.get_jump_speed()) << "Jump input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
     cleanup(world);
@@ -1136,7 +1146,7 @@ TEST(ShooterWorldTest, Look_Left_Input_Behaves_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1157,7 +1167,8 @@ TEST(ShooterWorldTest, Look_Left_Input_Behaves_Properly)
         float start_look_ang = target_player->entity->get_horizontal_look_angle();
         target_player->controller = controller;
         controller->performAction(game_engine::logic::Controller::Action::kLookLeft, 1.0f);
-        world.do_tick();
+        world.DoTick();
+        world.DoTick();
         EXPECT_EQ(target_player->entity->get_horizontal_look_angle(), start_look_ang - 1.0f) << "Look left does not work properly. Entity: " << printInfo(*target_player->entity);
     }
     cleanup(world);
@@ -1167,7 +1178,7 @@ TEST(ShooterWorldTest, Look_Right_Input_Behaves_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1188,7 +1199,8 @@ TEST(ShooterWorldTest, Look_Right_Input_Behaves_Properly)
         float start_look_ang = target_player->entity->get_horizontal_look_angle();
         target_player->controller = controller;
         controller->performAction(game_engine::logic::Controller::Action::kLookRight, 1.0f);
-        world.do_tick();
+        world.DoTick();
+        world.DoTick();
         EXPECT_EQ(target_player->entity->get_horizontal_look_angle(), start_look_ang + 1.0f) << "Look right does not work properly. Entity: " << printInfo(*target_player->entity);
     }
     cleanup(world);
@@ -1198,7 +1210,7 @@ TEST(ShooterWorldTest, Look_Up_Input_Behaves_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1219,7 +1231,8 @@ TEST(ShooterWorldTest, Look_Up_Input_Behaves_Properly)
         float start_look_ang = target_player->entity->get_vertical_look_angle();
         target_player->controller = controller;
         controller->performAction(game_engine::logic::Controller::Action::kLookUp, 1.0f);
-        world.do_tick();
+        world.DoTick();
+        world.DoTick();
         EXPECT_EQ(target_player->entity->get_vertical_look_angle(), start_look_ang + 1.0f) << "Look up does not work properly. Entity: " << printInfo(*target_player->entity);
     }
     cleanup(world);
@@ -1229,7 +1242,7 @@ TEST(ShooterWorldTest, Look_Down_Input_Behaves_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1250,7 +1263,8 @@ TEST(ShooterWorldTest, Look_Down_Input_Behaves_Properly)
         float start_look_ang = target_player->entity->get_vertical_look_angle();
         target_player->controller = controller;
         controller->performAction(game_engine::logic::Controller::Action::kLookDown, 1.0f);
-        world.do_tick();
+        world.DoTick();
+        world.DoTick();
         EXPECT_EQ(target_player->entity->get_vertical_look_angle(), start_look_ang - 1.0f) << "Look down does not work properly. Entity: " << printInfo(*target_player->entity);
     }
     cleanup(world);
@@ -1260,7 +1274,7 @@ TEST(ShooterWorldTest, Fire_Works_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1296,7 +1310,8 @@ TEST(ShooterWorldTest, Fire_Works_Properly)
             game_engine::logic::MockController *controller = new game_engine::logic::MockController();
             target_player->controller = controller;
             controller->performAction(game_engine::logic::Controller::Action::kShoot, 1.0f);
-            world.do_tick();
+            world.DoTick();
+            world.DoTick();
             EXPECT_EQ(target_player->active_projectile_launcher->get_loaded_ammo(), target_player->active_projectile_launcher->get_magazine_size() - 1) << "Fire does not consume ammo. Launcher: " << printInfo(*target_player->active_projectile_launcher);
             EXPECT_EQ(other_player->entity->get_hp(), 80) << "Fire does not hit healthy entities. Entity firing: " << printInfo(*target_player->entity) << " Entity being hit: " << printInfo(*other_player->entity) << "Launcher: " << printInfo(*target_player->active_projectile_launcher) << " Hit id" << target_player->active_projectile_launcher->get_last_hit()->get_id();
         }
@@ -1308,7 +1323,7 @@ TEST(ShooterWorldTest, Reload_Works_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1345,7 +1360,7 @@ TEST(ShooterWorldTest, Reload_Works_Properly)
             target_player->controller = controller;
             target_player->active_projectile_launcher->Fire(world.get_objects());
             controller->performAction(game_engine::logic::Controller::Action::kReload, 1.0f);
-            world.do_tick();
+            world.DoTick();
             EXPECT_EQ(target_player->active_projectile_launcher->get_loaded_ammo(), target_player->active_projectile_launcher->get_magazine_size()) << "Reload does not consume ammo. Launcher: " << printInfo(*target_player->active_projectile_launcher);
         }
     }
@@ -1356,7 +1371,7 @@ TEST(ShooterWorldTest, Swap_Weapon_Up_Works_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1380,7 +1395,7 @@ TEST(ShooterWorldTest, Swap_Weapon_Up_Works_Properly)
         target_player->inventory.push_back(launcherA);
         target_player->inventory.push_back(launcherB);
         controller->performAction(game_engine::logic::Controller::Action::kSwapWeaponUp, 1.0f);
-        world.do_tick();
+        world.DoTick();
         EXPECT_EQ(target_player->active_projectile_launcher, launcherB) << "Swap weapon up does not swap properly.";
     }
     cleanup(world);
@@ -1390,7 +1405,7 @@ TEST(ShooterWorldTest, Swap_Weapon_Down_Works_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1414,7 +1429,7 @@ TEST(ShooterWorldTest, Swap_Weapon_Down_Works_Properly)
         target_player->inventory.push_back(launcherA);
         target_player->inventory.push_back(launcherB);
         controller->performAction(game_engine::logic::Controller::Action::kSwapWeaponDown, 1.0f);
-        world.do_tick();
+        world.DoTick();
         EXPECT_EQ(target_player->active_projectile_launcher, launcherA) << "Swap weapon down does not swap properly.";
     }
     cleanup(world);
@@ -1425,7 +1440,7 @@ TEST(ShooterWorldTest, Round_Is_Won_On_No_HP)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Team *target_team = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1453,22 +1468,22 @@ TEST(ShooterWorldTest, Round_Is_Won_On_No_HP)
         EXPECT_NE(other_team, nullptr) << "Could not find other team";
         if (other_team)
         {
-            EXPECT_FALSE(world.round_over()) << "Round is considered over incorrectly.";
-            EXPECT_EQ(world.round_winner(), nullptr);
+            EXPECT_FALSE(world.RoundOver()) << "Round is considered over incorrectly.";
+            EXPECT_EQ(world.RoundWinner(), nullptr);
             EXPECT_EQ(other_team->get_score(), 0) << "Team starting score is set incorrectly";
             for (game_engine::logic::Player *player : target_team->get_players())
             {
                 player->entity->set_hp(0);
             }
-            EXPECT_TRUE(world.round_over()) << "Round is not considered over when all players on one team have 0 health.";
-            EXPECT_EQ(world.round_winner(), other_team) << "Round winner is not calculated correctly.";
-            world.do_tick();
+            EXPECT_TRUE(world.RoundOver()) << "Round is not considered over when all players on one team have 0 health.";
+            EXPECT_EQ(world.RoundWinner(), other_team) << "Round winner is not calculated correctly.";
+            world.DoTick();
             EXPECT_EQ(other_team->get_score(), 1) << "Score is not updated correctly after winning a round.";
-            world.do_tick();
+            world.DoTick();
             EXPECT_EQ(other_team->get_score(), 1) << "Score updates each tick after winning a round.";
-            world.new_round();
-            EXPECT_FALSE(world.round_over()) << "Round over does not reset on round reset.";
-            EXPECT_EQ(world.round_winner(), nullptr) << "Round winner does not reset after round reset.";
+            world.NewRound();
+            EXPECT_FALSE(world.RoundOver()) << "Round over does not reset on round reset.";
+            EXPECT_EQ(world.RoundWinner(), nullptr) << "Round winner does not reset after round reset.";
             for (game_engine::logic::Player *player : target_team->get_players())
             {
                 EXPECT_EQ(player->entity->get_hp(), 100) << "Health is not reset on round restart.";
@@ -1483,7 +1498,7 @@ TEST(ShooterWorldTest, Game_Is_Won_On_Limit_Reached)
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
     world.set_score_limit(5);
     game_engine::logic::Map box = test_box();
-    world.load_map(box);
+    world.LoadMap(box);
     game_engine::logic::Team *target_team = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1518,18 +1533,18 @@ TEST(ShooterWorldTest, Game_Is_Won_On_Limit_Reached)
                 {
                     player->entity->set_hp(0);
                 }
-                EXPECT_TRUE(world.round_over()) << "Round is not considered over when all players on one team have 0 health on iteration: " << i;
-                EXPECT_EQ(world.round_winner(), other_team) << "Round winner is not calculated correctly on iteration: " << i;
-                world.do_tick();
+                EXPECT_TRUE(world.RoundOver()) << "Round is not considered over when all players on one team have 0 health on iteration: " << i;
+                EXPECT_EQ(world.RoundWinner(), other_team) << "Round winner is not calculated correctly on iteration: " << i;
+                world.DoTick();
                 if (i < 4)
                 {
-                    EXPECT_FALSE(world.game_over()) << "Game is considered over before the score limit is reached";
-                    EXPECT_EQ(world.game_winner(), nullptr) << "Game has a winner despite not being won";
+                    EXPECT_FALSE(world.GameOver()) << "Game is considered over before the score limit is reached";
+                    EXPECT_EQ(world.GameWinner(), nullptr) << "Game has a winner despite not being won";
                 }
                 else
                 {
-                    EXPECT_TRUE(world.game_over()) << "Game is not over when score limit is reached";
-                    EXPECT_EQ(world.game_winner(), other_team) << "Game winner is not set correctly";
+                    EXPECT_TRUE(world.GameOver()) << "Game is not over when score limit is reached";
+                    EXPECT_EQ(world.GameWinner(), other_team) << "Game winner is not set correctly";
                 }
                 if (i < 5)
                 {
@@ -1539,7 +1554,7 @@ TEST(ShooterWorldTest, Game_Is_Won_On_Limit_Reached)
                 {
                     EXPECT_EQ(other_team->get_score(), 5) << "Score goes over limit after game is won";
                 }
-                world.new_round();
+                world.NewRound();
                 for (game_engine::logic::Player *player : target_team->get_players())
                 {
                     EXPECT_EQ(player->entity->get_hp(), 100) << "Health is not reset on round restart on iteration: " << i;
@@ -1553,17 +1568,17 @@ TEST(ShooterWorldTest, Game_Is_Won_On_Limit_Reached)
 TEST(ShooterWorldTest, Round_Time_Limit_Works)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld();
-    world.load_map(test_box());
+    world.LoadMap(test_box());
     world.set_round_time_limit((uint64_t)500u);
     uint64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
     uint64_t curr_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-    while (curr_time - start < (uint64_t)600u && !world.round_over())
+    while (curr_time - start < (uint64_t)600u && !world.RoundOver())
     {
-        world.do_tick();
+        world.DoTick();
         curr_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
         if (world.get_round_time() < world.get_round_time_limit())
         {
-            EXPECT_FALSE(world.round_over()) << "Round ends before time limit is reached";
+            EXPECT_FALSE(world.RoundOver()) << "Round ends before time limit is reached";
         }
     }
     cleanup(world);
@@ -1573,7 +1588,7 @@ TEST(ShooterWorldTest, Round_Time_Limit_Works)
 TEST(ShooterWorldTest, Firing_Takes_Precedent)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(10, 10, 1, 1);
-    world.load_map(test_box());
+    world.LoadMap(test_box());
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1611,10 +1626,11 @@ TEST(ShooterWorldTest, Firing_Takes_Precedent)
             game_engine::logic::MockController *controllerSouth = new game_engine::logic::MockController();
             other_player->controller = controllerNorth;
             target_player->controller = controllerSouth;
-            controllerNorth->performAction(game_engine::logic::Controller::Action::kWalkLeft, 1.0f);
+            controllerNorth->performAction(game_engine::logic::Controller::Action::kWalkRight, 1.0f);
             controllerSouth->performAction(game_engine::logic::Controller::Action::kShoot, 1.0f);
-            world.do_tick();
-            EXPECT_EQ(other_player->entity->get_hp(), 80) << "Entity is not hit before moving. Entity: " << printInfo(*other_player->entity);
+            world.DoTick();
+            world.DoTick();
+            EXPECT_EQ(other_player->entity->get_hp(), 80) << "Entity is not hit before moving. Entity: " << printInfo(*other_player->entity) << "\n Launcher: " << printInfo(*target_player->active_projectile_launcher);
             EXPECT_EQ(other_player->entity->get_x_pos(), 24) << "Entity does not move. Entity : " << printInfo(*other_player->entity);
         }
     }
@@ -1624,7 +1640,7 @@ TEST(ShooterWorldTest, Firing_Takes_Precedent)
 TEST(ShooterWorldTest, Movement_Stopped_By_Obstacles)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(10, 10, 1, 1);
-    world.load_map(test_box());
+    world.LoadMap(test_box());
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1657,19 +1673,18 @@ TEST(ShooterWorldTest, Movement_Stopped_By_Obstacles)
         EXPECT_NE(other_player, nullptr) << "Could not find other player";
         if (other_player)
         {
-            target_player->entity->set_move(5000, 0,0);
-            world.do_tick();
-            EXPECT_EQ(target_player->entity->get_max_z_pos(), other_player->entity->get_min_z_pos() - 1) << "Entities are not stopped by obstacles. Entity moving: " << printInfo(*target_player->entity) << " other entity: " << printInfo(*other_player->entity);
+            target_player->entity->set_move_relative(5000, 0,0);
+            world.DoTick();
+            EXPECT_EQ(target_player->entity->get_min_z_pos(), other_player->entity->get_max_z_pos() + 1) << "Entities are not stopped by obstacles. Entity moving: " << printInfo(*target_player->entity) << " other entity: " << printInfo(*other_player->entity);
         }
     }
     cleanup(world);
 }
 
-/*
 TEST(ShooterWorldTest, Stairs_Work_Properly)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(10, 10, 1, 1);
-    world.load_map(test_box());
+    world.LoadMap(test_box());
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1689,7 +1704,7 @@ TEST(ShooterWorldTest, Stairs_Work_Properly)
         game_engine::logic::Entity *stair = new game_engine::logic::Entity(0, 10, target_player->entity->get_max_z_pos() + 51, 100, 20, 100);
         world.add_object(stair);
         target_player->entity->set_move(0, 0, 1);
-        world.do_tick();
+        world.DoTick();
         EXPECT_EQ(target_player->entity->get_min_y_pos(), stair->get_max_y_pos() + 1) << "Entities cannot climb stairs. Entity moving:" << printInfo(*target_player->entity) << " stair: " << printInfo(*stair);
     }
     cleanup(world);
@@ -1698,7 +1713,7 @@ TEST(ShooterWorldTest, Stairs_Work_Properly)
 TEST(ShooterWorldTest, Stairs_Consider_Other_Terrain)
 {
     game_engine::logic::ShooterWorld world = game_engine::logic::ShooterWorld(10, 10, 1, 1);
-    world.load_map(test_box());
+    world.LoadMap(test_box());
     game_engine::logic::Player *target_player = nullptr;
     std::set<game_engine::logic::Team *> teams = world.get_teams();
     for (game_engine::logic::Team *team : teams)
@@ -1722,10 +1737,9 @@ TEST(ShooterWorldTest, Stairs_Consider_Other_Terrain)
         int start_y = target_player->entity->get_y_pos();
         int start_z = target_player->entity->get_z_pos();
         target_player->entity->set_move(0, 0, 1);
-        world.do_tick();
+        world.DoTick();
         EXPECT_EQ(target_player->entity->get_y_pos(), start_y) << "Entities climb stairs through roofs on y. Entity: " << printInfo(*target_player->entity) << " stair: " << printInfo(*stair) << " roof: " << printInfo(*roof);
         EXPECT_EQ(target_player->entity->get_z_pos(), start_z) << "Entities climb stairs through roofs on z. Entity: " << printInfo(*target_player->entity) << " stair: " << printInfo(*stair) << " roof: " << printInfo(*roof);
     }
     cleanup(world);
 }
-*/

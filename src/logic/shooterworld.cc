@@ -32,7 +32,7 @@ namespace game_engine
 
         ShooterWorld::ShooterWorld() : ShooterWorld(0, 0, 0, 0) {}
 
-        void ShooterWorld::load_map(const Map &map)
+        void ShooterWorld::LoadMap(const Map &map)
         {
             obj_map_.clear();
             // Delete all old objects
@@ -116,9 +116,10 @@ namespace game_engine
                     used_launcher->set_shoot_offset_x(launcher.get_shoot_offset_x());
                     used_launcher->set_shoot_offset_y(launcher.get_shoot_offset_y());
                     used_launcher->set_shoot_offset_z(launcher.get_shoot_offset_z());
+                    used_launcher->set_solid(false);
                     player->inventory.push_back(used_launcher);
                 }
-                equip_player(player, 0);
+                EquipPlayer(player, 0);
 
                 // Deciding which team this player is on
                 int division_pos;
@@ -147,15 +148,15 @@ namespace game_engine
             add_team(above_team);
             add_team(below_team);
 
-            new_round();
+            NewRound();
         }
 
-        bool ShooterWorld::round_over()
+        bool ShooterWorld::RoundOver()
         {
-            return (round_time_limit_ > (uint64_t)0u && round_time_ > round_time_limit_) || round_winner();
+            return (round_time_limit_ > (uint64_t)0u && round_time_ > round_time_limit_) || RoundWinner();
         }
 
-        void ShooterWorld::equip_player(Player *player, int index)
+        void ShooterWorld::EquipPlayer(Player *player, int index)
         {
             if (index < 0 || index >= (int)player->inventory.size() || player->inventory.at(index) == player->active_projectile_launcher)
             {
@@ -170,10 +171,11 @@ namespace game_engine
             player->active_projectile_launcher = launcher;
             player->entity->AddChild(launcher, -launcher->get_shoot_offset_x(), 0, -launcher->get_shoot_offset_z());
             player->entity->AddGhost(launcher);
+            launcher->AddGhost(player->entity);
             add_object(player->active_projectile_launcher);
         }
 
-        Team *ShooterWorld::round_winner()
+        Team *ShooterWorld::RoundWinner()
         {
             Team *winner = nullptr;
             Team *loser = nullptr;
@@ -205,7 +207,7 @@ namespace game_engine
             return nullptr;
         }
 
-        bool ShooterWorld::game_over()
+        bool ShooterWorld::GameOver()
         {
             if (score_limit_ <= 0)
             {
@@ -221,7 +223,7 @@ namespace game_engine
             return false;
         }
 
-        Team *ShooterWorld::game_winner()
+        Team *ShooterWorld::GameWinner()
         {
             Team *winner = nullptr;
             Team *loser = nullptr;
@@ -250,7 +252,7 @@ namespace game_engine
             return nullptr;
         }
 
-        void ShooterWorld::new_round()
+        void ShooterWorld::NewRound()
         {
             round_time_ = (uint64_t)0u;
             for (auto const& it : obj_map_)
@@ -284,162 +286,13 @@ namespace game_engine
                         used_launcher->set_ammo((launcher.get_ammo() + launcher.get_loaded_ammo()) - used_launcher->get_loaded_ammo());
                         used_launcher->Reload();
                     }
-                    equip_player(player, 0);
+                    EquipPlayer(player, 0);
                 }
             }
         }
 
-        void ShooterWorld::tick_players()
+        void ShooterWorld::TickPlayers()
         {
-            // Handling Inputs
-            for (Team *team : teams_)
-            {
-                for (Player *player : team->get_players())
-                {
-                    if (player->controller && player->entity->get_hp() > 0)
-                    {
-                        bool airborne_checked = false;
-                        bool airborne = true;
-                        Entity *entity = player->entity;
-                        ProjectileLauncher *launcher = player->active_projectile_launcher;
-                        if (player->controller == nullptr)
-                        {
-                            continue;
-                        }
-                        for (Controller::ScaledAction action : player->controller->get_actions())
-                        {
-                            // Launcher Controls
-
-                            switch (action.action)
-                            {
-                            case Controller::Action::kReload:
-                            {
-                                launcher->Reload();
-                            }
-                            break;
-
-                            case Controller::Action::kShoot:
-                            {
-                            launcher->Fire(objects_);
-                            }
-                            break;
-                            case Controller::Action::kSwapWeaponUp:
-                            case Controller::Action::kSwapWeaponDown:
-                            {
-                                if ((int)player->inventory.size() > 1)
-                                {
-                                    int index = -1;
-                                    std::vector<ProjectileLauncher *>::iterator iter = std::find(player->inventory.begin(), player->inventory.end(), player->active_projectile_launcher);
-                                    if (iter != player->inventory.end())
-                                    {
-                                        index = std::distance(player->inventory.begin(), iter);
-                                    }
-                                    int change = 0;
-                                    if (action.action == Controller::Action::kSwapWeaponUp)
-                                    {
-                                        change = -1;
-                                    }
-                                    if (action.action == Controller::Action::kSwapWeaponDown)
-                                    {
-                                        change = 1;
-                                    }
-                                    if (index != -1)
-                                    {
-                                        if (index + change < 0)
-                                        {
-                                            change = (int)player->inventory.size() - index - 1;
-                                        }
-                                        if (index + change >= (int)player->inventory.size())
-                                        {
-                                            change = -index;
-                                        }
-                                        equip_player(player, index + change);
-                                    }
-                                }
-                            }
-                            break;
-                            case Controller::Action::kLookUp:
-                            case Controller::Action::kLookDown:
-                            case Controller::Action::kLookLeft:
-                            case Controller::Action::kLookRight:
-                            {
-                                float look_horizontal = 0.0f, look_vertical = 0.0f;
-                                std::tie(look_horizontal, look_vertical) = entity->get_look_change_vector();
-                                if (action.action == Controller::Action::kLookUp)
-                                {
-                                    entity->set_look_change_vector(look_horizontal, look_vertical + action.scale);
-                                }
-                                if (action.action == Controller::Action::kLookDown)
-                                {
-                                    entity->set_look_change_vector(look_horizontal, look_vertical - action.scale);
-                                }
-                                if (action.action == Controller::Action::kLookLeft)
-                                {
-                                    entity->set_look_change_vector(look_horizontal - action.scale, look_vertical);
-                                }
-                                if (action.action == Controller::Action::kLookRight)
-                                {
-                                    entity->set_look_change_vector(look_horizontal + action.scale, look_vertical);
-                                }
-                            }
-                            break;
-                            case Controller::Action::kJump:
-                            case Controller::Action::kWalkForward:
-                            case Controller::Action::kWalkBackwards:
-                            case Controller::Action::kWalkLeft:
-                            case Controller::Action::kWalkRight:
-                            {
-                                int x = 0, y = 0, z = 0;
-                                std::tie(x, y, z) = entity->get_movement_vector();
-                                if (!airborne_checked)
-                                {
-                                    for (Entity *other : objects_)
-                                    {
-                                        // If moving the entity down by one unit it would collide then it must be on a surface
-                                        if (entity->WouldCollide(other, 0, -1, 0))
-                                        {
-                                            airborne = false;
-                                            break;
-                                        }
-                                    }
-                                    airborne_checked = true;
-                                }
-                                entity->set_friction(1.0f);
-                                if (airborne)
-                                {
-                                    // only allowed small movements in the air
-                                    entity->set_friction(0.1f);
-                                }
-                                int movement = static_cast<int>(round(action.scale * move_speed_));
-                                if (action.action == Controller::Action::kJump && !airborne)
-                                {
-                                    entity->set_move(x, std::max(0, std::min(static_cast<int>(round(action.scale * jump_speed_)), jump_speed_)), z);
-                                }
-                                if (action.action == Controller::Action::kWalkForward)
-                                {
-                                    entity->set_move(std::max(-move_speed_, std::min(move_speed_, x + movement)), y, z);
-                                    
-                                }
-                                if (action.action == Controller::Action::kWalkBackwards)
-                                {
-                                    entity->set_move(std::max(-move_speed_, std::min(move_speed_, x - movement)), y, z);
-                                    
-                                }
-                                if (action.action == Controller::Action::kWalkLeft)
-                                {
-                                    entity->set_move(x, y, std::max(-move_speed_, std::min(move_speed_, z + movement)));
-                                }
-                                if (action.action == Controller::Action::kWalkRight)
-                                {
-                                    entity->set_move(x, y, std::max(-move_speed_, std::min(move_speed_, z - movement)));
-                                }
-                            }
-                            break;
-                            }
-                        }
-                    }
-                }
-            }
             // Handle launchers hitting
             for (Team *team : teams_)
             {
@@ -480,18 +333,17 @@ namespace game_engine
                     movers.insert(e);
                 }
             }
-            // Pass Over Stationary Entities
             for (Entity *entity : movers)
             {
                 bool validated = false;
                 // Limit of 10 steps
-                for (int steps = 0; steps < 10 && !validated; steps++)
+                for (int steps = 0; steps < 50 && !validated; steps++)
                 {
                     std::tuple<int, int, int> movement_vector = entity->get_movement_vector();
                     int x = 0, y = 0, z = 0;
                     std::tie(x, y, z) = movement_vector;
-                    int x_rot = entity->RotatedXMovementHelper(x, z);
-                    int z_rot = entity->RotatedZMovementHelper(x, z);
+                    int x_rot = x;
+                    int z_rot = z;
                     int abs_x = std::abs(x_rot);
                     int abs_y = std::abs(y);
                     int abs_z = std::abs(z_rot);
@@ -503,9 +355,13 @@ namespace game_engine
                     }
 
                     std::vector<std::tuple<int, std::tuple<bool, bool, bool>, Entity *>> collisions = std::vector<std::tuple<int, std::tuple<bool, bool, bool>, Entity *>>();
-                    for (Entity *other : stationary)
+                    // Pass Over Stationary Entities
+                    for (Entity *other : objects_)
                     {
-                        if (entity->WouldCollide(other, x, y, z) || entity->PassesThrough(other, x, y, z))
+                        if(other == entity){
+                            continue;
+                        }
+                        if (entity->WouldCollide(other, x, y, z) || entity->PassesThrough(other,x,y,z))
                         {
                             int shortest = entity->EuclideanDistanceToOther(other);
                             bool x_responsible = false;
@@ -566,130 +422,57 @@ namespace game_engine
                         int z_change = 0;
                         float horizontal_look_angle = entity->get_horizontal_look_angle();
                         float vertical_look_angle = entity->get_vertical_look_angle();
-                        //Whether or not x or z needs to be considered due to rotation
-                        bool update_x = false;
-                        bool update_z = false;
-                        if (x_resp)
-                        {   
-                            int delta = entity->XDistanceToOther(other) - x_rot;
-                            if (abs_x != x_rot)
-                            {
-                                if(round(approxcos(horizontal_look_angle) * x) < 0){
-                                    update_x = true;
-                                }
-                                if(round(-approxsin(horizontal_look_angle) * z) < 0){
-                                    update_z = true;
-                                }
-                                if(update_x){
-                                    if(update_z){
-                                        //Delta is shared over both x and z
-                                        delta /= 2;
-                                    }
-                                    x_change = round(delta * approxcos(horizontal_look_angle));
-                                }
-                                if(update_z){
-                                    z_change = round(delta * -approxsin(horizontal_look_angle));
-                                }
-                                if(x_change < 0){
-                                    x_change += 1;
-                                }
-                                if(z_change < 0){
-                                    z_change += 1;
-                                }
-                            }
-                            else
-                            {
-                                if(round(approxcos(horizontal_look_angle) * x) > 0){
-                                    update_x = true;
-                                }
-                                if(round(-approxsin(horizontal_look_angle) * z) > 0){
-                                    update_z = true;
-                                }
-                                if(update_x){
-                                    if(update_z){
-                                        //Delta is shared over both x and z
-                                        delta /= 2;
-                                    }
-                                    x_change = round(delta / approxcos(horizontal_look_angle));
-                                }
-                                if(update_z){
-                                    z_change = round(delta / -approxsin(horizontal_look_angle));
-                                }
-                                if(x_change > 0){
-                                    x_change -= 1;
-                                }
-                                if(z_change > 0){
-                                    z_change -= 1;
-                                }
-                            }
+                        if(x_resp){
+                          x_change = entity->XDistanceToOther(other);
+                          if(x_change < 0){
+                            x_change += 1;
+                          }else{
+                            x_change -= 1;
+                          }
+                        } else{
+                            x_change = x;
                         }
-                        else if (y_resp)
-                        {
-                            y_change = entity->YDistanceToOther(other) - y;
-                            if (abs_y != y)
-                            {
+                        if(y_resp){
+                            y_change = entity->YDistanceToOther(other);
+                            if(y_change < 0){
                                 y_change += 1;
                             }
-                            else
-                            {
+                            else{
                                 y_change -= 1;
                             }
+                        } else{
+                            y_change = y;
                         }
-                        else if (z_resp)
-                        {
-                            int delta = entity->ZDistanceToOther(other) - z_rot;
-                            if (abs_z != z_rot)
-                            {
-                                if(round(approxsin(horizontal_look_angle) * x) < 0){
-                                    update_x = true;
-                                }
-                                if(round(approxcos(horizontal_look_angle) * z) < 0){
-                                    update_z = true;
-                                }
-                                if(update_x){
-                                    if(update_z){
-                                        //Delta is shared over both x and z
-                                        delta /= 2;
+                        if(z_resp){
+                            z_change = entity->ZDistanceToOther(other);
+                            if(z_change < 0){
+                                z_change += 1;
+                            } else{
+                                z_change -=1;
+                            }
+                        } else{
+                            z_change = z;
+                        }
+                        //Stairs
+                        if(entity->YDistanceToOther(other) == 0 && entity->get_max_y_pos() >= other->get_min_y_pos()){
+                                int elevation_change = other->get_max_y_pos() - entity->get_min_y_pos();
+                                int ratio = entity->get_height() / elevation_change;
+                                if(elevation_change > 0 && ratio >= 10){
+                                    elevation_change +=1;
+                                    bool can_shift_up = true;
+                                    for(Entity* vert_check : objects_){
+                                        if(entity->WouldCollide(vert_check,x,elevation_change,z)){
+                                            can_shift_up = false;
+                                        }
                                     }
-                                    x_change = round(delta / approxsin(horizontal_look_angle));
-                                }
-                                if(update_z){
-                                    z_change = round(delta / approxcos(horizontal_look_angle));
-                                }
-                                if(x_change < 0){
-                                    x_change += 1;
-                                }
-                                if(z_change < 0){
-                                    z_change += 1;
+                                    if(can_shift_up){
+                                        x_change = x;
+                                        y_change = elevation_change;
+                                        z_change = z;
+                                    }
                                 }
                             }
-                            else
-                            {
-                                if(round(approxsin(horizontal_look_angle) * x) > 0){
-                                    update_x = true;
-                                }
-                                if(round(approxcos(horizontal_look_angle) * z) > 0){
-                                    update_z = true;
-                                }
-                                if(update_x){
-                                    if(update_z){
-                                        //Delta is shared over both x and z
-                                        delta /= 2;
-                                    }
-                                    x_change = round(delta / approxsin(horizontal_look_angle));
-                                }
-                                if(update_z){
-                                    z_change = round(delta / approxcos(horizontal_look_angle));
-                                }
-                                if(x_change > 0){
-                                    x_change -= 1;
-                                }
-                                if(z_change > 0){
-                                    z_change -= 1;
-                                }
-                            }
-                        }
-                        entity->set_move(x + x_change, y + y_change, z + z_change);
+                       entity->set_move(x_change,y_change,z_change);
                     }
                     else
                     {
@@ -697,12 +480,200 @@ namespace game_engine
                     }
                 }
             }
+        }
 
+        void ShooterWorld::ProcessControllers()
+        {
             for (Team *team : teams_)
             {
                 for (Player *player : team->get_players())
                 {
-                    player->entity->DoTick();
+                    if (player->controller != nullptr)
+                    {
+                        player->controller->Update();
+                    }
+                }
+            }
+            // Handling Inputs
+            for (Team *team : teams_)
+            {
+                for (Player *player : team->get_players())
+                {
+                    if (player->controller && player->entity->get_hp() > 0)
+                    {
+                        bool airborne_checked = false;
+                        bool airborne = true;
+                        Entity *entity = player->entity;
+                        ProjectileLauncher *launcher = player->active_projectile_launcher;
+                        if (player->controller == nullptr)
+                        {
+                            continue;
+                        }
+                        int x = 0, y = 0, z = 0;
+                        std::tie(x, y, z) = entity->get_movement_vector();
+                        int dx = 0, dy = 0, dz = 0;
+                        for (Controller::ScaledAction action : player->controller->get_actions())
+                        {
+                            // Launcher Controls
+
+                            switch (action.action)
+                            {
+                            case Controller::Action::kReload:
+                            {
+                                launcher->Reload();
+                            }
+                            break;
+
+                            case Controller::Action::kShoot:
+                            {
+                            launcher->Fire(objects_);
+                            }
+                            break;
+                            case Controller::Action::kSwapWeaponUp:
+                            case Controller::Action::kSwapWeaponDown:
+                            {
+                                if ((int)player->inventory.size() > 1)
+                                {
+                                    int index = -1;
+                                    std::vector<ProjectileLauncher *>::iterator iter = std::find(player->inventory.begin(), player->inventory.end(), player->active_projectile_launcher);
+                                    if (iter != player->inventory.end())
+                                    {
+                                        index = std::distance(player->inventory.begin(), iter);
+                                    }
+                                    int change = 0;
+                                    if (action.action == Controller::Action::kSwapWeaponUp)
+                                    {
+                                        change = -1;
+                                    }
+                                    if (action.action == Controller::Action::kSwapWeaponDown)
+                                    {
+                                        change = 1;
+                                    }
+                                    if (index != -1)
+                                    {
+                                        if (index + change < 0)
+                                        {
+                                            change = (int)player->inventory.size() - index - 1;
+                                        }
+                                        if (index + change >= (int)player->inventory.size())
+                                        {
+                                            change = -index;
+                                        }
+                                        EquipPlayer(player, index + change);
+                                    }
+                                }
+                            }
+                            break;
+                            case Controller::Action::kLookUp:
+                            case Controller::Action::kLookDown:
+                            case Controller::Action::kLookLeft:
+                            case Controller::Action::kLookRight:
+                            {
+                                float look_horizontal = 0.0f, look_vertical = 0.0f;
+                                std::tie(look_horizontal, look_vertical) = entity->get_look_change_vector();
+                                if (action.action == Controller::Action::kLookUp)
+                                {
+                                    entity->set_look_change_vector(look_horizontal, look_vertical + action.scale);
+                                }
+                                if (action.action == Controller::Action::kLookDown)
+                                {
+                                    entity->set_look_change_vector(look_horizontal, look_vertical - action.scale);
+                                }
+                                if (action.action == Controller::Action::kLookLeft)
+                                {
+                                    entity->set_look_change_vector(look_horizontal - action.scale, look_vertical);
+                                }
+                                if (action.action == Controller::Action::kLookRight)
+                                {
+                                    entity->set_look_change_vector(look_horizontal + action.scale, look_vertical);
+                                }
+                            }
+                            break;
+                            case Controller::Action::kJump:
+                            case Controller::Action::kWalkForward:
+                            case Controller::Action::kWalkBackwards:
+                            case Controller::Action::kWalkLeft:
+                            case Controller::Action::kWalkRight:
+                            {
+                                if (!airborne_checked)
+                                {
+                                    for (Entity *other : objects_)
+                                    {
+                                        // If moving the entity down by one unit it would collide then it must be on a surface
+                                        if (entity->WouldCollide(other, 0, -1, 0))
+                                        {
+                                            airborne = false;
+                                            break;
+                                        }
+                                    }
+                                    airborne_checked = true;
+                                }
+                                float coeff = 1.f;
+                                if (airborne)
+                                {
+                                    // only allowed small movements in the air
+                                    coeff = 1.f;
+                                }
+                                int movement = static_cast<int>(round(action.scale * move_speed_ * coeff));
+                                if (action.action == Controller::Action::kJump && !airborne)
+                                {
+                                    dy += round(action.scale * jump_speed_);
+                                }
+                                if (action.action == Controller::Action::kWalkForward)
+                                {
+                                    dx += movement;
+                                }
+                                if (action.action == Controller::Action::kWalkBackwards)
+                                {
+                                   dx -= movement;
+                                }
+                                if (action.action == Controller::Action::kWalkLeft)
+                                {
+                                    dz -= movement;
+                                }
+                                if (action.action == Controller::Action::kWalkRight)
+                                {
+                                   dz += movement;
+                                }
+                            }
+                            break;
+                            }
+                        }
+                        if(dx != 0 || dy != 0 || dz != 0){
+                            if(dy == 0){
+                                dy = y;
+                            }
+                            float friction = entity->get_friction();
+                            int effective_move_speed = round(move_speed_ / friction);
+                            //Rotate these deltas
+                            int nx = entity->RotatedXMovementHelper(dx,dz);
+                            int nz = entity->RotatedZMovementHelper(dx,dz);
+                            
+                            //Limit the changes
+                            entity->set_move(std::max(-effective_move_speed,std::min(effective_move_speed,nx)),std::max(-jump_speed_,std::min(jump_speed_,dy)),std::max(-effective_move_speed,std::min(effective_move_speed,nz)));
+                        }
+                    }
+                }
+            }
+        }
+
+        void ShooterWorld::UpdateMovement(){
+            for (Team *team : teams_)
+            {
+                for (Player *player : team->get_players())
+                {
+                    bool airborne = true;
+                    for(Entity* other : objects_){
+                        if(player->entity->WouldCollide(other,0,-1,0)){
+                            airborne = false;
+                            break;
+                        }
+                    }
+                    player->entity->set_look_change_vector(0.f,0.f);
+                    //kill box
+                    if(player->entity->get_y_pos() <= -100){
+                        player->entity->set_hp(0);
+                    }
                     //Slow the entity down and apply gravity
                     int x,y,z;
                     std::tie(x,y,z) = player->entity->get_movement_vector();
@@ -724,13 +695,7 @@ namespace game_engine
                             x_update = -x;
                         } 
                     }
-                    bool airborne = true;
-                    for(Entity* other : objects_){
-                        if(player->entity->WouldCollide(other,0,-1,0)){
-                            airborne = false;
-                            break;
-                        }
-                    }
+                    
                     if(airborne){
                         y_update = -gravity_;
                     }else{
@@ -752,168 +717,174 @@ namespace game_engine
                             z_update = -z;
                         }
                     }
-                    
                     player->entity->set_move(x + x_update, y + y_update, z + z_update);
                 }
             }
         }
 
-        void ShooterWorld::process_controllers()
-        {
-            for (Team *team : teams_)
-            {
-                for (Player *player : team->get_players())
-                {
-                    if (player->controller != nullptr)
-                    {
-                        player->controller->Update();
-                    }
-                }
-            }
-        }
-
-        void ShooterWorld::do_tick()
+        void ShooterWorld::DoTick()
         {
             if (last_tick_ == (uint64_t)0)
             {
                 last_tick_ = time_ms();
             }
-            process_controllers();
-            tick_players();
-            for (Entity *ent : level_)
+            TickPlayers();
+            for (Entity *ent : objects_)
             {
                 if (ent != nullptr)
                 {
                     ent->DoTick();
                 }
             }
-            //validate_positions();
+            ValidatePositions();
+            UpdateMovement();
+            ProcessControllers();
             round_time_ += time_ms() - last_tick_;
-            if (round_over() && !game_over())
+            if (RoundOver() && !GameOver())
             {
-                Team *winner = round_winner();
+                Team *winner = RoundWinner();
                 if (winner != nullptr)
                 {
                     winner->add_score(1);
                 }
-                new_round();
+                NewRound();
             }
             last_tick_ = time_ms();
         }
 
-        void ShooterWorld::validate_positions()
+        void ShooterWorld::ValidatePositions()
         {
-            for (Entity *entity : objects_)
-            {
-                bool final = false;
-                for (int steps = 0; !final && steps < 10; steps++)
+            int max_steps = 10;
+            bool final = false;
+                for (int steps = 0; !final && steps < max_steps; steps++)
                 {
                     final = true;
-                    for (Entity *other : objects_)
-                    {
+            for (Entity *entity : objects_)
+            {
+                //Only entities with physics need to be validated
+                if(!entity->has_physics()){
+                    continue;
+                }
+                
+                for (Entity *other : objects_)
+                {
                         if (entity->IsColliding(other))
                         {
                             final = false;
-                            Entity *responsible = nullptr;
                             int x = 0, y = 0, z = 0, other_x = 0, other_y = 0, other_z = 0;
+                            float lx,ly,other_lx,other_ly;
                             std::tie(x, y, z) = entity->get_movement_vector();
+                            std::tie(lx,ly) = entity->get_look_change_vector();
                             std::tie(other_x, other_y, other_z) = other->get_movement_vector();
-                            if (((x != 0 || y != 0 || z != 0) && other_x == other_y && other_y == other_z && other_z == 0) || (entity->has_physics() && !other->has_physics()))
-                            {
-                                responsible = entity;
+                            std::tie(other_lx,other_ly) = other->get_look_change_vector();
+                            entity->DoLook(-lx,-ly);
+                            int old_width = entity->effective_width();
+                            int old_depth = entity->effective_depth();
+                            entity->DoLook(lx,ly);
+                            int entity_width_delta = entity->effective_width() - old_width;
+                            int entity_depth_delta = entity->effective_depth() - old_depth;
+                            if(x >= 0){
+                            x += entity_width_delta;
+                            } else{
+                                x -= entity_width_delta;
                             }
-                            if ((x == y && y == z && z == 0 && (other_x != 0 || other_y != 0 || other_z != 0)) || (other->has_physics() && !entity->has_physics()))
-                            {
-                                responsible = other;
+                            if(z >= 0){
+                            z += entity_depth_delta;
+                            }else{
+                                z -= entity_depth_delta;
                             }
-                            // How much total movement is needed to break overlap (- values mean other is in front)
-                            int x_move = 0;
-                            int y_move = 0;
-                            int z_move = 0;
-                            if (responsible != nullptr)
-                            {
-                                Entity *non_responsible = nullptr;
-                                int x_mul = 1;
-                                int y_mul = 1;
-                                int z_mul = 1;
-                                if (responsible == entity)
-                                {
-                                    non_responsible = other;
+                            other->DoLook(-other_lx,-other_ly);
+                            int other_old_width = other->effective_width();
+                            int other_old_depth = other->effective_depth();
+                            other->DoLook(other_lx,other_ly);
+                            int other_width_delta = other->effective_width() - other_old_width;
+                            int other_depth_delta = other->effective_depth() - other_old_depth;
+                            other_x += other_width_delta;
+                            other_z += other_depth_delta;
+                            //How much to move to stop overlapping
+                            int xoverlap = 0;
+                            int yoverlap = 0;
+                            int zoverlap = 0;
+                            int x_dist = entity->XDistanceToOther(other);
+                            int y_dist = entity->YDistanceToOther(other);
+                            int z_dist = entity->ZDistanceToOther(other);
+                            if(x_dist == 0){
+                                if(entity->get_x_pos() < other->get_x_pos()){
+                                    xoverlap = other->get_min_x_pos() - entity->get_max_x_pos();
+                                    xoverlap -= 1;
+                                }else{
+                                    xoverlap = other->get_max_x_pos() - entity->get_min_x_pos();
+                                    xoverlap += 1;
                                 }
-                                else
-                                {
-                                    non_responsible = entity;
+                            }
+                            if(y_dist == 0){
+                                if(entity->get_y_pos() < other->get_y_pos()){
+                                    yoverlap = other->get_min_y_pos() - entity->get_max_y_pos();
+                                    yoverlap -= 1;
+                                }else{
+                                    yoverlap = other->get_max_y_pos() - entity->get_min_y_pos();
+                                    yoverlap += 1;
                                 }
-                                int x_dist = responsible->XDistanceToOther(non_responsible);
-                                int y_dist = responsible->YDistanceToOther(non_responsible);
-                                int z_dist = responsible->ZDistanceToOther(non_responsible);
-                                if (x_dist == 0)
-                                {
-                                    if (non_responsible->get_x_pos() <= responsible->get_x_pos())
-                                    {
-                                        x_move = non_responsible->get_max_x_pos() - responsible->get_min_x_pos();
-                                        x_mul = -1;
+                            }
+                            if(z_dist == 0){
+                                if(entity->get_z_pos() < other->get_z_pos()){
+                                    zoverlap = other->get_min_z_pos() - entity->get_max_z_pos();
+                                    zoverlap -= 1;
+                                }else{
+                                    zoverlap =  other->get_max_z_pos() - entity->get_min_z_pos();
+                                    zoverlap += 1;
+                                }
+                            }
+                            int mask[] = {0,0,0};
+                            if(xoverlap != 0 && (yoverlap == 0 || abs(xoverlap) <= abs(yoverlap)) && (zoverlap == 0 || abs(xoverlap) <= abs(zoverlap))){
+                                mask[0] = 1;
+                            }else if(yoverlap != 0 && (xoverlap == 0 || abs(yoverlap) <= abs(xoverlap)) && (zoverlap == 0 || abs(yoverlap) <= abs(zoverlap))){
+                                mask[1] = 1;
+                            }else if(zoverlap != 0 && (xoverlap == 0 || abs(zoverlap) <= abs(xoverlap)) && (yoverlap == 0 || abs(zoverlap) <= abs(yoverlap))){
+                                mask[2] = 1;
+                            }
+                            if(mask[0] != 0){
+                                if(abs(x) < abs(other_x)){
+                                    mask[0] = 0;
+                                }
+                            }else if(mask[1] != 0){
+                                if(abs(y) < abs(other_y)){
+                                    mask[1] = 0;
+                                }
+                            }else if(mask[2] != 0){
+                                if(abs(z) < abs(other_z)){
+                                    mask[2] = 0;
+                                }
+                            }
+                            int moves[] = {xoverlap*mask[0],yoverlap*mask[1],zoverlap*mask[2]};
+                            //Try to move the entity with the least resistance
+                            bool moveable = true;
+                            bool other_moveable = true;
+                            for(Entity* otherObj : objects_){
+                                if(entity->WouldCollide(otherObj,moves[0],moves[1],moves[2])){
+                                    moveable = false;
+                                }
+                            }
+
+                            if(!moveable && other->has_physics()){
+                                for(Entity* otherObj : objects_){
+                                    if(other->WouldCollide(otherObj,-moves[0],-moves[1],-moves[2])){
+                                        other_moveable = false;
                                     }
-                                    else
-                                    {
-                                        x_move = responsible->get_max_x_pos() - non_responsible->get_min_x_pos();
-                                    }
                                 }
-                                if (y_dist == 0)
-                                {
-                                    if (non_responsible->get_y_pos() <= responsible->get_y_pos())
-                                    {
-                                        y_move = non_responsible->get_max_y_pos() - responsible->get_min_y_pos();
-                                        y_mul = -1;
-                                    }
-                                    else
-                                    {
-                                        y_move = (responsible->get_max_y_pos() - non_responsible->get_min_y_pos());
-                                    }
-                                }
-                                if (z_dist == 0)
-                                {
-                                    if (non_responsible->get_z_pos() <= responsible->get_z_pos())
-                                    {
-                                        z_move = non_responsible->get_max_z_pos() - responsible->get_min_z_pos();
-                                        z_mul = -1;
-                                    }
-                                    else
-                                    {
-                                        z_move = responsible->get_max_z_pos() - non_responsible->get_min_z_pos();
-                                    }
-                                }
-                                bool x_valid = false;
-                                bool y_valid = false;
-                                bool z_valid = false;
-                                x_valid = x_dist == 0;
-                                y_valid = y_dist == 0;
-                                z_valid = z_dist == 0;
-                                // Because the difference is how far to be at the edge, one needs to be added
-                                if (x_valid && (x_move <= y_move || !y_valid) && (x_move <= z_move || !z_valid))
-                                {
-                                    x_move += 1;
-                                    y_move = 0;
-                                    z_move = 0;
-                                }
-                                else if (y_valid && (y_move <= z_move || !z_valid) && (y_move <= x_move || !x_valid))
-                                {
-                                    x_move = 0;
-                                    y_move += 1;
-                                    z_move = 0;
-                                }
-                                else if (z_valid && (z_move <= y_move || !(y_valid)) && (z_move <= x_move || !x_valid))
-                                {
-                                    x_move = 0;
-                                    y_move = 0;
-                                    z_move += 1;
-                                }
-                                responsible->DoMoveAbsolute(-x_move * x_mul, -y_move * y_mul, -z_move * z_mul);
+                            } else{
+                                other_moveable = false;
+                            }
+                            if(moveable || (!moveable && !other_moveable)){
+                                entity->DoMoveAbsolute(moves[0],moves[1],moves[2]);
+                            }else if(other_moveable){
+                                other->DoMoveAbsolute(-moves[0],-moves[1],-moves[2]);
                             }
                         }
                     }
                 }
             }
+    
         }
 
         void ShooterWorld::add_object(Entity *object)

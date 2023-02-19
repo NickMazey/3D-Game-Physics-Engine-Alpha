@@ -28,25 +28,28 @@ public:
     ShooterWorld(int move_speed, int jump_speed, int gravity, int air_friction);
 
     //Loads a map for this ShooterWorld
-    void load_map(const Map &map);
+    void LoadMap(const Map &map);
 
     //Determines whether or not the round is over
-    bool round_over();
+    bool RoundOver();
 
     //Determines the winner of the round
-    Team* round_winner();
+    Team* RoundWinner();
 
     //Determines whether or not the game is over
-    bool game_over();
+    bool GameOver();
 
     //Determines the winner of the game 
-    Team* game_winner();
+    Team* GameWinner();
 
     //Resets the game world and timer, setting all players to the start positions and resetting their HP
-    void new_round();
+    void NewRound();
 
     //Sub-tick method for players
-    void tick_players();
+    void TickPlayers();
+
+    //Sub-tick method to apply physics to entities and reset look vectors
+    void UpdateMovement();
 
     //Adds a team to teams
     void add_team(Team* team){
@@ -134,13 +137,13 @@ public:
     }
 
     //Sets the corresponding player's active projectile launcher to the launcher at the specified index in its inventory
-    void equip_player(Player* player, int index);
+    void EquipPlayer(Player* player, int index);
 
-    void process_controllers();
+    void ProcessControllers();
 
-    void do_tick();
+    void DoTick();
 
-    void validate_positions();
+    void ValidatePositions();
 
     void add_object(Entity* object);
 
