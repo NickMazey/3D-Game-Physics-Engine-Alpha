@@ -420,8 +420,6 @@ namespace game_engine
                         int x_change = 0;
                         int y_change = 0;
                         int z_change = 0;
-                        float horizontal_look_angle = entity->get_horizontal_look_angle();
-                        float vertical_look_angle = entity->get_vertical_look_angle();
                         if(x_resp){
                           x_change = entity->XDistanceToOther(other);
                           if(x_change < 0){
