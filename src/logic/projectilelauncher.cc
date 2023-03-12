@@ -171,15 +171,15 @@ namespace game_engine
                     float coeff = 1.f;
                     if (test_point->IsColliding(active_entity) || test_point->WouldCollide(active_entity, x_movement, y_movement, z_movement) || test_point->PassesThrough(active_entity, x_movement, y_movement, z_movement))
                     {
-                        if (x_movement != 0 && abs(x_movement) >= abs(y_movement) && abs(x_movement) >= abs(z_movement))
+                        if (x_movement != 0 && x_distance != 0 && abs(x_movement) >= abs(y_movement) && abs(x_movement) >= abs(z_movement))
                         {
                             coeff = static_cast<float>(x_distance) / static_cast<float>(x_movement);
                         }
-                        else if (y_movement != 0 && abs(y_movement) >= abs(x_movement) && abs(y_movement) >= abs(z_movement))
+                        else if (y_movement != 0 && y_distance != 0 && abs(y_movement) >= abs(x_movement) && abs(y_movement) >= abs(z_movement))
                         {
                             coeff = static_cast<float>(y_distance) / static_cast<float>(y_movement);
                         }
-                        else if (z_movement != 0 && abs(z_movement) >= abs(x_movement) && abs(z_movement) >= abs(y_movement))
+                        else if (z_movement != 0 && z_distance != 0 && abs(z_movement) >= abs(x_movement) && abs(z_movement) >= abs(y_movement))
                         {
                             coeff = static_cast<float>(z_distance) / static_cast<float>(z_movement);
                         }
