@@ -405,7 +405,9 @@ bool Entity::WouldCollide(Entity* other, int x, int y, int z)
         Entity* created = new Entity(x_pos_, y_pos_, z_pos_, width_, height_, depth_);
         created->DoLook(horizontal_look_angle_, vertical_look_angle_);
         created->DoMoveAbsolute(x, y, z);
-        return created->IsColliding(other);
+        bool wouldCollide = created->IsColliding(other);
+        delete created;
+        return wouldCollide;
     }
     // Can't collide
     return false;
@@ -422,7 +424,9 @@ bool Entity::WouldCollideRotate(Entity* other, float horizontal, float vertical)
         Entity* created = new Entity(x_pos_, y_pos_, z_pos_, width_, height_, depth_);
         created->DoLook(horizontal_look_angle_, vertical_look_angle_);
         created->DoLook(horizontal,vertical);
-        return created->IsColliding(other);
+        bool wouldCollide = created->IsColliding(other);
+        delete created;
+        return wouldCollide;
     }
     // Can't collide
     return false;
