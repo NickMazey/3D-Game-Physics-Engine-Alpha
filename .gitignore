@@ -45,6 +45,7 @@ build-and-test.bat
 #CMake Stuff
 
 /project_build/
+/build/
 
 #CPPCheck
 *.cppcheck

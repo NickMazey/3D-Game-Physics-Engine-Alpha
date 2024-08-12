@@ -1,6 +1,7 @@
 // Copyright 2022 Nicholas Mazey. All rights reserved
 #include "logicutil.h"
 
+#include <chrono>
 #include <math.h>
 namespace game_engine
 {
@@ -17,7 +18,7 @@ int RadiansToDegrees(const float radians)
     return static_cast<int>((180.0f * radians) / kPITenDP);
 }
 
-const int SimplifyAngle(const int degrees)
+int SimplifyAngle(const int degrees)
 {
     if (-180 <= degrees && degrees <= 180)
     {
@@ -34,7 +35,7 @@ const int SimplifyAngle(const int degrees)
     }
 }
 
-const float SimplifyRadians(const float radians)
+float SimplifyRadians(const float radians)
 {
     if (-1.0f * kPITenDP <= radians && radians <= kPITenDP)
     {
@@ -51,14 +52,19 @@ const float SimplifyRadians(const float radians)
     }
 }
 
-const float approxsin(const float radians)
+float approxsin(const float radians)
 {
     return sinf(radians);
 }
 
-const float approxcos(const float radians)
+float approxcos(const float radians)
 {
     return cosf(radians);
+}
+
+uint64_t time_ms()
+{
+    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
 }
 
 } // namespace logic

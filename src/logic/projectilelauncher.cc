@@ -24,9 +24,8 @@ namespace game_engine
             set_shoot_offset_x(0);
             set_shoot_offset_y(0);
             set_shoot_offset_z(0);
-            set_projectile(*this);
-            set_active_projectile(this);
-            set_last_hit(this);
+            set_active_projectile(nullptr);
+            set_last_hit(-1);
             Reload();
         }
 
@@ -38,6 +37,10 @@ namespace game_engine
             projectile_starting_velocity_[2] = projectile.get_z_pos();
             projectile.set_pos(0, 0, 0);
             set_projectile(projectile);
+        }
+
+        ProjectileLauncher::ProjectileLauncher(){
+            
         }
 
         void ProjectileLauncher::Reload()
@@ -63,8 +66,10 @@ namespace game_engine
 
         bool ProjectileLauncher::Fire(const std::set<Entity *> &entities)
         {
-            entity_list_ = entities;
-            set_last_hit(this);
+            if(!hitscan_){
+                entity_list_ = entities;
+            }
+            set_last_hit(-1);
             bool can_fire;
             can_fire = false;
             if (loaded_ammo_ > 0)
@@ -88,7 +93,12 @@ namespace game_engine
             {
                 if (hitscan_)
                 {
-                    last_hit_ = FindFirstCollision(entities);
+                    Entity* first_collision = FindFirstCollision(entities);
+                    if(first_collision != nullptr){
+                        last_hit_ = first_collision->get_id();
+                    } else{
+                        last_hit_ = -1;
+                    }
                 }
                 else
                 { // Non-hitscan
@@ -103,19 +113,19 @@ namespace game_engine
 
         bool ProjectileLauncher::has_hit()
         {
-            return last_hit_ != this;
+            return last_hit_ != -1;
         }
 
         void ProjectileLauncher::DoTick()
         {
             Entity::DoTick();
-            if (!hitscan_ && active_projectile_ != this)
+            if (!hitscan_ && active_projectile_ != nullptr)
             {
                 for (Entity *active_entity : entity_list_)
                 {
                     if (active_projectile_->IsColliding(active_entity) || active_projectile_->PassesThrough(active_entity, projectile_starting_velocity_[0], projectile_starting_velocity_[1], projectile_starting_velocity_[2]))
                     {
-                        last_hit_ = active_entity;
+                        last_hit_ = active_entity->get_id();
                         delete active_projectile_;
                         active_projectile_ = this;
                     }
@@ -127,7 +137,7 @@ namespace game_engine
                     {
                         if (active_projectile_->IsColliding(active_entity))
                         {
-                            last_hit_ = active_entity;
+                            last_hit_ = active_entity->get_id();
                             delete active_projectile_;
                             active_projectile_ = this;
                         }
@@ -139,7 +149,7 @@ namespace game_engine
         Entity *ProjectileLauncher::FindFirstCollision(std::set<Entity *> entities)
         {
             int closest = -1;
-            Entity *closest_hittable_entity = this;
+            Entity *closest_hittable_entity = nullptr;
             // How much the line should move in each dimension per step with the given angles
             float y_coefficient = approxsin(get_vertical_look_angle());
             float xz_coefficient = approxcos(get_vertical_look_angle());
@@ -173,19 +183,19 @@ namespace game_engine
                     {
                         if (x_movement != 0 && x_distance != 0 && abs(x_movement) >= abs(y_movement) && abs(x_movement) >= abs(z_movement))
                         {
-                            coeff = static_cast<float>(x_distance) / static_cast<float>(x_movement);
+                            coeff = static_cast<float>(x_distance) / static_cast<float>(distance);
                         }
                         else if (y_movement != 0 && y_distance != 0 && abs(y_movement) >= abs(x_movement) && abs(y_movement) >= abs(z_movement))
                         {
-                            coeff = static_cast<float>(y_distance) / static_cast<float>(y_movement);
+                            coeff = static_cast<float>(y_distance) / static_cast<float>(distance);
                         }
                         else if (z_movement != 0 && z_distance != 0 && abs(z_movement) >= abs(x_movement) && abs(z_movement) >= abs(y_movement))
                         {
-                            coeff = static_cast<float>(z_distance) / static_cast<float>(z_movement);
+                            coeff = static_cast<float>(z_distance) / static_cast<float>(distance);
                         }
-                        //Scales similarly to hypotenuse but is less likely to overflow the double limit
+                        //Scales roughly proportional to hypotenuse but is less likely to overflow the double limit
                         int dist = round(abs(x_movement * coeff) + abs(y_movement * coeff) + abs(z_movement * coeff));
-                        if (closest_hittable_entity == this)
+                        if (closest_hittable_entity == nullptr)
                         {
                             closest_hittable_entity = active_entity;
                             closest = dist;
@@ -215,7 +225,7 @@ namespace game_engine
                 std::set<Entity *> new_entities = std::set<Entity *>();
                 new_entities.insert(active_entity);
                 Entity *firstCollision = FindFirstCollision(new_entities);
-                if (firstCollision != this)
+                if (firstCollision != nullptr)
                 {
                     hittable_entities.insert(active_entity);
                 }
@@ -317,7 +327,7 @@ namespace game_engine
             projectile_ = to_set;
         }
 
-        void ProjectileLauncher::set_last_hit(Entity *to_set)
+        void ProjectileLauncher::set_last_hit(int to_set)
         {
             last_hit_ = to_set;
         }

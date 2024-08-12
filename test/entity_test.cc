@@ -99,11 +99,13 @@ TEST(EntityTest, Unique_Ids_2){
 }
 
 TEST(EntityTest, Unique_Ids_3){
+    int id = 0;
     if(true){
         game_engine::logic::Entity a (0,0,0,0,0,0);
+        id = a.get_id();
     }
     game_engine::logic::Entity b (0,0,0,0,0,0);
-    EXPECT_TRUE(b.get_id() == 1) << "ID only changes within scope \n Entity:" << printInfo(b);
+    EXPECT_TRUE(b.get_id() == id + 1) << "ID only changes within scope \n Entity:" << printInfo(b);
 }
 
 

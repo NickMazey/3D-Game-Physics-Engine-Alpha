@@ -6,6 +6,10 @@
 #include <tuple>
 
 #include "logicutil.h"
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/set.hpp>
+#include <boost/serialization/access.hpp>
+#include "serialiser.h"
 
 #ifndef GAME_ENGINE_LOGIC_ENTITY_H
 #define GAME_ENGINE_LOGIC_ENTITY_H
@@ -36,7 +40,7 @@ public:
     bool operator<(const Entity& other) const;
 
     // Destroys the entity and removes it from other entities' lists
-    ~Entity();
+    virtual ~Entity();
 
     // Adds to dependents
     void AddDependent(Entity* other);
@@ -126,7 +130,7 @@ public:
     void set_other_pos_relative_to(Entity* other, int x, int y, int z);
 
     // Does DoMove and DoLook methods for a game tick
-    void DoTick();
+    virtual void DoTick();
 
     // Returns the width of this entity with rotation
     int effective_width() const
@@ -291,6 +295,7 @@ public:
     void set_friction(const float to_set);
 
 private:
+    friend class boost::serialization::access;
     int id_ = -1;
     int hp_ = -1;
     std::set<Entity*> dependents_ = std::set<Entity*>();
@@ -315,6 +320,30 @@ private:
     float vertical_look_angle_ = 0.0f;
     int fov_ = 0;
     float look_change_vector_[2] = { 0.0 }; // Radians
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & id_;
+        ar & hp_;
+        ar & dependents_;
+        ar & x_pos_;
+        ar & y_pos_;
+        ar & z_pos_;
+        ar & movement_vector_;
+        ar & children_;
+        ar & solid_;
+        ar & width_;
+        ar & height_;
+        ar & depth_;
+        ar & ghosts_;
+        ar & physics_;
+        ar & gravity_;
+        ar & friction_;
+        ar & horizontal_look_angle_;
+        ar & vertical_look_angle_;
+        ar & fov_;
+        ar & look_change_vector_;
+    }
 };
 } // namespace logic
 } // namespace game_engine

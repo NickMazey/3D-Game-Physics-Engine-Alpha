@@ -12,11 +12,6 @@ namespace game_engine
     namespace logic
     {
 
-        uint64_t time_ms()
-        {
-            return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-        }
-
         ShooterWorld::ShooterWorld(int move_speed, int jump_speed, int gravity, int air_friction)
         {
             move_speed_ = move_speed;
@@ -300,10 +295,14 @@ namespace game_engine
                 {
                     for (ProjectileLauncher *launcher : player->inventory)
                     {
-                        if (launcher->get_last_hit() != launcher)
+                        if (launcher->get_last_hit() != -1)
                         {
-                            launcher->get_last_hit()->remove_hp(launcher->get_damage());
-                            launcher->set_last_hit(launcher);
+                            for(Entity* entity : objects_){
+                                if(entity->get_id() == launcher->get_last_hit()){
+                                    entity->remove_hp(launcher->get_damage());
+                                }
+                            }
+                            launcher->set_last_hit(-1);
                         }
                     }
                 }
@@ -454,7 +453,7 @@ namespace game_engine
                         //Stairs
                         if(entity->YDistanceToOther(other) == 0 && entity->get_max_y_pos() >= other->get_min_y_pos()){
                                 int elevation_change = other->get_max_y_pos() - entity->get_min_y_pos();
-                                int ratio = round(entity->get_height() / static_cast<double>(elevation_change));
+                                int ratio = round(entity->get_height() / static_cast<float>(elevation_change));
                                 if(elevation_change > 0 && ratio >= 10){
                                     elevation_change +=1;
                                     bool can_shift_up = true;
@@ -524,7 +523,7 @@ namespace game_engine
 
                             case Controller::Action::kShoot:
                             {
-                            launcher->Fire(objects_);
+                                launcher->Fire(objects_);
                             }
                             break;
                             case Controller::Action::kSwapWeaponUp:

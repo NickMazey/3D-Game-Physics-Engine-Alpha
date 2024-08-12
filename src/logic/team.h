@@ -3,6 +3,9 @@
 
 #include "player.h"
 
+#include <boost/serialization/set.hpp>
+#include <boost/serialization/access.hpp>
+
 #ifndef GAME_ENGINE_LOGIC_TEAM_H
 #define GAME_ENGINE_LOGIC_TEAM_H
 namespace game_engine
@@ -50,12 +53,22 @@ public:
     }
 
 private:
+    friend class boost::serialization::access;
+    Team();
     int max_team_size_;
     int score_;
     std::set<Player*> players_ = std::set<Player*>();
 
     // Creates a set of all entities owned by a player
     std::set<Entity*> get_entities(Player* player);
+    
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & max_team_size_;
+        ar & score_;
+        ar & players_;
+    }
 };
 } // namespace logic
 } // namespace game_engine

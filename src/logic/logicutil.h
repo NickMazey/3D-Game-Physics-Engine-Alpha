@@ -1,3 +1,5 @@
+#include <cstdint>
+
 // Copyright 2022 Nicholas Mazey. All rights reserved
 #ifndef GAME_ENGINE_LOGIC_LOGICUTIL_H
 #define GAME_ENGINE_LOGIC_LOGICUTIL_H
@@ -13,16 +15,20 @@ float DegreesToRadians(int degrees);
 int RadiansToDegrees(float radians);
 
 // simplifies a given angle to between -180 and 180 degrees
-const int SimplifyAngle(const int degrees);
+int SimplifyAngle(const int degrees);
 
 // simplifies a given angle in radians to between -PI and PI
-const float SimplifyRadians(const float radians);
+float SimplifyRadians(const float radians);
 
 // Gives an approximation of sine
-const float approxsin(const float degrees);
+float approxsin(const float degrees);
 
 // Gives an approximation of cos
-const float approxcos(const float degrees);
+float approxcos(const float degrees);
+
+// Gets epoch time in milliseconds
+uint64_t time_ms();
+        
 } // namespace logic
 } // namespace game_engine
 #endif // GAME_ENGINE_LOGIC_LOGICUTIL_H

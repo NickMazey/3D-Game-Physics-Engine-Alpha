@@ -6,6 +6,8 @@
 #include "entity.h"
 #include "world.h"
 
+#include <boost/serialization/export.hpp>
+
 #ifndef GAME_ENGINE_LOGIC_PROJECTILELAUNCHER_H
 #define GAME_ENGINE_LOGIC_PROJECTILELAUNCHER_H
 
@@ -94,7 +96,7 @@ public:
         return projectile_;
     }
 
-    Entity* get_last_hit()
+    int get_last_hit()
     {
         return last_hit_;
     }
@@ -120,11 +122,13 @@ public:
 
     void set_projectile(const Entity &to_set);
 
-    void set_last_hit(Entity* to_set);
+    void set_last_hit(int to_set);
 
     void set_active_projectile(Entity* to_set);
 
 private:
+    ProjectileLauncher();
+    friend class boost::serialization::access;
     int ammo_;
     int magazine_size_;
     int loaded_ammo_;
@@ -147,8 +151,27 @@ private:
     // TODO: Should be changed into a list in the future, will probably also need last hit to be a list that is removed from when used
     Entity* active_projectile_ = nullptr;
 
-    Entity* last_hit_;
+    int last_hit_;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+    ar & boost::serialization::base_object<Entity>(*this);
+    ar & ammo_;
+    ar & magazine_size_;
+    ar & loaded_ammo_;
+    ar & projectile_starting_velocity_;
+    ar & damage_;
+    ar & shoot_offset_x_;
+    ar & shoot_offset_y_;
+    ar & shoot_offset_z_;
+    ar & hitscan_;
+    ar & projectile_;
+    ar & entity_list_;
+    ar & active_projectile_;
+    ar & last_hit_;
+    }
 };
 } // namespace logic
 } // namespace game_engine
+
 #endif // GAME_ENGINE_LOGIC_PROJECTILELAUNCHER_H
