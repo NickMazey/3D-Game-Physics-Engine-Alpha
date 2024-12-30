@@ -7,6 +7,9 @@ namespace game_engine
 {
 namespace logic
 {
+Team::Team(){
+
+}
 
 Team::Team(const int max_team_size) {
     if (max_team_size > 0) {

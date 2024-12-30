@@ -89,9 +89,11 @@ bool Entity::InDependents(Entity* other)
 
 void Entity::AddGhost(Entity* other)
 {
-    ghosts_.insert(other);
-    other->AddDependent(this);
-    AddDependent(other);
+    if(*other != *this){
+        ghosts_.insert(other);
+        other->AddDependent(this);
+        AddDependent(other);
+    }
 }
 
 void Entity::RemoveGhost(Entity* other)
@@ -437,8 +439,6 @@ bool Entity::PassesThrough(Entity* other, int x, int y, int z)
     // If it would collide (on either side of the entity) then it must not have passed through
     if (!WouldCollide(other, x, y, z) && solid_ && other->is_solid() && !InGhosts(other) && (x != 0 || y != 0 || z != 0))
     {
-        int rotated_x_movement = x;
-        int rotated_z_movement = z;
        //X Step 
        int x_dist = XDistanceToOther(other);
        int y_dist = YDistanceToOther(other);

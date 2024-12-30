@@ -10,6 +10,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
     - name: Build
       run: |
         mkdir project_build
@@ -31,7 +33,7 @@ jobs:
         gcovr project_build -r src --html --html-details -o project_build/coverage/coverage-html.html
     - name: Archive Report
       if: always()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
           name: coverage
           path: project_build/coverage

@@ -193,24 +193,6 @@ std::string printInfo(const game_engine::logic::ProjectileLauncher toPrint)
     return toReturn;
 }
 
-void cleanup(game_engine::logic::ShooterWorld world)
-{
-    return;
-    /*
-    for(game_engine::logic::Team* team : world.get_teams()){
-        for(game_engine::logic::Player* player : team->get_players()){
-            if(player->controller){
-                delete player->controller;
-            }
-            delete player;
-        }
-        delete team;
-    }
-    for(game_engine::logic::Entity* entity : world.get_objects()){
-        delete entity;
-    }*/
-}
-
 // Init
 TEST(ShooterWorldTest, Initialises_Gravity_Properly)
 {
@@ -363,7 +345,6 @@ TEST(ShooterWorldTest, Load_Map_Loads_Correct_Number)
     game_engine::logic::Map box = test_box();
     world.LoadMap(box);
     EXPECT_EQ((int)world.get_objects().size(), box.players.size() + box.level.size() + box.players.size()) << "Map does not load correctly.";
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Load_Map_Loads_Players_Correctly)
@@ -388,7 +369,6 @@ TEST(ShooterWorldTest, Load_Map_Loads_Players_Correctly)
         }
         EXPECT_TRUE(player_present) << "Could not find entity " << printInfo(player);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Load_Map_Loads_Launchers_Correctly)
@@ -442,7 +422,6 @@ TEST(ShooterWorldTest, Load_Map_Loads_Terrain_Correctly)
         }
         EXPECT_TRUE(terrain_present) << "Could not find terrain " << printInfo(terrain);
     }
-    cleanup(world);
 }
 
 // Position Validation
@@ -471,7 +450,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ)
         world.ValidatePositions();
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ)
@@ -499,7 +477,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ)
         world.ValidatePositions();
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PX)
@@ -527,7 +504,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PX)
         world.ValidatePositions();
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NX)
@@ -555,7 +531,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NX)
         world.ValidatePositions();
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PY)
@@ -583,7 +558,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PY)
         world.ValidatePositions();
         EXPECT_EQ(target_entity->get_max_y_pos(), 999) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NY)
@@ -611,7 +585,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NY)
         world.ValidatePositions();
         EXPECT_EQ(target_entity->get_min_y_pos(), 1) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX)
@@ -640,7 +613,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX)
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX)
@@ -669,7 +641,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX)
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX)
@@ -698,7 +669,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX)
         EXPECT_EQ(target_entity->get_max_z_pos(), 999) << "Entity's position not validated correctly on positive Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX)
@@ -727,7 +697,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX)
         EXPECT_EQ(target_entity->get_min_z_pos(), -999) << "Entity's position not validated correctly on negative Z. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX_PY)
@@ -757,7 +726,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX_PY)
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_y_pos(), 999) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX_PY)
@@ -787,7 +755,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX_PY)
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_y_pos(), 999) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX_PY)
@@ -817,7 +784,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX_PY)
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_y_pos(), 999) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX_PY)
@@ -847,7 +813,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX_PY)
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_max_y_pos(), 999) << "Entity's position not validated correctly on positive Y. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX_NY)
@@ -877,7 +842,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_PX_NY)
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_y_pos(), 1) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX_NY)
@@ -907,7 +871,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_PX_NY)
         EXPECT_EQ(target_entity->get_max_x_pos(), 999) << "Entity's position not validated correctly on positive X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_y_pos(), 1) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX_NY)
@@ -937,7 +900,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_PZ_NX_NY)
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_y_pos(), 1) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX_NY)
@@ -967,7 +929,6 @@ TEST(ShooterWorldTest, Validates_Position_Correctly_Move_NZ_NX_NY)
         EXPECT_EQ(target_entity->get_min_x_pos(), -999) << "Entity's position not validated correctly on negative X. Entity : " << printInfo(*target_entity);
         EXPECT_EQ(target_entity->get_min_y_pos(), 1) << "Entity's position not validated correctly on negative Y. Entity : " << printInfo(*target_entity);
     }
-    cleanup(world);
 }
 
 // Controller Reading
@@ -1001,7 +962,6 @@ TEST(ShooterWorldTest, Forward_Input_Behaves_Properly)
         world.DoTick();
         EXPECT_EQ(target_player->entity->get_z_pos(), start_z - world.get_move_speed()) << "Forward input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Backward_Input_Behaves_Properly)
@@ -1035,7 +995,6 @@ TEST(ShooterWorldTest, Backward_Input_Behaves_Properly)
         world.DoTick();
         EXPECT_EQ(target_player->entity->get_z_pos(), start_z - world.get_move_speed()) << "Backwards input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Left_Input_Behaves_Properly)
@@ -1068,7 +1027,6 @@ TEST(ShooterWorldTest, Left_Input_Behaves_Properly)
         world.DoTick();
         EXPECT_EQ(target_player->entity->get_x_pos(), start_x + world.get_move_speed()) << "Left input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Right_Input_Behaves_Properly)
@@ -1106,7 +1064,6 @@ TEST(ShooterWorldTest, Right_Input_Behaves_Properly)
         world.DoTick();
         EXPECT_EQ(target_player->entity->get_x_pos(), start_x - world.get_move_speed()) << "Right input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Jump_Input_Behaves_Properly)
@@ -1139,7 +1096,6 @@ TEST(ShooterWorldTest, Jump_Input_Behaves_Properly)
         world.DoTick();
         EXPECT_EQ(target_player->entity->get_y_pos(), startY + world.get_jump_speed()) << "Jump input does not work properly. Entity: " << printInfo(*target_player->entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Look_Left_Input_Behaves_Properly)
@@ -1171,7 +1127,6 @@ TEST(ShooterWorldTest, Look_Left_Input_Behaves_Properly)
         world.DoTick();
         EXPECT_EQ(target_player->entity->get_horizontal_look_angle(), start_look_ang - 1.0f) << "Look left does not work properly. Entity: " << printInfo(*target_player->entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Look_Right_Input_Behaves_Properly)
@@ -1203,7 +1158,6 @@ TEST(ShooterWorldTest, Look_Right_Input_Behaves_Properly)
         world.DoTick();
         EXPECT_EQ(target_player->entity->get_horizontal_look_angle(), start_look_ang + 1.0f) << "Look right does not work properly. Entity: " << printInfo(*target_player->entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Look_Up_Input_Behaves_Properly)
@@ -1235,7 +1189,6 @@ TEST(ShooterWorldTest, Look_Up_Input_Behaves_Properly)
         world.DoTick();
         EXPECT_EQ(target_player->entity->get_vertical_look_angle(), start_look_ang + 1.0f) << "Look up does not work properly. Entity: " << printInfo(*target_player->entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Look_Down_Input_Behaves_Properly)
@@ -1267,7 +1220,6 @@ TEST(ShooterWorldTest, Look_Down_Input_Behaves_Properly)
         world.DoTick();
         EXPECT_EQ(target_player->entity->get_vertical_look_angle(), start_look_ang - 1.0f) << "Look down does not work properly. Entity: " << printInfo(*target_player->entity);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Fire_Works_Properly)
@@ -1313,10 +1265,9 @@ TEST(ShooterWorldTest, Fire_Works_Properly)
             world.DoTick();
             world.DoTick();
             EXPECT_EQ(target_player->active_projectile_launcher->get_loaded_ammo(), target_player->active_projectile_launcher->get_magazine_size() - 1) << "Fire does not consume ammo. Launcher: " << printInfo(*target_player->active_projectile_launcher);
-            EXPECT_EQ(other_player->entity->get_hp(), 80) << "Fire does not hit healthy entities. Entity firing: " << printInfo(*target_player->entity) << " Entity being hit: " << printInfo(*other_player->entity) << "Launcher: " << printInfo(*target_player->active_projectile_launcher) << " Hit id" << target_player->active_projectile_launcher->get_last_hit()->get_id();
+            EXPECT_EQ(other_player->entity->get_hp(), 80) << "Fire does not hit healthy entities. Entity firing: " << printInfo(*target_player->entity) << " Entity being hit: " << printInfo(*other_player->entity) << "Launcher: " << printInfo(*target_player->active_projectile_launcher) << " Hit id" << target_player->active_projectile_launcher->get_last_hit();
         }
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Reload_Works_Properly)
@@ -1364,7 +1315,6 @@ TEST(ShooterWorldTest, Reload_Works_Properly)
             EXPECT_EQ(target_player->active_projectile_launcher->get_loaded_ammo(), target_player->active_projectile_launcher->get_magazine_size()) << "Reload does not consume ammo. Launcher: " << printInfo(*target_player->active_projectile_launcher);
         }
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Swap_Weapon_Up_Works_Properly)
@@ -1398,7 +1348,6 @@ TEST(ShooterWorldTest, Swap_Weapon_Up_Works_Properly)
         world.DoTick();
         EXPECT_EQ(target_player->active_projectile_launcher, launcherB) << "Swap weapon up does not swap properly.";
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Swap_Weapon_Down_Works_Properly)
@@ -1432,7 +1381,6 @@ TEST(ShooterWorldTest, Swap_Weapon_Down_Works_Properly)
         world.DoTick();
         EXPECT_EQ(target_player->active_projectile_launcher, launcherA) << "Swap weapon down does not swap properly.";
     }
-    cleanup(world);
 }
 
 // Round over
@@ -1490,7 +1438,6 @@ TEST(ShooterWorldTest, Round_Is_Won_On_No_HP)
             }
         }
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Game_Is_Won_On_Limit_Reached)
@@ -1562,7 +1509,6 @@ TEST(ShooterWorldTest, Game_Is_Won_On_Limit_Reached)
             }
         }
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Round_Time_Limit_Works)
@@ -1581,7 +1527,6 @@ TEST(ShooterWorldTest, Round_Time_Limit_Works)
             EXPECT_FALSE(world.RoundOver()) << "Round ends before time limit is reached";
         }
     }
-    cleanup(world);
 }
 
 // Tick Tests
@@ -1634,7 +1579,6 @@ TEST(ShooterWorldTest, Firing_Takes_Precedent)
             EXPECT_EQ(other_player->entity->get_x_pos(), 24) << "Entity does not move. Entity : " << printInfo(*other_player->entity);
         }
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Movement_Stopped_By_Obstacles)
@@ -1678,7 +1622,6 @@ TEST(ShooterWorldTest, Movement_Stopped_By_Obstacles)
             EXPECT_EQ(target_player->entity->get_min_z_pos(), other_player->entity->get_max_z_pos() + 1) << "Entities are not stopped by obstacles. Entity moving: " << printInfo(*target_player->entity) << " other entity: " << printInfo(*other_player->entity);
         }
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Stairs_Work_Properly)
@@ -1707,7 +1650,6 @@ TEST(ShooterWorldTest, Stairs_Work_Properly)
         world.DoTick();
         EXPECT_EQ(target_player->entity->get_min_y_pos(), stair->get_max_y_pos() + 1) << "Entities cannot climb stairs. Entity moving:" << printInfo(*target_player->entity) << " stair: " << printInfo(*stair);
     }
-    cleanup(world);
 }
 
 TEST(ShooterWorldTest, Stairs_Consider_Other_Terrain)
@@ -1741,5 +1683,4 @@ TEST(ShooterWorldTest, Stairs_Consider_Other_Terrain)
         EXPECT_EQ(target_player->entity->get_y_pos(), start_y) << "Entities climb stairs through roofs on y. Entity: " << printInfo(*target_player->entity) << " stair: " << printInfo(*stair) << " roof: " << printInfo(*roof);
         EXPECT_EQ(target_player->entity->get_z_pos(), start_z) << "Entities climb stairs through roofs on z. Entity: " << printInfo(*target_player->entity) << " stair: " << printInfo(*stair) << " roof: " << printInfo(*roof);
     }
-    cleanup(world);
 }

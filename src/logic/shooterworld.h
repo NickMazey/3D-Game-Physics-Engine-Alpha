@@ -152,6 +152,7 @@ public:
     const std::set<Entity*> get_objects();
 
 private:
+    friend class boost::serialization::access;
     std::set<Team*> teams_ = std::set<Team*>() ;
     int score_limit_;
     uint64_t round_time_limit_;
@@ -166,6 +167,25 @@ private:
     int move_speed_;
     int jump_speed_;
     int air_friction_;
+
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & teams_;
+        ar & score_limit_;
+        ar & round_time_limit_;
+        ar & round_time_;
+        ar & last_tick_;
+        ar & player_hp_;
+        ar & map_;
+        ar & level_;
+        ar & objects_;
+        ar & obj_map_;
+        ar & gravity_;
+        ar & move_speed_;
+        ar & jump_speed_;
+        ar & air_friction_;
+    }
 
 };
 } // namespace logic

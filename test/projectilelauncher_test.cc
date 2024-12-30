@@ -97,8 +97,8 @@ TEST(ProjectileLauncherTest, Init_Non_Hitscan_Is_Not_Hitscan)
 TEST(ProjectileLauncherTest, Init_Hitscan_Projectile)
 {
     game_engine::logic::ProjectileLauncher *proj = new game_engine::logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 0, 0, 0);
-    EXPECT_EQ(proj->get_active_projectile(), proj) << "projectile launchers don't initialise their active projectile to themselves.";
-    EXPECT_EQ(proj->get_id(), proj->get_projectile().get_id()) << "hitscan projectilelaunchers don't return themselves when asked for their projectile";
+    EXPECT_EQ(proj->get_active_projectile(), nullptr) << "projectile launchers don't initialise their active projectile to null.";
+    EXPECT_EQ(proj->get_projectile().get_id(), -1) << "hitscan projectilelaunchers don't return the null entity when asked for their projectile.";
     delete proj;
 }
 
@@ -112,7 +112,7 @@ TEST(ProjectileLauncherTest, Init_Non_Hitscan_Projectile)
 TEST(ProjectileLauncherTest, Init_Hitscan_Hit_Init)
 {
     game_engine::logic::ProjectileLauncher *proj = new game_engine::logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 0, 0, 0);
-    EXPECT_EQ(proj->get_last_hit(), proj) << "hitscan projectilelaunchers don't initialise lasthit to themselves";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "hitscan projectilelaunchers don't initialise lasthit to nullptr";
     EXPECT_EQ(proj->has_hit(), false) << "projectilelaunchers initialise with has_hit returning true";
     delete proj;
 }
@@ -155,7 +155,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_No_Ammo)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     bool fired = proj->Fire(entities);
     EXPECT_FALSE(fired) << "projectilelaunchers fire without any ammo";
-    EXPECT_EQ(proj->get_last_hit(), proj) << "hitscan projectilelaunchers hit entities without firing";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "hitscan projectilelaunchers hit entities without firing";
     delete proj;
 }
 
@@ -166,7 +166,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_No_Ammo_Entity)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), proj) << "hitscan projectilelaunchers hit entities without firing";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "hitscan projectilelaunchers hit entities without firing";
     delete target;
     delete proj;
 }
@@ -177,7 +177,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     bool fired = proj->Fire(entities);
     EXPECT_TRUE(fired) << "projectilelaunchers don't fire with ammo";
-    EXPECT_EQ(proj->get_last_hit(), proj) << "projectilelaunchers hit entities without any to hit";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "projectilelaunchers hit entities without any to hit";
     EXPECT_EQ(proj->get_loaded_ammo(), 9) << "projectilelaunchers don't decrease their loaded ammo when fired";
     EXPECT_EQ(proj->get_ammo(), 90) << "projectilelaunchers decrease their ammo pool without reloading";
     delete proj;
@@ -190,7 +190,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities in front of them";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities in front of them";
     delete target;
     delete proj;
 }
@@ -202,7 +202,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Miss_No_Off_X)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), proj) << "hitscan projectilelaunchers hit entities that are out of their range on the x axis";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "hitscan projectilelaunchers hit entities that are out of their range on the x axis";
     delete target;
     delete proj;
 }
@@ -214,7 +214,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Miss_No_Off_Y)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), proj) << "hitscan projectilelaunchers hit entities that are out of their range on the y axis";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "hitscan projectilelaunchers hit entities that are out of their range on the y axis";
     delete target;
     delete proj;
 }
@@ -226,7 +226,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Miss_No_Off_Z)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), proj) << "hitscan projectilelaunchers hit entities that are out of their range on the Z axis";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "hitscan projectilelaunchers hit entities that are out of their range on the Z axis";
     delete target;
     delete proj;
 }
@@ -239,7 +239,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Hit_Off_X)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities that are in their range on the x axis with offset";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities that are in their range on the x axis with offset";
     delete target;
     delete proj;
 }
@@ -252,7 +252,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Hit_Off_Y)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities that are in their range on the y axis with offset";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities that are in their range on the y axis with offset";
     delete target;
     delete proj;
 }
@@ -265,7 +265,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Hit_Off_Z)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities that are in their range on the z axis with offset";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities that are in their range on the z axis with offset";
     delete target;
     delete proj;
 }
@@ -278,7 +278,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_45)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated 45 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities in front of them when rotated 45 degrees";
     delete target;
     delete proj;
 }
@@ -291,7 +291,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_90)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated 90 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities in front of them when rotated 90 degrees";
     delete target;
     delete proj;
 }
@@ -304,7 +304,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_135)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated 135 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities in front of them when rotated 135 degrees";
     delete target;
     delete proj;
 }
@@ -317,7 +317,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated 135 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities in front of them when rotated 135 degrees";
     delete target;
     delete proj;
 }
@@ -330,7 +330,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_45_Neg)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -45 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -45 degrees";
     delete target;
     delete proj;
 }
@@ -343,7 +343,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_90_Neg)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -90 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -90 degrees";
     delete target;
     delete proj;
 }
@@ -356,7 +356,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_135_Neg
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -135 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -135 degrees";
     delete target;
     delete proj;
 }
@@ -369,7 +369,7 @@ TEST(ProjectileLauncherTest, Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180_Neg
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -180 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities in front of them when rotated -180 degrees";
     delete target;
     delete proj;
 }
@@ -382,8 +382,8 @@ TEST(ProjectileLauncherTest, GitHub_Consistency)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    game_engine::logic::Entity *hitLast = proj->get_last_hit();
-    EXPECT_EQ(hitLast, target) << "this should work according to above"; 
+    int hitLast = proj->get_last_hit();
+    EXPECT_EQ(hitLast, target->get_id()) << "this should work according to above"; 
     delete target;
     delete proj;
 }
@@ -396,8 +396,8 @@ TEST(ProjectileLauncherTest, Hitscan_Y_45_Pos)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    game_engine::logic::Entity *hitLast = proj->get_last_hit();
-    EXPECT_EQ(hitLast, target) << "hitscan projectilelaunchers don't hit entities in front of them when looking 45 degrees up";
+    int hitLast = proj->get_last_hit();
+    EXPECT_EQ(hitLast, target->get_id()) << "hitscan projectilelaunchers don't hit entities in front of them when looking 45 degrees up";
     delete target;
     delete proj;
 }
@@ -410,7 +410,7 @@ TEST(ProjectileLauncherTest, Hitscan_Y_90_Pos)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities in front of them when looking 90 degrees up";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities in front of them when looking 90 degrees up";
     delete target;
     delete proj;
 }
@@ -423,7 +423,7 @@ TEST(ProjectileLauncherTest, Hitscan_Y_45_Neg)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities in front of them when looking 45 degrees down";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities in front of them when looking 45 degrees down";
     delete target;
     delete proj;
 }
@@ -436,7 +436,7 @@ TEST(ProjectileLauncherTest, Hitscan_Y_90_Neg)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), target) << "hitscan projectilelaunchers don't hit entities in front of them when looking 90 degrees down";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "hitscan projectilelaunchers don't hit entities in front of them when looking 90 degrees down";
     delete target;
     delete proj;
 }
@@ -457,7 +457,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_No_Ammo)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     bool fired = proj->Fire(entities);
     EXPECT_FALSE(fired) << "non-hitscan projectilelaunchers fire without any ammo";
-    EXPECT_EQ(proj->get_last_hit(), proj) << "non-hitscan projectilelaunchers hit entities without firing";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "non-hitscan projectilelaunchers hit entities without firing";
     delete proj;
 }
 
@@ -468,7 +468,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_No_Ammo_Entity)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
     proj->Fire(entities);
-    EXPECT_EQ(proj->get_last_hit(), proj) << "non-hitscan projectilelaunchers hit entities without firing";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "non-hitscan projectilelaunchers hit entities without firing";
     delete target;
     delete proj;
 }
@@ -479,7 +479,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo)
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     bool fired = proj->Fire(entities);
     EXPECT_TRUE(fired) << "non-hitscan projectilelaunchers don't fire with ammo";
-    EXPECT_EQ(proj->get_last_hit(), proj) << "non-hitscan projectilelaunchers hit entities without any to hit";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "non-hitscan projectilelaunchers hit entities without any to hit";
     EXPECT_EQ(proj->get_active_projectile()->get_x_pos(), proj->get_x_pos() + proj->get_shoot_offset_x()) << "non-hitscan projectile launchers don't set their projectiles' initial X value properly";
     EXPECT_EQ(proj->get_active_projectile()->get_y_pos(), proj->get_y_pos() + proj->get_shoot_offset_y()) << "non-hitscan projectile launchers don't set their projectiles' initial Y value properly";
     EXPECT_EQ(proj->get_active_projectile()->get_z_pos(), proj->get_z_pos() + proj->get_shoot_offset_z()) << "non-hitscan projectile launchers don't set their projectiles' initial Z value properly";
@@ -496,7 +496,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Doesnt_Hit_No_Off_No_Tick)
     entities.insert(target);
     proj->Fire(entities);
     EXPECT_FALSE(proj->has_hit()) << "non-hitscan projectile launchers say they've hit before they hit anything";
-    EXPECT_NE(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers hit entities without ticking";
+    EXPECT_NE(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers hit entities without ticking";
     delete target;
     delete proj;
 }
@@ -510,7 +510,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Hits_No_Off_Tick_X)
     proj->Fire(entities);
     proj->DoTick();
     EXPECT_TRUE(proj->has_hit()) << "non-hitscan projectile launchers don't update has_hit when they hit something";
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities with ticking on X";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities with ticking on X";
     delete target;
     delete proj;
 }
@@ -523,7 +523,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Hits_No_Off_Tick_Y)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities with ticking on Y";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities with ticking on Y";
     delete target;
     delete proj;
 }
@@ -536,7 +536,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Hits_No_Off_Tick_Z)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities with ticking on Y";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities with ticking on Y";
     delete target;
     delete proj;
 }
@@ -549,7 +549,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Passthrough_Hits)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectile launchers don't hit entities when they pass through them";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectile launchers don't hit entities when they pass through them";
     delete target;
     delete proj;
 }
@@ -562,7 +562,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Doesnt_Hit_No_Off_Tick)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), proj) << "non-hitscan projectilelaunchers hit entities even though they don't move far enough in one tick";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "non-hitscan projectilelaunchers hit entities even though they don't move far enough in one tick";
     delete target;
     delete proj;
 }
@@ -575,7 +575,7 @@ TEST(ProjectileLauncherTest, Non_HitscanMiss_No_Off_X_Tick)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), proj) << "non-hitscan projectilelaunchers hit entities that are out of their range on the x axis";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "non-hitscan projectilelaunchers hit entities that are out of their range on the x axis";
     delete target;
     delete proj;
 }
@@ -588,7 +588,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Miss_No_Off_Y_Tick)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), proj) << "non-hitscan projectilelaunchers hit entities that are out of their range on the y axis";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "non-hitscan projectilelaunchers hit entities that are out of their range on the y axis";
     delete target;
     delete proj;
 }
@@ -601,7 +601,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Miss_No_Off_Z_Tick)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), proj) << "non-hitscan projectilelaunchers hit entities that are out of their range on the z axis";
+    EXPECT_EQ(proj->get_last_hit(), -1) << "non-hitscan projectilelaunchers hit entities that are out of their range on the z axis";
     delete target;
     delete proj;
 }
@@ -615,7 +615,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Hit_Off_X_Tick)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities that are in their range on the x axis with offset";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities that are in their range on the x axis with offset";
     delete target;
     delete proj;
 }
@@ -629,7 +629,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Hit_Off_Y_Tick)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities that are in their range on the y axis with offset";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities that are in their range on the y axis with offset";
     delete target;
     delete proj;
 }
@@ -643,7 +643,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Hit_Off_Z_Tick)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities that are in their range on the z axis with offset";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities that are in their range on the z axis with offset";
     delete target;
     delete proj;
 }
@@ -657,7 +657,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Hit_No_Off_45_Tick)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated 45 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated 45 degrees";
     delete target;
     delete proj;
 }
@@ -671,7 +671,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Hit_No_Off_90_Tick)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated 90 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated 90 degrees";
     delete target;
     delete proj;
 }
@@ -685,7 +685,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Hit_No_Off_135_Tick)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated 135 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated 135 degrees";
     delete target;
     delete proj;
 }
@@ -699,7 +699,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Hit_No_Off_180_Tick)
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated 180 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated 180 degrees";
     delete target;
     delete proj;
 }
@@ -713,7 +713,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_45_
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated -45 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated -45 degrees";
     delete target;
     delete proj;
 }
@@ -727,7 +727,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_90_
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated -90 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated -90 degrees";
     delete target;
     delete proj;
 }
@@ -741,7 +741,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_135
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated -135 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated -135 degrees";
     delete target;
     delete proj;
 }
@@ -755,7 +755,7 @@ TEST(ProjectileLauncherTest, Non_Hitscan_Fire_Ammo_Entity_Infront_Hit_No_Off_180
     entities.insert(target);
     proj->Fire(entities);
     proj->DoTick();
-    EXPECT_EQ(proj->get_last_hit(), target) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated 180 degrees";
+    EXPECT_EQ(proj->get_last_hit(), target->get_id()) << "non-hitscan projectilelaunchers don't hit entities in front of them when rotated 180 degrees";
     delete target;
     delete proj;
 }
@@ -765,7 +765,7 @@ TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_No_Entities)
 {
     game_engine::logic::ProjectileLauncher *proj = new game_engine::logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0);
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
-    EXPECT_EQ(proj->FindFirstCollision(entities), proj) << "findfirstcollision doesn't return itself without any entities to hit";
+    EXPECT_EQ(proj->FindFirstCollision(entities), nullptr) << "findfirstcollision doesn't return null without any entities to hit";
     delete proj;
 }
 
@@ -786,7 +786,7 @@ TEST(ProjectileLauncherTest, Hitscan_Find_First_Collision_One_Entity_Cant_Hit)
     game_engine::logic::ProjectileLauncher *proj = new game_engine::logic::ProjectileLauncher(0, 0, 0, 0, 0, 0, 100, 10, 0);
     std::set<game_engine::logic::Entity *> entities = std::set<game_engine::logic::Entity *>();
     entities.insert(target);
-    EXPECT_EQ(proj->FindFirstCollision(entities), proj) << "findfirstcollision returns an entity that it doesn't hit";
+    EXPECT_EQ(proj->FindFirstCollision(entities), nullptr) << "findfirstcollision returns an entity that it doesn't hit";
     delete target;
     delete proj;
 }

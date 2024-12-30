@@ -1,6 +1,9 @@
 // Copyright 2022 Nicholas Mazey. All rights reserved
 #include <set>
 
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/set.hpp>
+
 #ifndef GAME_ENGINE_LOGIC_CONTROLLER_H
 #define GAME_ENGINE_LOGIC_CONTROLLER_H
 namespace game_engine
@@ -63,7 +66,25 @@ public:
     virtual ~Controller(){}
 protected:
     std::set<ScaledAction> actions_ = std::set<ScaledAction>();
+private:
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+        ar & actions_;
+    }
 };
 } // namespace logic
 } // namespace game_engine
+
+namespace boost {
+namespace serialization {
+template<class Archive>
+void serialize(Archive & ar, game_engine::logic::Controller::ScaledAction & scaledAction, const unsigned int version)
+{
+    ar & scaledAction.action;
+    ar & scaledAction.scale;
+}
+}
+}
 #endif // GAME_ENGINE_LOGIC_CONTROLLER_H
