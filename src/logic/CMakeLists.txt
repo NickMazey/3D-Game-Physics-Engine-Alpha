@@ -2,11 +2,7 @@ SET(Boost_USE_STATIC_LIBS        ON)
 set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
 
-find_package(Boost REQUIRED COMPONENTS serialization)
-IF (Boost_FOUND)
-    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
-ENDIF()
-link_directories(${Boost_LIBRARY_DIR})
+add_subdirectory(${CMAKE_SOURCE_DIR}/lib/boost bin EXCLUDE_FROM_ALL)
 
 add_library(game_engine STATIC
     ${CMAKE_CURRENT_SOURCE_DIR}/entity.cc 
