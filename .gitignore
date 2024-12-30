@@ -50,6 +50,3 @@ build-and-test.bat
 #CPPCheck
 *.cppcheck
 /check-cppcheck-build-dir/
-
-#Libraries
-/lib/*
