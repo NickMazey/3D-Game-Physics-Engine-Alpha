@@ -14,6 +14,7 @@ else()
 endif()
 
 add_subdirectory(src/logic)
+target_include_directories(game_engine PUBLIC src/maps)
 
 enable_testing()
 add_subdirectory(test)
