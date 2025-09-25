@@ -16,9 +16,12 @@ add_executable(entity_test entity_test.cc)
 
 target_link_libraries(
   entity_test 
+  PUBLIC
   game_engine
   gtest_main
 )
+
+target_link_libraries(entity_test PRIVATE Boost::serialization)
 
 gtest_discover_tests(entity_test)
 
@@ -34,6 +37,9 @@ target_link_libraries(
     game_engine
     gtest_main
 )
+
+target_link_libraries(map_test PRIVATE Boost::serialization)
+
 
 gtest_discover_tests(map_test)
 
@@ -51,6 +57,9 @@ target_link_libraries(
     gtest_main
 )
 
+target_link_libraries(mockcontroller_test PRIVATE Boost::serialization)
+
+
 gtest_discover_tests(mockcontroller_test)
 
 #Player Test
@@ -65,6 +74,10 @@ target_link_libraries(
     game_engine
     gtest_main
 )
+
+target_link_libraries(player_test PRIVATE Boost::serialization)
+
+
 gtest_discover_tests(player_test)
 
 #Projectile Launcher Test
@@ -79,6 +92,8 @@ target_link_libraries(
     game_engine
     gtest_main
 )
+
+target_link_libraries(projectilelauncher_test PRIVATE Boost::serialization)
 
 gtest_discover_tests(projectilelauncher_test)
 
@@ -95,6 +110,8 @@ target_link_libraries(
     gtest_main
 )
 
+target_link_libraries(team_test PRIVATE Boost::serialization)
+
 gtest_discover_tests(team_test)
 
 #ShooterWorld Test
@@ -110,5 +127,6 @@ target_link_libraries(
     gtest_main
 )
 
+target_link_libraries(shooterworld_test PRIVATE Boost::serialization)
 
 gtest_discover_tests(shooterworld_test)
